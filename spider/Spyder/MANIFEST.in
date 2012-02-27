@@ -1,0 +1,5 @@
+include README.rst
+include LICENSE
+include src/spyder/spyder_template/logging.conf
+include src/spyder/spyder_template/log/.keep
+recursive-include docs-source *.rst

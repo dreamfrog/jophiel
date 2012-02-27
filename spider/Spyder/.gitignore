@@ -1,0 +1,14 @@
+*.swp
+*.pyc
+*.pyo
+.installed.cfg
+bin
+develop-eggs
+dist
+downloads
+eggs
+parts
+src/*.egg-info
+docs
+pylint*
+.coverage
