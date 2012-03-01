@@ -191,7 +191,6 @@ class AllResource(object):
     def info(self):
         """Returns a dictionary of the current status of the pending jobs,
         processed, no. of queues, no. of workers, no. of failed jobs.
-
         """
         pending = 0
         for q in self.taskqueue.queues():
@@ -200,8 +199,5 @@ class AllResource(object):
             'pending'   : pending,
             'processed' : Stat('processed', self).get(),
             'queues'    : len(self.taskqueue.queues()),
-            #'workers'   : len(self.workers()),
-            #'working'   : len(self.working()),
             'failed'    : Stat('failed', self).get(),
-            #'servers'   : ['%s:%s' % (self.host, self.port)]
         }   

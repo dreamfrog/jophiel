@@ -3,8 +3,7 @@ Created on 2012-2-13
 
 @author: liu
 '''
-import app
-from .models import to_db
+from .field import to_db
 
 class QuerySet(object):
     def __init__(self, model, order_by=None, filter_by=None):
@@ -43,14 +42,6 @@ class QuerySet(object):
         if is_slice:
             return results
         return results[0]
-
-    def __len__(self):
-        if self.index.startswith('-'):
-            index = self.index[1:]
-        else:
-            index = self.index
-        
-        return app.db.count(self.model, index)
 
     def __iter__(self):
         for r in self[0:-1]:

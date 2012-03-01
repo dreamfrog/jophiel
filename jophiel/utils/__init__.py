@@ -4,6 +4,17 @@ Created on 2012-2-23
 @author: lzz
 '''
 import os
+from contextlib import contextmanager
+from functools import partial, wraps
+from inspect import getargspec
+from itertools import islice
+from pprint import pprint
+import imp as _imp
+
+import time, datetime
+import sys
+import logging
+import importlib
 
 from UserDict import DictMixin
 
@@ -157,10 +168,36 @@ class OrderedDict(dict, DictMixin):
     def __ne__(self, other):
         return not self == other
 
-import os
-import time, datetime
-import sys
-import logging
+@contextmanager
+def cwd_in_path():
+    cwd = os.getcwd()
+    if cwd in sys.path:
+        yield
+    else:
+        sys.path.insert(0, cwd)
+        try:
+            yield cwd
+        finally:
+            try:
+                sys.path.remove(cwd)
+            except ValueError:
+                pass
+
+
+def find_module(module, path=None, imp=None):
+    """Version of :func:`imp.find_module` supporting dots."""
+    if imp is None:
+        imp = importlib.import_module
+    with cwd_in_path():
+        if "." in module:
+            last = None
+            parts = module.split(".")
+            for i, part in enumerate(parts[:-1]):
+                path = imp(".".join(parts[:i + 1])).__path__
+                last = _imp.find_module(parts[i + 1], path)
+            return last
+        return _imp.find_module(module)
+
 
 def special_log_file(filename):
     if filename in ("stderr", "stdout"):
@@ -214,3 +251,147 @@ def setup_logging(procname, log_level=logging.INFO, filename=None):
     logger.setLevel(log_level)
     handler = get_logging_handler(filename, procname)
     logger.addHandler(handler)
+
+
+def fun_takes_kwargs(fun, kwlist=[]):
+    """With a function, and a list of keyword arguments, returns arguments
+    in the list which the function takes.
+
+    If the object has an `argspec` attribute that is used instead
+    of using the :meth:`inspect.getargspec` introspection.
+
+    :param fun: The function to inspect arguments of.
+    :param kwlist: The list of keyword arguments.
+
+    Examples
+
+        >>> def foo(self, x, y, logfile=None, loglevel=None):
+        ...     return x * y
+        >>> fun_takes_kwargs(foo, ["logfile", "loglevel", "task_id"])
+        ["logfile", "loglevel"]
+
+        >>> def foo(self, x, y, **kwargs):
+        >>> fun_takes_kwargs(foo, ["logfile", "loglevel", "task_id"])
+        ["logfile", "loglevel", "task_id"]
+
+    """
+    argspec = getattr(fun, "argspec", getargspec(fun))
+    args, _varargs, keywords, _defaults = argspec
+    if keywords != None:
+        return kwlist
+    return filter(partial(operator.contains, args), kwlist)
+
+
+def get_cls_by_name(name, aliases={}, imp=None, package=None, **kwargs):
+    """Get class by name.
+
+    The name should be the full dot-separated path to the class::
+
+        modulename.ClassName
+
+    Example::
+
+        celery.concurrency.processes.TaskPool
+                                    ^- class name
+
+    If `aliases` is provided, a dict containing short name/long name
+    mappings, the name is looked up in the aliases first.
+
+    Examples:
+
+        >>> get_cls_by_name("celery.concurrency.processes.TaskPool")
+        <class 'celery.concurrency.processes.TaskPool'>
+
+        >>> get_cls_by_name("default", {
+        ...     "default": "celery.concurrency.processes.TaskPool"})
+        <class 'celery.concurrency.processes.TaskPool'>
+
+        # Does not try to look up non-string names.
+        >>> from celery.concurrency.processes import TaskPool
+        >>> get_cls_by_name(TaskPool) is TaskPool
+        True
+
+    """
+    if imp is None:
+        imp = importlib.import_module
+
+    if not isinstance(name, basestring):
+        return name                                 # already a class
+
+    name = aliases.get(name) or name
+    module_name, _, cls_name = name.rpartition(".")
+    if not module_name and package:
+        module_name = package
+    try:
+        module = imp(module_name, package=package, **kwargs)
+    except ValueError, exc:
+        raise ValueError("Couldn't import %r: %s" % (name, exc))
+    return getattr(module, cls_name)
+
+get_symbol_by_name = get_cls_by_name
+
+
+class _Code(object):
+
+    def __init__(self, code):
+        self.co_filename = code.co_filename
+        self.co_name = code.co_name
+
+
+class _Frame(object):
+    Code = _Code
+
+    def __init__(self, frame):
+        self.f_globals = {
+            "__file__": frame.f_globals.get("__file__", "__main__"),
+        }
+        self.f_code = self.Code(frame.f_code)
+
+import traceback
+
+class Traceback(object):
+    Frame = _Frame
+
+    def __init__(self, tb):
+        self.tb_frame = self.Frame(tb.tb_frame)
+        self.tb_lineno = tb.tb_lineno
+        if tb.tb_next is None:
+            self.tb_next = None
+        else:
+            self.tb_next = Traceback(tb.tb_next)
+
+
+class ExceptionInfo(object):
+    """Exception wrapping an exception and its traceback.
+
+    :param exc_info: The exception info tuple as returned by
+        :func:`sys.exc_info`.
+
+    """
+
+    #: Exception type.
+    type = None
+
+    #: Exception instance.
+    exception = None
+
+    #: Pickleable traceback instance for use with :mod:`traceback`
+    tb = None
+
+    #: String representation of the traceback.
+    traceback = None
+
+    def __init__(self, exc_info):
+        self.type, self.exception, tb = exc_info
+        self.tb = Traceback(tb)
+        self.traceback = ''.join(traceback.format_exception(*exc_info))
+
+    def __str__(self):
+        return self.traceback
+
+    def __repr__(self):
+        return "<ExceptionInfo: %r>" % (self.exception, )
+
+    @property
+    def exc_info(self):
+        return self.type, self.exception, self.tb

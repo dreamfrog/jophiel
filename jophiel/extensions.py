@@ -11,7 +11,7 @@ except:
 
 from jophiel.taskqueue import RedisQueue
 
-from jophiel.exceptions import NoQueueError
+from jophiel.errors import NoQueueError
 from jophiel.worker import Worker
 
 class JuniorWorker(Worker):

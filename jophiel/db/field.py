@@ -5,6 +5,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+import uuid
 
 class Field(object):
     def __init__(self, default=None, **kwargs):
@@ -27,11 +28,26 @@ class Field(object):
     def to_python(self, value=None):
         return value
 
-class ForeignKey(object):
-    def __init__(self, to_model):
-        self.to_model = to_model
+class KeyField(Field):
+    
+    def generate_key(self):
+        return uuid.uuid4().hex
+    
+    def get_default(self):
+        if not self.default:
+            value = self.to_python(None)
+        elif callable(self.default):
+            value = self.default()
+        else:
+            value = self.default
+        return value
 
-class String(Field):
+    def to_python(self, value=None):
+        if not value:
+            value = self.generate_key()
+        return value
+
+class StringField(Field):
     def to_python(self, value=None):
         if value:
             value = unicode(value)
@@ -39,10 +55,10 @@ class String(Field):
             value = u''
         return value
 
-class Text(String):
+class TextField(StringField):
     pass
 
-class Integer(Field):
+class IntegerField(Field):
     def to_python(self, value=None):
         if value:
             value = int(value)
@@ -50,7 +66,7 @@ class Integer(Field):
             value = 0
         return value
 
-class Float(Field):
+class FloatField(Field):
     def to_python(self, value=None):
         if value:
             value = float(value)
@@ -58,7 +74,7 @@ class Float(Field):
             value = 0.0
         return value
 
-class DateTime(Field):
+class DateTimeField(Field):
     def to_db(self, value=None):
         if isinstance(value, datetime.datetime):
             # TODO: coerce this to UTC
@@ -72,9 +88,19 @@ class DateTime(Field):
                 value = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
             else:
                 value = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')
+                
         return value
 
-class List(Field):
+    def get_default(self):
+        if not self.default:
+            value = self.to_python(datetime.datetime.now())
+        elif callable(self.default):
+            value = self.default()
+        else:
+            value = self.default
+        return value
+
+class ListField(Field):
     def to_db(self, value=None):
         if isinstance(value, (tuple, list)):
             value = pickle.dumps(value)
@@ -86,3 +112,42 @@ class List(Field):
         elif isinstance(value, basestring):
             value = pickle.loads(value)
         return value
+
+class ReverseUrlField(Field):
+    def to_db(self,value=""):
+        return self.__reverse_url(value)
+        
+    def to_python(self,value=None):
+        return self.__restore_url(value)
+
+    def __reverse_url(self, url):
+        protocol,link = filter(None, url.split("//"))
+        hops = filter(None, link.split("/"))  
+        domain = hops[0].split(".")  
+        domain.reverse()  
+        domain = '.'.join(domain)  
+        hops[0] = domain  
+        return protocol + "//"+'/'.join(hops) 
+     
+    def __restore_url(self,url):
+        prococol,link = filter(None, url.split("//"))[-1]  
+        hops = filter(None, link.split("/"))  
+        domain = hops[0].split(".")  
+        domain.reverse()  
+        domain = '.'.join(domain)  
+        hops[0] = domain  
+        return prococol + "//"+'/'.join(hops)      
+
+
+def to_db(model, values):
+    result = {}
+    for k, v in values.iteritems():
+        field = model._meta.fields.get(k)
+        if field:
+            v = field.to_db(v)
+            if v is None:
+                v = ''
+        else:
+            v = simplejson.dumps(v)
+        result[k] = v
+    return result        

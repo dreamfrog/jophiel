@@ -12,10 +12,10 @@ import threading
 from pprint import pprint
 
 from jophiel import taskqueue
-from jophiel.exceptions import NoQueueError
+from jophiel.errors import NoQueueError
 from jophiel.jobs import Job
 
-import jophiel.json_parser as json
+import jophiel.utils.json_parser as json
 from jophiel import redisclient
 from jophiel.resource import Stat
 

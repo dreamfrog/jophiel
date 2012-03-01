@@ -30,11 +30,9 @@ class TaskQueue(object):pass
 class RedisQueue(object):
     """The ResQ class defines the Redis server object to which we will
     enqueue jobs into various queues.
-
     """
     def __init__(self,):
         self.redis = redisclient.client
-        self._watched_queues = set()
 
     def push(self, queue, item):
         self.watch_queue(queue)
@@ -55,11 +53,7 @@ class RedisQueue(object):
         return int(self.redis.llen("resque:queue:%s" % queue))
 
     def watch_queue(self, queue):
-        if queue in self._watched_queues:
-            return
-        else:
-            if self.redis.sadd('resque:queues', str(queue)):
-                self._watched_queues.add(queue)
+        self.redis.sadd('resque:queues', str(queue))
 
     def peek(self, queue, start=0, count=1):
         return self.list_range('resque:queue:%s' % queue, start, count)
@@ -71,35 +65,8 @@ class RedisQueue(object):
             ret_list.append(TaskMessage.decode(i))
         return ret_list
 
-    def _get_redis(self):
-        return self._redis
-
-    def _set_redis(self, server):
-        if isinstance(server, basestring):
-            self.dsn = server
-            host, port = server.split(':')
-            self._redis = Redis(host=host, port=int(port))
-            self.host = host
-            self.port = int(port)
-        elif isinstance(server, Redis):
-            if hasattr(server, "host"):
-                self.host = server.host
-                self.port = server.port
-            else:
-                connection = server.connection_pool.get_connection('_')
-                self.host = connection.host
-                self.port = connection.port
-            self.dsn = '%s:%s' % (self.host, self.port)
-            self._redis = server
-        else:
-            raise Exception("I don't know what to do with %s" % str(server))
-    redis = property(_get_redis, _set_redis)
-
     def enqueue(self, klass, *args):
-        """Enqueue a job into a specific queue. Make sure the class you are
-        passing has **queue** attribute and a **perform** method on it.
-
-        """
+        
         queue = getattr(klass, 'queue', None)
         if queue:
             class_name = '%s.%s' % (klass.__module__, klass.__name__)
@@ -132,8 +99,6 @@ class RedisQueue(object):
                 for key in self.redis.keys('resque:*')]
 
     def remove_queue(self, queue):
-        if queue in self._watched_queues:
-            self._watched_queues.remove(queue)
         self.redis.srem('resque:queues', queue)
         del self.redis['resque:queue:%s' % queue]
 
