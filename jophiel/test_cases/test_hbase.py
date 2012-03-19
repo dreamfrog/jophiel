@@ -1,5 +1,0 @@
-'''
-Created on 2012-2-28
-
-@author: lzz
-'''

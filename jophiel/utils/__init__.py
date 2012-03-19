@@ -395,3 +395,27 @@ class ExceptionInfo(object):
     @property
     def exc_info(self):
         return self.type, self.exception, self.tb
+
+class Registry(dict):
+     
+    def register(self, task):
+        self[task.name] = task
+
+    def unregister(self, name):
+        try:
+            name = name.name
+        except AttributeError:
+            pass
+        self.pop(name)
+
+    def filter_types(self, type):
+        """Return all tasks of a specific type."""
+        return dict((name, task) for name, task in self.iteritems()
+                                    if task.type == type)
+        
+    def __getitem__(self, key):
+
+        return dict.__getitem__(self, key)
+
+    def pop(self, key, *args):
+        return dict.pop(self, key, *args)
