@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from jophiel.worker.base import BasicWorker
+from jophiel.worker.base import Worker
 
 
-class MultiWorker(BasicWorker):pass
+class MultiWorker(Worker):pass

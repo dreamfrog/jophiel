@@ -5,66 +5,42 @@ Created on 2012-3-9
 '''
 import sys
 
-class TaskMeta(type):
-
+"""
+    generate default name for task£¬and other attribute to task
+"""
+class TaskDescriptor(type):
     def __new__(cls, name, bases, attrs):
-        new = super(TaskMeta, cls).__new__
+        new = super(TaskDescriptor, cls).__new__
         task_module = attrs.get("__module__") or "__main__"
-
-        # Automatically generate missing/empty name.
         if not attrs.get("name"):
             try:
                 module_name = sys.modules[task_module].__name__
-            except KeyError:  # pragma: no cover
-                # Fix for manage.py shell_plus (Issue #366).
+            except KeyError:  
                 module_name = task_module
             attrs["name"] = '.'.join([module_name, name])
-        
         task_cls = new(cls, name, bases, attrs)
         return task_cls
 
-
-class  Task(object):
-    """Task base class.
-    """
-    __metaclass__ = TaskMeta
+"""Task base class.
+"""   
+class Task(object):
     
-    name = None 
-    
-    def __init__(self,task_id,args,kwargs):
+    __metaclass__ = TaskDescriptor
+        
+    def __init__(self,task_id,*args,**kwargs):
         self.task_id = task_id
         self.args = args
         self.kwargs = kwargs
-    
-    def perform(self):
-        self.run(*self.args,**self.kwargs)
-    
-    @classmethod
-    def run(cls, *args, **kwargs):
-        raise NotImplementedError("Tasks must define the run method.")
-    
-    @classmethod
-    def after_return(cls, status, retval, task_id, args, kwargs, einfo):
-        pass
 
-    """hook for task processing"""
-    @classmethod
-    def on_success(cls, retval, task_id, args, kwargs):
-        pass
-    @classmethod
-    def on_retry(cls, exc, task_id, args, kwargs, einfo):
-        """Retry handler."""
-        pass
-    @classmethod
-    def on_failure(cls, exc, task_id, args, kwargs, einfo):
-        pass
-    
     def __repr__(self):
         """`repr(task)`"""
-        return "<@task: %s>" % (self.name, )
-
-    @property
-    def __name__(self):
-        return self.__class__.__name__
+        return "<@task: %s,%s>" % (self.name,self.task_id )
+     
+    def run(self, *args, **kwargs):
+        raise NotImplementedError("Tasks must define the run method.")
     
-    
+    """hook for task processing"""
+    def after_return(self, status, retval, einfo):pass
+    def on_success(self, retval, task_id, *args, **kwargs):pass
+    def on_failure(self, retval, task_id, einfo,*args, **kwargs):pass  
+    def on_retry(self,retval,task_id,einfo,*args,**kwargs):pass

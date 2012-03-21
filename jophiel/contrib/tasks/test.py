@@ -8,8 +8,11 @@ from jophiel.tasks.base import Task
 class TestTask(Task):
     
     name = "test"
-    
-    def execute(self, request, **kwargs):
+
+    def run(self, *args, **kwargs):
+        print "hello,scrapy"
+        
+    def execute(self, **kwargs):
         print "hello,scrapy"
         pass
     

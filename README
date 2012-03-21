@@ -1,0 +1,18 @@
+This shows you how to make a table -- if you only want to make a list see :ref:`making-a-list`.
+
+==================   ============  ============
+split	optional	A method that uses t he input — the input being anything JSON-serializable, or a URL to a file — and splits it up into work units suitable for parallel processing. Return an array of output from this method, and each element in the array will be sent as the input to the next step (process), in parallel across all your workers.
+process	mandatory	Perform the parallel portion of the computation. The input comes directly from your Job request, or, if you have a split method defined, from the output of split. The return value from process is either returned as the output of the job, or sent to merge for further processing.
+merge	optional	The input is an unordered array of all the outputs from the process stage. The return value of merge is the result of the Job.
+
+==================   ============  ============
+
+The Action API
+Inheriting from CloudCrowd::Action also provides a handful of convenience methods:
+
+input	The input value to this stage of the action. In split and process, this is usually the URL to the file that needs to be processed, but it can be anything JSON-serializable. In merge, this is an array containing every result that was returned from all of the workers processing (which are also often, but not necessarily, URLs).
+options	As part of creating a job, you can specify an options configuration hash of arbitrary JSON for internal use. This options hash is passed through verbatim to each stage and every work unit.
+download(url,path)	A convenience method to download the contents of a given URL to local storage, specified by a relative path.
+save(path)	Saves the temporary file at the given path to a permanent location, using the AssetStore (S3 in production). This method will return a publicly accessible or authenticated URL to the file, which is usually what you’ll want to output.
+input_path	If the input is a URL, it will automatically be downloaded for you to local storage before the action begins. input_path gives you the local path to the input file.
+In addition, all actions run within a work-unit-specific temporary directory, so relative paths work great for saving and loading scratch files, and all your scratch work will be automatically deleted at the end of the action.

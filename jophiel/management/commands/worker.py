@@ -9,7 +9,7 @@ from optparse import make_option
 import sys 
 import logging
 
-from jophiel.worker import Worker
+from jophiel.worker.base import Worker
 from jophiel.utils import setup_pidfile
 from jophiel.utils import setup_logging
 
@@ -44,6 +44,6 @@ class Command(BaseCommand):
         if interval is not None:
             interval = int(interval)
     
-        queues = args[0].split(',')
-        server = '%s:%s' % (options["host"], options["port"])
-        Worker.run(queues, server, interval)
+        queues = args[0]
+        #server = '%s:%s' % (options["host"], options["port"])
+        Worker.run(queues)

@@ -8,79 +8,68 @@ import signal
 
 import os
 import multiprocessing
+import time 
+import threading
 
 from jophiel import app
 from jophiel.app import client
-from jophiel.worker.worker import Worker
+from jophiel.worker import node
+from jophiel.worker.base import Worker
 
 logger = app.logger
 
 """
-    work manager,response for process system signals,mulsti tasks etc.
+    work manager,response for processing system signals,mulsti tasks etc.
 """
 class Manager(object):
-    def __init__(self, queues, host, max_children=10):
-        self.queues = queues
-        self._shutdown = False
-        self.redis = client
-        self.workers = []
-        self.children = []
-
-    def __str__(self):
-        hostname = os.uname()[1]
-        pid = os.getpid()
-        return 'manager:%s:%s:%s' % (hostname, pid, ','.join(self.queues))
-
-    """???remove the dependence
-    """
-    def register_manager(self):
-        self.redis.sadd('resque:managers', str(self))
-
-    def unregister_manager(self):
-        self.redis.srem('resque:managers', str(self))
+    def __init__(self, queue, host,port,internal = 60):
+        self.queue = queue
+        self.running = False
+        self.workers =None
+        self.server = node.ServerThread(self.host,self.port)
+        self.internal = internal
+        self.monitor = threading.Thread(target=self.beatheat)
+        self.worker = Worker(self.queue)
+    
+    def beatheat(self):
+        while not self.running:
+            'send some beatheat messages'
+            "print send meaage"
+            print "beat,",time.time()
+            time.sleep(self.internal)
             
     def startup(self):
-        self.register_manager()
+        self.running = True
+        self.server.start()
+        self.monitor.start()
         self.register_signals()
     
-    def stop(self):
-        self.unregister_manager()
-    """
-    ???need to enhance functions,exit,quit,children manager etc
-    """
+    def stop(self):pass
+
     def work(self):
         self.startup()
-        #check to see if stuff is still going
-        for queue in self.queues:
-            self.start_child(queue)
-        for child in self.children:
-            child.join()
+        self.worker.start()
 
     def register_signals(self):
         signal.signal(signal.SIGTERM, self.shutdown_all)
         signal.signal(signal.SIGINT, self.shutdown_all)
-        signal.signal(signal.SIGUSR1, self.kill_children)
 
     def shutdown_all(self, signum, frame):
         self.schedule_shutdown(signum, frame)
-        self.kill_children()
-
+        
     def schedule_shutdown(self, signum, frame):
-        self._shutdown = True
-
-    def kill_children(self):
-        for child in self.children:
-            child.terminate()
-
-    def start_child(self, queue):
-        p = multiprocessing.Process(target=Worker.run, args=(queue,))
-        self.children.append(p)
-        p.start()
-
+        self.running = False
+        self.worker.schedule_down()
+        
     @classmethod
-    def run(cls, queues=()):
-        manager = cls(queues)
+    def run(cls, queue):
+        manager = cls(queue)
         manager.work()
+
+    def __str__(self):
+        hostname = os.uname()[1]
+        pid = os.getpid()
+        return '%s:%s:%s' % (hostname, pid, ','.join(self.queue))
         
 if __name__ == "__main__":
     from optparse import OptionParser

@@ -87,10 +87,10 @@ class ModelDescriptor(type):
         else:
             meta = attr_meta
         
-        key_name = "row_key"
-        if not key_name in attrs:
-            raise Exception("key:[%s] item not in attrs:[%s]"%(key_name,attrs.keys()))
-        setattr(new_class,key_name,attrs.pop(key_name))
+        #key_name = "row_key"
+        #if not key_name in attrs:
+        #    raise Exception("key:[%s] item not in attrs:[%s]"%(key_name,attrs.keys()))
+        #setattr(new_class,key_name,attrs.pop(key_name))
         
         setattr(new_class, '_meta', Options(meta, attrs))
         setattr(new_class, 'objects', Manager(new_class))

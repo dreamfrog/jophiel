@@ -10,7 +10,7 @@ from __future__ import absolute_import
 
 import datetime
 
-from jophiel.redisclient import client
+from jophiel.app import client
 from jophiel.db.base import BaseBackend
 
 class RedisBackend(BaseBackend):

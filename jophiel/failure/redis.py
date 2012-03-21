@@ -2,7 +2,8 @@ import datetime, time
 from base64 import b64encode
 
 from base import BaseBackend
-from jophiel.taskqueue import RedisQueue
+from jophiel.app import client
+import json
 
 
 class RedisBackend(BaseBackend):
@@ -10,8 +11,6 @@ class RedisBackend(BaseBackend):
 
     def save(self, resq=None):
         """Saves the failed Job into a "failed" Redis queue preserving all its original enqueud info."""
-        if not resq:
-            resq = RedisQueue()
         data = {
             'failed_at' : datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
             'payload'   : self._payload,
@@ -22,25 +21,25 @@ class RedisBackend(BaseBackend):
         }
         if self._worker:
             data['worker'] = self._worker
-        data = resq.encode(data)
-        resq.redis.rpush('resque:failed', data)
+        data = json.dumps(data)
+        client.rpush('resque:failed', data)
 
     @classmethod
     def count(cls, resq):
         return int(resq.redis.llen('resque:failed'))
 
     @classmethod
-    def all(cls, resq, start=0, count=1):
-        items = resq.redis.lrange('resque:failed', start, count) or []
+    def all(cls, start=0, count=1):
+        items = client.lrange('resque:failed', start, count) or []
 
         ret_list = []
         for i in items:
-            failure = resq.decode(i)
+            failure = json.loads(i)
             failure['redis_value'] = b64encode(i)
             ret_list.append(failure)
         return ret_list
 
     @classmethod
-    def clear(cls, resq):
-        return resq.redis.delete('resque:failed')
+    def clear(cls):
+        return client.delete('resque:failed')
 

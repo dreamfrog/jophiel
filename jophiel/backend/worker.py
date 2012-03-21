@@ -54,11 +54,9 @@ class WorkerStats(BaseStat):
     resq_worker_start = "resque:worker:%s:start"
     resq_worker = "resque:worker:%s"
     
-    def __init__(self,queue_name,worker_id = None ):
+    def __init__(self,worker_id, queue_name):
         self.queue_name = queue_name
         self.worker_id =worker_id
-        if not worker_id:
-            self.worker_id = uuid.uuid4()
     
     @classmethod
     def all(cls):
@@ -132,7 +130,7 @@ class WorkerStats(BaseStat):
 
     #workiong params
     def working_on(self, task):
-        data = task.dump()
+        data = {}
         data = json.dumps(data)
         client[self.resq_worker_task%self.worker_id] = data
         

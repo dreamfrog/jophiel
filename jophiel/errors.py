@@ -9,3 +9,6 @@ class NoQueueError(Exception):
 
 class NoRegisterError(Exception):
     pass
+
+class NotImplementError(Exception):
+    pass

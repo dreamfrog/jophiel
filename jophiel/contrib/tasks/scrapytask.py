@@ -4,13 +4,12 @@ Created on 2012-3-7
 @author: lzz
 '''
 
-from jophiel.tasks.base import BaseTask
+from jophiel.tasks.base import Task
 
-class ScrapyTask(BaseTask):
+class ScrapyTask(Task):
     
     name = "scrapyspider"
     
     def execute(self, request, **kwargs):
         pass
-    
     

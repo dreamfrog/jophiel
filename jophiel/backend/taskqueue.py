@@ -13,6 +13,9 @@ class TaskQueue(TimeRedisQueue):
     client = app.client
     
     @classmethod
+    def enqueue_cls(cls,task):pass 
+    
+    @classmethod
     def enqueue(cls,taskinfo):
         queue = taskinfo.get('queue',None)
         if queue:

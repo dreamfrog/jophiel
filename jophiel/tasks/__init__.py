@@ -19,6 +19,7 @@ class TaskResult(object):
         self.status = status
         self.traceback = traceback
 
-
-
-
+class AsyncResult(object):
+    def __init__(self,task_id,task=None):
+        self.task_id = task_id
+        self.task = task
