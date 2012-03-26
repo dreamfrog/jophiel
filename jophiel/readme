@@ -1,0 +1,37 @@
+RestClient.post('http://localhost:9173/jobs', 
+  {:job => {
+
+    'action' => 'structural_analysis',
+
+    'inputs' => [
+      'http://www.gutenberg.org/a_midsummers_nights_dream.txt',
+      'http://www.gutenberg.org/romeo_and_juliet.txt',
+      'http://www.gutenberg.org/titus_andronicus.txt',
+     ],
+
+    'options' => {
+      'limit'    => 20,
+      'variance' => 0.75
+    }
+
+  }.to_json}
+)
+
+
+id	The job¡¯s integer id. Use this when requesting the status of a job at /jobs/:job_id
+status	The job¡¯s current status. One of: succeeded, failed, processing, splitting, merging
+outputs	If the job is complete (either succeeded or failed), outputs will be an array of all the job¡¯s results. Often these are URLs where the finished output can be downloaded, for import back into your application.
+percent_complete	The percentage of the job¡¯s work units that have already been completed. An integer between 0 and 100. This number may occasionally move backwards if your action uses split, increasing the number of remaining work units.
+work_units	The total number of work units that make up the job. This number may change over time, due to split or merge. Useful for comparing the relative size of different jobs.
+time_taken	The number of seconds that this job has been running for, or, if complete, the number of seconds it took to process from start to finish.
+color	A unique hexadecimal color code, which can be used directly in HTML to distinguish the job visually.
+
+{
+  "id" : 11,
+  "status" : "succeeded",
+  "time_taken" : 62.3368,
+  "percent_complete" : 100,
+  "work_units" : 0,
+  "color" : "2652dc",
+  "outputs" : ["http://s3.amazonaws.com/process_pdfs/job_11/unit_94/pdfs.tar"]
+}
