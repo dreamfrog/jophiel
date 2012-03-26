@@ -253,34 +253,6 @@ def setup_logging(procname, log_level=logging.INFO, filename=None):
     logger.addHandler(handler)
 
 
-def fun_takes_kwargs(fun, kwlist=[]):
-    """With a function, and a list of keyword arguments, returns arguments
-    in the list which the function takes.
-
-    If the object has an `argspec` attribute that is used instead
-    of using the :meth:`inspect.getargspec` introspection.
-
-    :param fun: The function to inspect arguments of.
-    :param kwlist: The list of keyword arguments.
-
-    Examples
-
-        >>> def foo(self, x, y, logfile=None, loglevel=None):
-        ...     return x * y
-        >>> fun_takes_kwargs(foo, ["logfile", "loglevel", "task_id"])
-        ["logfile", "loglevel"]
-
-        >>> def foo(self, x, y, **kwargs):
-        >>> fun_takes_kwargs(foo, ["logfile", "loglevel", "task_id"])
-        ["logfile", "loglevel", "task_id"]
-
-    """
-    argspec = getattr(fun, "argspec", getargspec(fun))
-    args, _varargs, keywords, _defaults = argspec
-    if keywords != None:
-        return kwlist
-    return filter(partial(operator.contains, args), kwlist)
-
 
 def get_cls_by_name(name, aliases={}, imp=None, package=None, **kwargs):
     """Get class by name.

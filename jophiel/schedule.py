@@ -7,7 +7,7 @@ Created on 2012-3-16
 import time
 
 from jophiel.tasks import async
-from jophiel.backend.taskqueue import TaskQueue
+from jophiel.queues.task import TaskQueue
 
 from jophiel.app import logger
 

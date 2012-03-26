@@ -5,20 +5,19 @@ Created on 2012-3-15
 '''
 import unittest
 from unittest import TestCase
-from jophiel.db.models import BaseModel
-from jophiel.db.field import *
 import random 
 
-class TestBase(TestCase):
+from jophiel.backend.connection import BrokerConnection
+
+class TestQueue(TestCase):
     
     def setUp(self):pass
         
     def setDown(self):pass
-
-
-class TestQueue(TestBase):
     
-    def setUp(self):pass
-        
-    def setDown(self):pass
+    def testQueue(self):
+        with BrokerConnection("redis://localhost:6379//") as conn:
+            with conn.SimpleQueue("kombu_demo") as queue:
+                queue.put({"hello": "world"}, serializer="json")
+
     

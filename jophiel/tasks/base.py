@@ -1,3 +1,4 @@
+#encoding=utf-8
 '''
 Created on 2012-3-9
 
@@ -6,7 +7,7 @@ Created on 2012-3-9
 import sys
 
 """
-    generate default name for task£¬and other attribute to task
+    generate default name for task and other attribute to task
 """
 class TaskDescriptor(type):
     def __new__(cls, name, bases, attrs):

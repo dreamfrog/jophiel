@@ -10,8 +10,8 @@ import time
 
 from jophiel import app
 from jophiel.errors import NotImplementError
-from jophiel.backend.worker import WorkerStats
-from jophiel.backend.taskqueue import TaskQueue
+from jophiel.monitor.worker import WorkerStats
+from jophiel.queues.task import TaskQueue
 from jophiel.tasks.utils import build_task
 from jophiel.tasks import engine 
 from jophiel.app import logger
