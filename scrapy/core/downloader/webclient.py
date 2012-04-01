@@ -9,7 +9,6 @@ from twisted.internet import defer
 from scrapy.http import Headers
 from scrapy.utils.httpobj import urlparse_cached
 from scrapy.responsetypes import responsetypes
-from scrapy import optional_features
 
 
 def _parsed_url_args(parsed):
@@ -119,7 +118,7 @@ class ScrapyHTTPClientFactory(HTTPClientFactory):
             self.headers.setdefault("Connection", "close")
 
     def _build_response(self, body, request):
-        request.meta['download_latency'] = self.headers_time - self.start_time
+        request.meta['download_latency'] = self.headers_time-self.start_time
         status = int(self.status)
         headers = Headers(self.response_headers)
         respcls = responsetypes.from_args(headers=headers, url=self.url)
@@ -136,24 +135,3 @@ class ScrapyHTTPClientFactory(HTTPClientFactory):
     def gotHeaders(self, headers):
         self.headers_time = time()
         self.response_headers = headers
-
-
-
-if 'ssl' in optional_features:
-    from twisted.internet.ssl import ClientContextFactory
-    from OpenSSL import SSL
-else:
-    ClientContextFactory = object
-
-
-class ScrapyClientContextFactory(ClientContextFactory):
-    "A SSL context factory which is more permissive against SSL bugs."
-    # see https://github.com/scrapy/scrapy/issues/82
-    # and https://github.com/scrapy/scrapy/issues/26
-
-    def getContext(self):
-        ctx = ClientContextFactory.getContext(self)
-        # Enable all workarounds to SSL bugs as documented by
-        # http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html
-        ctx.set_options(SSL.OP_ALL)
-        return ctx

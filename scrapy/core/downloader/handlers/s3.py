@@ -1,6 +1,7 @@
 from scrapy import optional_features
 from scrapy.exceptions import NotConfigured
 from scrapy.utils.httpobj import urlparse_cached
+from scrapy.conf import settings
 from .http import HttpDownloadHandler
 
 try:
@@ -33,6 +34,11 @@ class S3DownloadHandler(object):
             httpdownloadhandler=HttpDownloadHandler):
         if 'boto' not in optional_features:
             raise NotConfigured("missing boto library")
+
+        if not aws_access_key_id:
+            aws_access_key_id = settings['AWS_ACCESS_KEY_ID']
+        if not aws_secret_access_key:
+            aws_secret_access_key = settings['AWS_SECRET_ACCESS_KEY']
 
         try:
             self.conn = _S3Connection(aws_access_key_id, aws_secret_access_key)

@@ -2,10 +2,12 @@ import os
 from scrapy.utils.request import request_fingerprint
 from scrapy.utils.job import job_dir
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
 
-class BaseDupeFilter(SettingObject):
+class BaseDupeFilter(object):
+
+    @classmethod
+    def from_settings(cls, settings):
+        return cls()
 
     def request_seen(self, request):
         return False
@@ -19,24 +21,18 @@ class BaseDupeFilter(SettingObject):
 
 class RFPDupeFilter(BaseDupeFilter):
     """Request Fingerprint duplicates filter"""
-    
-    job_dir = StringField(default="")
-    
-    def __init__(self, settings):
-        super(RFPDupeFilter, self).__init__(settings)
-        path = self.__job_dir(self.job_dir.to_value())
-        
+
+    def __init__(self, path=None):
         self.file = None
         self.fingerprints = set()
         if path:
             self.file = open(os.path.join(path, 'requests.seen'), 'a+')
             self.fingerprints.update(x.rstrip() for x in self.file)
-            
-    def __job_dir(self, path):
-        if path and not os.path.exists(path):
-            os.makedirs(path)
-        return path
-    
+
+    @classmethod
+    def from_settings(cls, settings):
+        return cls(job_dir(settings))
+
     def request_seen(self, request):
         fp = request_fingerprint(request)
         if fp in self.fingerprints:

@@ -1,6 +1,6 @@
 import codecs
 
-from scrapy import settings
+from scrapy.conf import settings
 
 _ENCODING_ALIASES = dict(settings['ENCODING_ALIASES_BASE'])
 _ENCODING_ALIASES.update(settings['ENCODING_ALIASES'])

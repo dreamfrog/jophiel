@@ -6,12 +6,10 @@ from urlparse import urlunparse
 from scrapy.utils.httpobj import urlparse_cached
 from scrapy.exceptions import NotConfigured
 
-from scrapy.middleware import BaseMiddleware
 
-class HttpProxyMiddleware(BaseMiddleware):
+class HttpProxyMiddleware(object):
 
-    def __init__(self, settings, crawler=None):
-        super(HttpProxyMiddleware, self).__init__(settings)
+    def __init__(self):
         self.proxies = {}
         for type, url in getproxies().items():
             self.proxies[type] = self._get_proxy(url, type)

@@ -20,4 +20,5 @@ class TestQueue(TestCase):
             with conn.SimpleQueue("kombu_demo") as queue:
                 queue.put({"hello": "world"}, serializer="json")
 
-    
+if __name__ == '__main__':
+    unittest.main()

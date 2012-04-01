@@ -5,25 +5,23 @@ See documentation in docs/topics/spiders.rst
 """
 
 from scrapy import log
+from scrapy.settings import SpiderSettings
 from scrapy.http import Request
 from scrapy.utils.misc import arg_to_iter
 from scrapy.utils.trackref import object_ref
 from scrapy.utils.url import url_is_from_spider
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
 
-class BaseSpider(SettingObject, object_ref):
+class BaseSpider(object_ref):
     """Base class for scrapy spiders. All spiders must inherit from this
     class.
     """
 
-    spider_name = StringField(default="")
+    name = None
 
-    def __init__(self, settings, name=None, **kwargs):
-        super(BaseSpider, self).__init__(settings)
+    def __init__(self, name=None, **kwargs):
         if name is not None:
-            self.spider_name = name
+            self.name = name
         elif not getattr(self, 'name', None):
             raise ValueError("%s must have a name" % type(self).__name__)
         self.__dict__.update(kwargs)
@@ -44,6 +42,12 @@ class BaseSpider(SettingObject, object_ref):
     def crawler(self):
         assert hasattr(self, '_crawler'), "Spider not bounded to any crawler"
         return self._crawler
+
+    @property
+    def settings(self):
+        if not hasattr(self, '_settings'):
+            self._settings = SpiderSettings(self, self.crawler.settings)
+        return self._settings
 
     def start_requests(self):
         reqs = []

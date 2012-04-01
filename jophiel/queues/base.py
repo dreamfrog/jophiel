@@ -5,9 +5,10 @@ Created on 2012-3-23
 '''
 
 import json
-       
+from jophiel.backend.connection import BrokerConnection
+from jophiel import settings
+
 class TaskMessage(object):
-    
     @classmethod
     def encode(cls, item):
         return json.dumps(item)
@@ -20,6 +21,18 @@ class TaskMessage(object):
         return None
 
 class BaseQueue(object):
-    def __init__(self,backend,queue):
-        self.conn = 
-        self.client = 
+    conn = None
+    
+    def __init__(self,conn):
+        self.conn = conn
+    
+    @classmethod
+    def instance(cls):
+        backend = settings.QUEUE_BACKEND
+        if not cls.conn:
+            conn = BrokerConnection(backend)
+            return cls(conn)
+        return cls(cls.conn)
+        
+    def close(self):
+        self.conn.close()

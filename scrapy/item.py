@@ -20,7 +20,7 @@ class Field(dict):
 
 class ItemMeta(type):
 
-    def __new__(cls, class_name, bases, attrs):
+    def __new__(mcs, class_name, bases, attrs):
         fields = {}
         new_attrs = {}
         for n, v in attrs.iteritems():
@@ -29,7 +29,7 @@ class ItemMeta(type):
             else:
                 new_attrs[n] = v
 
-        cls = type.__new__(cls, class_name, bases, new_attrs)
+        cls = type.__new__(mcs, class_name, bases, new_attrs)
         cls.fields = cls.fields.copy()
         cls.fields.update(fields)
         return cls

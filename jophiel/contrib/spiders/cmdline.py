@@ -1,7 +1,7 @@
 from __future__ import with_statement
 
 from scrapy.crawler import CommonCrawler
-from jophiel.spiders import CommonSpider
+from jophiel.contrib.spiders import CommonSpider
 
 def execute(settings):
     #override settings

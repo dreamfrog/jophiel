@@ -61,7 +61,7 @@ __all__ = ['AmbiguityError', 'CheckboxControl', 'Control',
            'HiddenControl', 'IgnoreControl', 'ImageControl', 'IsindexControl',
            'Item', 'ItemCountError', 'ItemNotFoundError', 'Label',
            'ListControl', 'LocateError', 'Missing', 'ParseError', 'ParseFile',
-           'ParseFileEx', 'ParseResponse', 'ParseResponseEx', 'PasswordControl',
+           'ParseFileEx', 'ParseResponse', 'ParseResponseEx','PasswordControl',
            'RadioControl', 'ScalarControl', 'SelectControl',
            'SubmitButtonControl', 'SubmitControl', 'TextControl',
            'TextareaControl', 'XHTMLCompatibleFormParser']
@@ -93,7 +93,7 @@ else:
 
         caller_name = inspect.stack()[1][3]
         extended_msg = '%%s %s' % msg
-        extended_args = (caller_name,) + args
+        extended_args = (caller_name,)+args
         debug = _logger.debug(extended_msg, *extended_args, **kwds)
 
     def _show_debug_messages():
@@ -128,7 +128,7 @@ except ImportError:
         pass
 else:
     def deprecation(message, stack_offset=0):
-        warnings.warn(message, DeprecationWarning, stacklevel=3 + stack_offset)
+        warnings.warn(message, DeprecationWarning, stacklevel=3+stack_offset)
 
 VERSION = "0.2.10"
 
@@ -148,7 +148,7 @@ def normalize_line_endings(text):
 # This version of urlencode is from my Python 1.5.2 back-port of the
 # Python 2.1 CVS maintenance branch of urllib.  It will accept a sequence
 # of pairs instead of a mapping -- the 2.0 version only accepts a mapping.
-def urlencode(query, doseq=False,):
+def urlencode(query,doseq=False,):
     """Encode a sequence of two-element tuples or dictionary into a URL query \
 string.
 
@@ -160,7 +160,7 @@ string.
     input.
     """
 
-    if hasattr(query, "items"):
+    if hasattr(query,"items"):
         # mapping objects
         query = query.items()
     else:
@@ -177,7 +177,7 @@ string.
             # allowed empty dicts that type of behavior probably should be
             # preserved for consistency
         except TypeError:
-            ty, va, tb = sys.exc_info()
+            ty,va,tb = sys.exc_info()
             raise TypeError("not a valid non-string sequence or mapping "
                             "object", tb)
 
@@ -198,7 +198,7 @@ string.
                 # is there a reasonable way to convert to ASCII?
                 # encode generates a string, but "replace" or "ignore"
                 # lose information and "strict" can raise UnicodeError
-                v = urllib.quote_plus(v.encode("ASCII", "replace"))
+                v = urllib.quote_plus(v.encode("ASCII","replace"))
                 l.append(k + '=' + v)
             else:
                 try:
@@ -240,7 +240,7 @@ def unescape(data, entities, encoding=DEFAULT_ENCODING):
 def unescape_charref(data, encoding):
     name, base = data, 10
     if name.startswith("x"):
-        name, base = name[1:], 16
+        name, base= name[1:], 16
     try:
         uc = unichr(int(name, base))
     except ValueError:
@@ -285,7 +285,7 @@ def issequence(x):
     return True
 
 def isstringlike(x):
-    try: x + ""
+    try: x+""
     except: return False
     else: return True
 
@@ -293,7 +293,7 @@ def isstringlike(x):
 def choose_boundary():
     """Return a string usable as a multipart boundary."""
     # follow IE and firefox
-    nonce = "".join([str(random.randint(0, sys.maxint - 1)) for i in 0, 1, 2])
+    nonce = "".join([str(random.randint(0, sys.maxint-1)) for i in 0,1,2])
     return "-"*27 + nonce
 
 # This cut-n-pasted MimeWriter from standard library is here so can add
@@ -722,7 +722,7 @@ class _AbstractFormParser:
         # doesn't clash with INPUT TYPE={SUBMIT,RESET,BUTTON}
         # e.g. type for BUTTON/RESET is "resetbutton"
         #     (type for INPUT/RESET is "reset")
-        type = type + "button"
+        type = type+"button"
         self._add_label(d)
         controls.append((type, name, d))
 
@@ -845,7 +845,7 @@ class _AbstractSgmllibParser(_AbstractFormParser):
     def do_option(self, attrs):
         _AbstractFormParser._start_option(self, attrs)
 
-    if sys.version_info[:2] >= (2, 5):
+    if sys.version_info[:2] >= (2,5):
         # we override this attr to decode hex charrefs
         entity_or_charref = re.compile(
             '&(?:([a-zA-Z][-.a-zA-Z0-9]*)|#(x?[0-9a-fA-F]+))(;?)')
@@ -1138,7 +1138,7 @@ def _ParseFileEx(file, base_uri,
             type, name, attrs = controls[ii]
             # index=ii*10 allows ImageControl to return multiple ordered pairs
             form.new_control(
-                type, name, attrs, select_default=select_default, index=ii * 10)
+                type, name, attrs, select_default=select_default, index=ii*10)
         forms.append(form)
     for form in forms:
         form.fixup()
@@ -1332,7 +1332,7 @@ class ScalarControl(Control):
         if name == "value":
             return self.__dict__["_value"]
         else:
-            raise AttributeError("%s instance has no attribute '%s'" % 
+            raise AttributeError("%s instance has no attribute '%s'" %
                                  (self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
@@ -1649,7 +1649,7 @@ class Item:
         return res
 
     def __getattr__(self, name):
-        if name == "selected":
+        if name=="selected":
             return self._selected
         raise AttributeError(name)
 
@@ -1672,7 +1672,7 @@ class Item:
     def __repr__(self):
         # XXX appending the attrs without distinguishing them from name and id
         # is silly
-        attrs = [("name", self.name), ("id", self.id)] + self.attrs.items()
+        attrs = [("name", self.name), ("id", self.id)]+self.attrs.items()
         return "<%s %s>" % (
             self.__class__.__name__,
             " ".join(["%s=%r" % (k, v) for k, v in attrs])
@@ -1801,7 +1801,7 @@ class ListControl(Control):
         self.value = []
 
     def is_of_kind(self, kind):
-        if kind == "list":
+        if kind  == "list":
             return True
         elif kind == "multilist":
             return bool(self.multiple)
@@ -2025,7 +2025,7 @@ class ListControl(Control):
             # always count nameless elements as separate controls
             Control.add_to_form(self, form)
         else:
-            for ii in range(len(form.controls) - 1, -1, -1):
+            for ii in range(len(form.controls)-1, -1, -1):
                 control = form.controls[ii]
                 if control.name == self.name and control.type == self.type:
                     if control._closed:
@@ -2085,7 +2085,7 @@ class ListControl(Control):
             return [o.name for o in self.items if o.selected and
                     (not o.disabled or compat)]
         else:
-            raise AttributeError("%s instance has no attribute '%s'" % 
+            raise AttributeError("%s instance has no attribute '%s'" %
                                  (self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
@@ -2499,11 +2499,11 @@ class ImageControl(SubmitControl):
         if name is None: return []
         pairs = [
             (self._index, "%s.x" % name, str(clicked[0])),
-            (self._index + 1, "%s.y" % name, str(clicked[1])),
+            (self._index+1, "%s.y" % name, str(clicked[1])),
             ]
         value = self._value
         if value:
-            pairs.append((self._index + 2, name, value))
+            pairs.append((self._index+2, name, value))
         return pairs
 
     get_labels = ScalarControl.get_labels
@@ -2855,7 +2855,7 @@ class HTMLForm:
             control = klass(type, name, a, index)
 
         if type == "select" and len(attrs) == 1:
-            for ii in range(len(self.controls) - 1, -1, -1):
+            for ii in range(len(self.controls)-1, -1, -1):
                 ctl = self.controls[ii]
                 if ctl.type == "select":
                     ctl.close_control()
@@ -2882,7 +2882,7 @@ class HTMLForm:
 #---------------------------------------------------
     def __str__(self):
         header = "%s%s %s %s" % (
-            (self.name and self.name + " " or ""),
+            (self.name and self.name+" " or ""),
             self.method, self.action, self.enctype)
         rep = [header]
         for control in self.controls:
@@ -2905,7 +2905,7 @@ class HTMLForm:
 
     def get_value(self,
                   name=None, type=None, kind=None, id=None, nr=None,
-                  by_label=False, # by_label is deprecated
+                  by_label=False,  # by_label is deprecated
                   label=None):
         """Return value of control.
 
@@ -2929,7 +2929,7 @@ class HTMLForm:
             return c.value
     def set_value(self, value,
                   name=None, type=None, kind=None, id=None, nr=None,
-                  by_label=False, # by_label is deprecated
+                  by_label=False,  # by_label is deprecated
                   label=None):
         """Set value of control.
 
@@ -3000,14 +3000,14 @@ class HTMLForm:
 #---------------------------------------------------
 # Form-filling methods applying only to ListControls.
 
-    def possible_items(self, # deprecated
+    def possible_items(self,  # deprecated
                        name=None, type=None, kind=None, id=None,
                        nr=None, by_label=False, label=None):
         """Return a list of all values that the specified control can take."""
         c = self._find_list_control(name, type, kind, id, label, nr)
         return c.possible_items(by_label)
 
-    def set(self, selected, item_name, # deprecated
+    def set(self, selected, item_name,  # deprecated
             name=None, type=None, kind=None, id=None, nr=None,
             by_label=False, label=None):
         """Select / deselect named list item.
@@ -3017,14 +3017,14 @@ class HTMLForm:
         """
         self._find_list_control(name, type, kind, id, label, nr).set(
             selected, item_name, by_label)
-    def toggle(self, item_name, # deprecated
+    def toggle(self, item_name,  # deprecated
                name=None, type=None, kind=None, id=None, nr=None,
                by_label=False, label=None):
         """Toggle selected state of named list item."""
         self._find_list_control(name, type, kind, id, label, nr).toggle(
             item_name, by_label)
 
-    def set_single(self, selected, # deprecated
+    def set_single(self, selected,  # deprecated
                    name=None, type=None, kind=None, id=None,
                    nr=None, by_label=None, label=None):
         """Select / deselect list item in a control having only one item.
@@ -3091,7 +3091,7 @@ class HTMLForm:
 #---------------------------------------------------
 # Form submission methods, applying only to clickable controls.
 
-    def click(self, name=None, type=None, id=None, nr=0, coord=(1, 1),
+    def click(self, name=None, type=None, id=None, nr=0, coord=(1,1),
               request_class=urllib2.Request,
               label=None):
         """Return request that would result from clicking on a control.
@@ -3120,7 +3120,7 @@ class HTMLForm:
 
     def click_request_data(self,
                            name=None, type=None, id=None,
-                           nr=0, coord=(1, 1),
+                           nr=0, coord=(1,1),
                            request_class=urllib2.Request,
                            label=None):
         """As for click method, but return a tuple (url, data, headers).
@@ -3153,7 +3153,7 @@ class HTMLForm:
                            self._request_class)
 
     def click_pairs(self, name=None, type=None, id=None,
-                    nr=0, coord=(1, 1),
+                    nr=0, coord=(1,1),
                     label=None):
         """As for click_request_data, but returns a list of (key, value) pairs.
 
@@ -3230,14 +3230,14 @@ class HTMLForm:
 # Private methods.
 
     def _find_list_control(self,
-                           name=None, type=None, kind=None, id=None,
+                           name=None, type=None, kind=None, id=None, 
                            label=None, nr=None):
         if ((name is None) and (type is None) and (kind is None) and
             (id is None) and (label is None) and (nr is None)):
             raise ValueError(
                 "at least one argument must be supplied to specify control")
 
-        return self._find_control(name, type, kind, id, label,
+        return self._find_control(name, type, kind, id, label, 
                                   is_listcontrol, nr)
 
     def _find_control(self, name, type, kind, id, label, predicate, nr):
@@ -3306,9 +3306,9 @@ class HTMLForm:
         description = ", ".join(description)
 
         if ambiguous:
-            raise AmbiguityError("more than one control matching " + description)
+            raise AmbiguityError("more than one control matching "+description)
         elif not found:
-            raise ControlNotFoundError("no control matching " + description)
+            raise ControlNotFoundError("no control matching "+description)
         assert False
 
     def _click(self, name, type, id, label, nr, coord, return_type,

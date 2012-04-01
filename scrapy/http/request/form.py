@@ -35,7 +35,7 @@ class FormRequest(Request):
             self.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 
     @classmethod
-    def from_response(cls, response, formname=None, formnumber=0, formdata=None,
+    def from_response(cls, response, formname=None, formnumber=0, formdata=None, 
                       clickdata=None, dont_click=False, **kwargs):
         encoding = getattr(response, 'encoding', 'utf-8')
         forms = ParseFile(StringIO(response.body), response.url,

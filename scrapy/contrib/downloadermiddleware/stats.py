@@ -2,17 +2,12 @@ from scrapy.exceptions import NotConfigured
 from scrapy.utils.request import request_httprepr
 from scrapy.utils.response import response_httprepr
 from scrapy.stats import stats
+from scrapy.conf import settings
 
+class DownloaderStats(object):
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import BooleanField
-
-class DownloaderStats(BaseMiddleware):
-    downloader_stats_enable = BooleanField(default=True)
-
-    def __init__(self, settings):
-        super(DownloaderStats, self).__init__(settings)
-        if not self.downloader_stats_enable.to_value():
+    def __init__(self):
+        if not settings.getbool('DOWNLOADER_STATS'):
             raise NotConfigured
 
     def process_request(self, request, spider):

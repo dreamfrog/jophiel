@@ -21,6 +21,6 @@ def decode_chunked_transfer(chunked_body):
             break
         size = int(h, 16)
         body += t[:size]
-        t = t[size + 2:]
+        t = t[size+2:]
     return body
 

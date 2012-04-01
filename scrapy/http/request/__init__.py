@@ -17,7 +17,7 @@ from scrapy.http.common import deprecated_setter
 
 class Request(object_ref):
 
-    def __init__(self, url, callback=None, method='GET', headers=None, body=None,
+    def __init__(self, url, callback=None, method='GET', headers=None, body=None, 
                  cookies=None, meta=None, encoding='utf-8', priority=0,
                  dont_filter=False, errback=None):
 
@@ -52,7 +52,7 @@ class Request(object_ref):
             self._url = escape_ajax(safe_url_string(url))
         elif isinstance(url, unicode):
             if self.encoding is None:
-                raise TypeError('Cannot convert unicode url - %s has no encoding' % 
+                raise TypeError('Cannot convert unicode url - %s has no encoding' %
                     type(self).__name__)
             self._set_url(url.encode(self.encoding))
         else:
@@ -70,7 +70,7 @@ class Request(object_ref):
             self._body = body
         elif isinstance(body, unicode):
             if self.encoding is None:
-                raise TypeError('Cannot convert unicode body - %s has no encoding' % 
+                raise TypeError('Cannot convert unicode body - %s has no encoding' %
                     type(self).__name__)
             self._body = body.encode(self.encoding)
         elif body is None:

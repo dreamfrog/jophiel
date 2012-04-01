@@ -26,13 +26,9 @@ from twisted.internet.defer import TimeoutError as UserTimeoutError
 from scrapy import log
 from scrapy.exceptions import NotConfigured
 from scrapy.utils.response import response_status_message
+from scrapy.conf import settings
 
-from scrapy.meta import BooleanField
-from scrapy.meta import IntegerField
-from scrapy.meta import ListField
-from scrapy.middleware import BaseMiddleware
-
-class RetryMiddleware(BaseMiddleware):
+class RetryMiddleware(object):
 
     # IOError is raised by the HttpCompression middleware when trying to
     # decompress an empty response
@@ -41,19 +37,12 @@ class RetryMiddleware(BaseMiddleware):
                            ConnectionLost, TCPTimedOutError,
                            IOError)
 
-    
-    retry_enable = BooleanField(default=True)
-    retry_times = IntegerField(default=3)
-    retry_http_codes = ListField(default=[500, 503, 504, 400, 408])
-    retry_priority_adjust = IntegerField(default= -1)
-
-    def __init__(self, settings):
-        super(RetryMiddleware).__init__(settings)
-        if not self.retry_enable.to_value():
+    def __init__(self):
+        if not settings.getbool('RETRY_ENABLED'):
             raise NotConfigured
-        self.max_retry_times = self.retry_times.to_value()
-        self.retry_http_codes = set(int(x) for x in self.retry_http_codes.to_value())
-        self.priority_adjust = self.retry_priority_adjust.to_value()
+        self.max_retry_times = settings.getint('RETRY_TIMES')
+        self.retry_http_codes = set(int(x) for x in settings.getlist('RETRY_HTTP_CODES'))
+        self.priority_adjust = settings.getint('RETRY_PRIORITY_ADJUST')
 
     def process_response(self, request, response, spider):
         if 'dont_retry' in request.meta:

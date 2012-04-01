@@ -9,18 +9,13 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy.stats import stats
 from scrapy import signals
 from scrapy.mail import MailSender
-
+from scrapy.conf import settings
 from scrapy.exceptions import NotConfigured
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import ListField
 
-class StatsMailer(BaseMiddleware):
-    
-    recipients = ListField(default=[])
+class StatsMailer(object):
 
-    def __init__(self, settings):
-        super(StatsMailer, self).__init__(settings)
-        self.recipients = self.recipients.to_value()
+    def __init__(self):
+        self.recipients = settings.getlist("STATSMAILER_RCPTS")
         if not self.recipients:
             raise NotConfigured
         dispatcher.connect(self.stats_spider_closed, signal=signals.stats_spider_closed)

@@ -3,23 +3,18 @@ from __future__ import with_statement
 import os, cPickle as pickle
 
 from scrapy import signals
+from scrapy.exceptions import NotConfigured
 from scrapy.xlib.pydispatch import dispatcher
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import StringField
-
-class SpiderState(BaseMiddleware):
+class SpiderState(object):
     """Store and load spider state during a scraping job"""
-    
-    jobdir = StringField(default="")
-    
-    def __init__(self, settings, jobdir=None):
-        super(SpiderState, self).__init__(settings)
+
+    def __init__(self, jobdir=None):
         self.jobdir = jobdir
 
     @classmethod
     def from_crawler(cls, crawler):
-        obj = cls(crawler.metas)
+        obj = cls(crawler.settings.get('JOBDIR'))
         dispatcher.connect(obj.spider_closed, signal=signals.spider_closed)
         dispatcher.connect(obj.spider_opened, signal=signals.spider_opened)
         return obj

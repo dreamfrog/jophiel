@@ -32,7 +32,7 @@ class ItemLoader(object):
         if value is None:
             return
         if not field_name:
-            for k, v in value.iteritems():
+            for k,v in value.iteritems():
                 self._add_value(k, v)
         else:
             self._add_value(field_name, value)
@@ -42,7 +42,7 @@ class ItemLoader(object):
         if value is None:
             return
         if not field_name:
-            for k, v in value.iteritems():
+            for k,v in value.iteritems():
                 self._replace_value(k, v)
         else:
             self._replace_value(field_name, value)

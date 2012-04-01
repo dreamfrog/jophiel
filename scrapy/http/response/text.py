@@ -11,12 +11,12 @@ from scrapy.http.response.dammit import UnicodeDammit
 from scrapy.http.response import Response
 from scrapy.utils.python import memoizemethod_noargs
 from scrapy.utils.encoding import encoding_exists, resolve_encoding
-from scrapy import settings
+from scrapy.conf import settings
 
 
 # Python decoder doesn't follow unicode standard when handling
 # bad utf-8 encoded strings. see http://bugs.python.org/issue8271
-codecs.register_error('scrapy_replace', lambda exc: (u'\ufffd', exc.start + 1))
+codecs.register_error('scrapy_replace', lambda exc: (u'\ufffd', exc.start+1))
 
 
 class TextResponse(Response):
@@ -33,7 +33,7 @@ class TextResponse(Response):
     def _set_url(self, url):
         if isinstance(url, unicode):
             if self.encoding is None:
-                raise TypeError('Cannot convert unicode url - %s has no encoding' % 
+                raise TypeError('Cannot convert unicode url - %s has no encoding' %
                     type(self).__name__)
             self._url = url.encode(self.encoding)
         else:
@@ -43,7 +43,7 @@ class TextResponse(Response):
         self._body = ''
         if isinstance(body, unicode):
             if self.encoding is None:
-                raise TypeError('Cannot convert unicode body - %s has no encoding' % 
+                raise TypeError('Cannot convert unicode body - %s has no encoding' %
                     type(self).__name__)
             self._body = body.encode(self._encoding)
         else:

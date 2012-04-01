@@ -4,7 +4,7 @@ import os
 import sys
 import struct
 
-_vmvalue_scale = {'kB': 1024, 'mB': 1024 * 1024, 'KB': 1024, 'MB': 1024 * 1024}
+_vmvalue_scale = {'kB': 1024, 'mB': 1024*1024, 'KB': 1024, 'MB': 1024*1024}
 
 def get_vmvalue_from_procfs(vmkey='VmSize', pid=None):
     """Return virtual memory value (in bytes) for the given pid using the /proc

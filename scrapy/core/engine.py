@@ -49,26 +49,18 @@ class Slot(object):
                 self.nextcall.cancel()
             self.closing.callback(None)
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import IntegerField
 
-class ExecutionEngine(SettingObject):
-    
-    scheduler = StringField(default="scrapy.core.scheduler.Scheduler")
-    current_spiders = IntegerField(default=1)
+class ExecutionEngine(object):
 
     def __init__(self, crawler, spider_closed_callback):
-        super(ExecutionEngine, self).__init__(crawler.metas)
-        
+        self.settings = crawler.settings
         self.slots = {}
         self.running = False
         self.paused = False
-        self.scheduler_cls = load_object(self.scheduler.to_value())
-        self.downloader = Downloader(self.metas)
+        self.scheduler_cls = load_object(self.settings['SCHEDULER'])
+        self.downloader = Downloader(crawler)
         self.scraper = Scraper(crawler)
-        self._concurrent_spiders = self.current_spiders.to_value()
-        
+        self._concurrent_spiders = self.settings.getint('CONCURRENT_SPIDERS', 1)
         if self._concurrent_spiders != 1:
             warnings.warn("CONCURRENT_SPIDERS settings is deprecated, use " \
                 "Scrapyd max_proc config instead", ScrapyDeprecationWarning)
@@ -226,7 +218,7 @@ class ExecutionEngine(SettingObject):
             spider.name
         log.msg("Spider opened", spider=spider)
         nextcall = CallLaterOnce(self._next_request, spider)
-        scheduler = self.scheduler_cls(self.metas)
+        scheduler = self.scheduler_cls.from_settings(self.settings)
         slot = Slot(start_requests or (), close_if_idle, nextcall, scheduler)
         self.slots[spider] = slot
         yield scheduler.open(spider)

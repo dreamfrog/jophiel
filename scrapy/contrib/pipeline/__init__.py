@@ -10,6 +10,10 @@ class ItemPipelineManager(MiddlewareManager):
 
     component_name = 'item pipeline'
 
+    @classmethod
+    def _get_mwlist_from_settings(cls, settings):
+        return settings.getlist('ITEM_PIPELINES')
+
     def _add_middleware(self, pipe):
         super(ItemPipelineManager, self)._add_middleware(pipe)
         if hasattr(pipe, 'process_item'):

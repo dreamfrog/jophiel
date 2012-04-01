@@ -2,12 +2,8 @@ from twisted.internet import task
 
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import NotConfigured
-
+from scrapy.conf import settings
 from scrapy import log, signals
-
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import BooleanField
-from scrapy.meta import IntegerField
 
 class Slot(object):
 
@@ -17,14 +13,11 @@ class Slot(object):
         self.pages = 0
         self.pagesprev = 0
 
-class LogStats(BaseMiddleware):
+class LogStats(object):
     """Log basic scraping stats periodically"""
 
-    logstats_internal = IntegerField(default=60)
-    
-    def __init__(self, settings):
-        super(LogStats, self).__init__(settings)
-        self.interval = self.logstats_internal.to_value()
+    def __init__(self):
+        self.interval = settings.getfloat('LOGSTATS_INTERVAL')
         if not self.interval:
             raise NotConfigured
         self.slots = {}

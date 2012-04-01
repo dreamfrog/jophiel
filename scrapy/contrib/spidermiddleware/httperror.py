@@ -13,9 +13,8 @@ class HttpError(IgnoreRequest):
         self.response = response
         super(HttpError, self).__init__(*args, **kwargs)
 
-from scrapy.middleware import BaseMiddleware
 
-class HttpErrorMiddleware(BaseMiddleware):
+class HttpErrorMiddleware(object):
 
     def process_spider_input(self, response, spider):
         if 200 <= response.status < 300: # common case

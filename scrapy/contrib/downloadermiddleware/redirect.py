@@ -4,26 +4,18 @@ from scrapy import log
 from scrapy.http import HtmlResponse
 from scrapy.utils.response import get_meta_refresh
 from scrapy.exceptions import IgnoreRequest, NotConfigured
+from scrapy.conf import settings
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import BooleanField
-from scrapy.meta import IntegerField
 
-class RedirectMiddleware(BaseMiddleware):
+class RedirectMiddleware(object):
     """Handle redirection of requests based on response status and meta-refresh html tag"""
-    
-    redirect_enable = BooleanField(default=True)
-    max_metarefresh_delay = IntegerField(default=60)
-    max_redirect_times = IntegerField(default=3)
-    priority_adjust = IntegerField(default= -1)
-    
-    def __init__(self, settings):
-        super(RedirectMiddleware, self).__init__(settings)
-        if not self.redirect_enable.to_value():
+
+    def __init__(self):
+        if not settings.getbool('REDIRECT_ENABLED'):
             raise NotConfigured
-        self.max_metarefresh_delay = self.max_metarefresh_delay.to_value()
-        self.max_redirect_times = self.max_redirect_times.to_value()
-        self.priority_adjust = self.priority_adjust.to_value()
+        self.max_metarefresh_delay = settings.getint('REDIRECT_MAX_METAREFRESH_DELAY')
+        self.max_redirect_times = settings.getint('REDIRECT_MAX_TIMES')
+        self.priority_adjust = settings.getint('REDIRECT_PRIORITY_ADJUST')
 
     def process_response(self, request, response, spider):
         if 'dont_redirect' in request.meta:

@@ -4,17 +4,14 @@ from twisted.internet import reactor
 
 from scrapy.exceptions import NotSupported
 from scrapy.utils.misc import load_object
+from scrapy.conf import settings
 from scrapy import optional_features
 
 ssl_supported = 'ssl' in optional_features
-
-settings = {
-        "DOWNLOADER_HTTPCLIENTFACTORY":'scrapy.core.downloader.webclient.ScrapyHTTPClientFactory',
-        "DOWNLOADER_CLIENTCONTEXTFACTORY":'scrapy.core.downloader.webclient.ScrapyClientContextFactory'
-    }
+if ssl_supported:
+    from twisted.internet.ssl import ClientContextFactory
 
 HTTPClientFactory = load_object(settings['DOWNLOADER_HTTPCLIENTFACTORY'])
-ClientContextFactory = load_object(settings['DOWNLOADER_CLIENTCONTEXTFACTORY'])
 
 
 class HttpDownloadHandler(object):

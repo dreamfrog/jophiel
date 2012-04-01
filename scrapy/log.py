@@ -10,12 +10,11 @@ import warnings
 from twisted.python import log
 
 import scrapy
+from scrapy.conf import settings
 from scrapy.utils.python import unicode_to_str
 from scrapy.utils.misc import load_object
 from scrapy.exceptions import ScrapyDeprecationWarning
-
-from scrapy import settings
-
+ 
 # Logging levels
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -104,7 +103,7 @@ def start(logfile=None, loglevel=None, logstdout=None):
         logfile = logfile or settings['LOG_FILE']
         file = open(logfile, 'a') if logfile else sys.stderr
         if logstdout is None:
-            logstdout = settings['LOG_STDOUT']
+            logstdout = settings.getbool('LOG_STDOUT')
         sflo = ScrapyFileLogObserver(file, loglevel, settings['LOG_ENCODING'])
         _oldshowwarning = warnings.showwarning
         log.startLoggingWithObserver(sflo.emit, setStdout=logstdout)
@@ -114,7 +113,6 @@ def start(logfile=None, loglevel=None, logstdout=None):
             settings['BOT_NAME']))
 
 def msg(message, level=INFO, **kw):
-    print message 
     if 'component' in kw:
         warnings.warn("Argument `component` of scrapy.log.msg() is deprecated", \
             ScrapyDeprecationWarning, stacklevel=2)
@@ -123,7 +121,6 @@ def msg(message, level=INFO, **kw):
     log.msg(message, **kw)
 
 def err(_stuff=None, _why=None, **kw):
-    print _stuff, _why
     kw.setdefault('system', 'scrapy')
     kw['logLevel'] = kw.pop('level', ERROR)
     log.err(_stuff, _why, **kw)

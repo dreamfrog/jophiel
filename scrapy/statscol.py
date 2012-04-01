@@ -10,12 +10,12 @@ from scrapy.signals import stats_spider_opened, stats_spider_closing, \
 from scrapy.utils.signal import send_catch_log
 from scrapy import signals
 from scrapy import log
-from scrapy import settings
+from scrapy.conf import settings
 
 class StatsCollector(object):
 
     def __init__(self):
-        self._dump = settings['STATS_DUMP']
+        self._dump = settings.getbool('STATS_DUMP')
         self._stats = {None: {}} # None is for global stats
 
     def get_value(self, key, default=None, spider=None):

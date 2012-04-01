@@ -7,8 +7,8 @@ See documentation in docs/topics/spider-middleware.rst
 from twisted.python.failure import Failure
 from scrapy.middleware import MiddlewareManager
 from scrapy.utils.defer import mustbe_deferred
+from scrapy.utils.conf import build_component_list
 
-from scrapy.meta import ListField
 def _isiterable(possible_iterator):
     return hasattr(possible_iterator, '__iter__')
 
@@ -16,10 +16,12 @@ class SpiderMiddlewareManager(MiddlewareManager):
 
     component_name = 'spider middleware'
 
-    middleware_lists = ListField(default={})
-    
+    @classmethod
+    def _get_mwlist_from_settings(cls, settings):
+        return build_component_list(settings['SPIDER_MIDDLEWARES_BASE'], \
+            settings['SPIDER_MIDDLEWARES'])
+
     def _add_middleware(self, mw):
-        print "---- ", mw
         super(SpiderMiddlewareManager, self)._add_middleware(mw)
         if hasattr(mw, 'process_spider_input'):
             self.methods['process_spider_input'].append(mw.process_spider_input)

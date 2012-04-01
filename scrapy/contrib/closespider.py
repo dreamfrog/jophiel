@@ -13,30 +13,20 @@ from scrapy.xlib.pydispatch import dispatcher
 
 from scrapy import signals, log
 from scrapy.exceptions import ScrapyDeprecationWarning
-from scrapy import settings
-from scrapy.meta import IntegerField
+from scrapy.conf import settings
 
-from scrapy.middleware import BaseMiddleware
+class CloseSpider(object):
 
-
-CLOSESPIDER_TIMEOUT = 0
-CLOSESPIDER_PAGECOUNT = 0
-CLOSESPIDER_ITEMCOUNT = 0
-
-
-class CloseSpider(BaseMiddleware):
-    closespider_timeout = IntegerField(default=0)
-    closespider_itemcount = IntegerField(default=0)
-    closespider_pagecount = IntegerField(default=0)
-    closespider_errorcount = IntegerField(default=0)
-
-    def __init__(self, settings, crawler):
-        super(CloseSpider, self).__init__(settings)
+    def __init__(self, crawler):
         self.crawler = crawler
-        self.timeout = self.closespider_timeout.to_value()
-        self.itemcount = self.closespider_itemcount.to_value()
-        self.pagecount = self.closespider_pagecount.to_value()
-        self.errorcount = self.closespider_errorcount.to_value()
+        self.timeout = settings.getint('CLOSESPIDER_TIMEOUT')
+        self.itemcount = settings.getint('CLOSESPIDER_ITEMCOUNT')
+        # XXX: legacy support - remove for future releases
+        if settings.getint('CLOSESPIDER_ITEMPASSED'):
+            warnings.warn("CLOSESPIDER_ITEMPASSED setting is deprecated, use CLOSESPIDER_ITEMCOUNT instead", ScrapyDeprecationWarning)
+            self.pagecount = settings.getint('CLOSESPIDER_ITEMPASSED')
+        self.pagecount = settings.getint('CLOSESPIDER_PAGECOUNT')
+        self.errorcount = settings.getint('CLOSESPIDER_ERRORCOUNT')
 
         self.errorcounts = defaultdict(int)
         self.pagecounts = defaultdict(int)
@@ -55,7 +45,7 @@ class CloseSpider(BaseMiddleware):
 
     @classmethod
     def from_crawler(cls, crawler):
-        return cls(crawler.metas, crawler)
+        return cls(crawler)
 
     def catch_log(self, event):
         if event.get('logLevel') == log.ERROR:

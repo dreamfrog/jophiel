@@ -3,14 +3,13 @@ DefaultHeaders downloader middleware
 
 See documentation in docs/topics/downloader-middleware.rst
 """
+from scrapy import conf
 from scrapy.utils.python import WeakKeyCache
 
-from scrapy.middleware import BaseMiddleware
 
-class DefaultHeadersMiddleware(BaseMiddleware):
+class DefaultHeadersMiddleware(object):
 
-    def __init__(self, settings):
-        super(DefaultHeadersMiddleware, self).__init__(settings)
+    def __init__(self, settings=conf.settings):
         self._headers = WeakKeyCache(self._default_headers)
 
     def _default_headers(self, spider):

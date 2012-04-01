@@ -1,9 +1,3 @@
-'''
-Created on 2012-2-16
-
-@author: lzz
-'''
-
 import signal
 
 from twisted.internet import reactor, defer
@@ -16,25 +10,30 @@ from scrapy.utils.ossignal import install_shutdown_handlers, signal_names
 from scrapy.utils.misc import load_object
 from scrapy import log, signals
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import BooleanField
 
-class Crawler(SettingObject):
-    
-    spider_manager_class = StringField(default="scrapy.spidermanager.SpiderManager")
-    
+class Crawler(object):
+
     def __init__(self, settings):
-        super(Crawler, self).__init__(settings)
         self.configured = False
+        self.settings = settings
+
+    def install(self):
+        import scrapy.project
+        assert not hasattr(scrapy.project, 'crawler'), "crawler already installed"
+        scrapy.project.crawler = self
+
+    def uninstall(self):
+        import scrapy.project
+        assert hasattr(scrapy.project, 'crawler'), "crawler not installed"
+        del scrapy.project.crawler
 
     def configure(self):
         if self.configured:
             return
         self.configured = True
-        self.extensions = ExtensionManager(self.metas, self)
-        spman_cls = load_object(self.spider_manager_class.to_value())
-        self.spiders = spman_cls(self.metas)
+        self.extensions = ExtensionManager.from_crawler(self)
+        spman_cls = load_object(self.settings['SPIDER_MANAGER_CLASS'])
+        self.spiders = spman_cls.from_crawler(self)
         self.engine = ExecutionEngine(self, self._spider_closed)
 
     def crawl(self, spider, requests=None):
@@ -63,16 +62,15 @@ class CrawlerProcess(Crawler):
     automatic control of the Twisted reactor and installs some convenient
     signals for shutting down the crawl.
     """
-    dnscache_enable = BooleanField(default=False)
-    
-    def __init__(self, settings, *a, **kw):
-        super(CrawlerProcess, self).__init__(settings)
+
+    def __init__(self, *a, **kw):
+        super(CrawlerProcess, self).__init__(*a, **kw)
         dispatcher.connect(self.stop, signals.engine_stopped)
         install_shutdown_handlers(self._signal_shutdown)
 
     def start(self):
         super(CrawlerProcess, self).start()
-        if self.dnscache_enable.to_value():
+        if self.settings.getbool('DNSCACHE_ENABLED'):
             reactor.installResolver(CachingThreadedResolver(reactor))
         reactor.addSystemEventTrigger('before', 'shutdown', self.stop)
         reactor.run(installSignalHandlers=False) # blocking call
@@ -101,27 +99,3 @@ class CrawlerProcess(Crawler):
         log.msg('Received %s twice, forcing unclean shutdown' % signame, \
             level=log.INFO)
         reactor.callFromThread(self._stop_reactor)
-
-from scrapy.xlib.pydispatch import dispatcher
-
-class CommonCrawler(object):
- 
-    def __init__(self, settings, spider):
-        
-        self.settings = settings 
-        self.items = []
-        self.spider = spider
-        
-        self.crawler = CrawlerProcess(settings)
-        self.crawler.configure()
-        
-        #configure item passed signals
-        dispatcher.connect(self._item_passed, signals.item_passed)
- 
-    def _item_passed(self, item):
-        print "Got item:", item
-  
-    def run(self):
-        self.crawler.crawl(self.spider)
-        self.crawler.start()
-        self.crawler.stop()

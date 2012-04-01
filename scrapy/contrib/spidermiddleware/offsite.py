@@ -12,16 +12,11 @@ from scrapy.http import Request
 from scrapy.utils.httpobj import urlparse_cached
 from scrapy import log
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import IntegerField
+class OffsiteMiddleware(object):
 
-class OffsiteMiddleware(BaseMiddleware):
-
-    def __init__(self, settings):
-        super(OffsiteMiddleware, self).__init__(settings)
+    def __init__(self):
         self.host_regexes = {}
         self.domains_seen = {}
-        
         dispatcher.connect(self.spider_opened, signal=signals.spider_opened)
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 

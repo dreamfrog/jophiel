@@ -11,37 +11,23 @@ from scrapy.utils.py26 import json
 from scrapy.stats import stats
 from scrapy import log
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import BooleanField
+class Scheduler(object):
 
-class Scheduler(SettingObject):
-    
-    dupfilter_class = StringField(default="scrapy.dupefilter.RFPDupeFilter")
-    schedule_disk_queue = StringField(default="scrapy.squeue.PickleLifoDiskQueue")
-    schedule_memory_queue = StringField(default="scrapy.squeue.LifoMemoryQueue")
-    log_unserailizable_requests = BooleanField(default=False)
-    jobdir = StringField(default="")
-    
-    def __init__(self, settings):
-        super(Scheduler, self).__init__(settings)
-        dupefilter_cls = load_object(self.dupfilter_class.to_value())
-        dupefilter = dupefilter_cls(self.metas)
-        dqclass = load_object(self.schedule_disk_queue.to_value())
-        mqclass = load_object(self.schedule_memory_queue.to_value())
-        logunser = self.log_unserailizable_requests.to_value()
-        
+    def __init__(self, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False):
         self.df = dupefilter
-        self.jobpath = self.__job_dir(self.jobdir.to_value()) 
-        self.dqdir = self._dqdir(self.jobpath)
+        self.dqdir = self._dqdir(jobdir)
         self.dqclass = dqclass
         self.mqclass = mqclass
         self.logunser = logunser
-    
-    def __job_dir(self, path):
-        if path and not os.path.exists(path):
-            os.makedirs(path)
-        return path
+
+    @classmethod
+    def from_settings(cls, settings):
+        dupefilter_cls = load_object(settings['DUPEFILTER_CLASS'])
+        dupefilter = dupefilter_cls.from_settings(settings)
+        dqclass = load_object(settings['SCHEDULER_DISK_QUEUE'])
+        mqclass = load_object(settings['SCHEDULER_MEMORY_QUEUE'])
+        logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS')
+        return cls(dupefilter, job_dir(settings), dqclass, mqclass, logunser)
 
     def has_pending_requests(self):
         return len(self) > 0

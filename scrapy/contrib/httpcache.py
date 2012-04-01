@@ -8,22 +8,15 @@ from scrapy.http import Headers
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
 from scrapy.utils.project import data_path
-
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import IntegerField
+from scrapy import conf
 
 
-class DbmCacheStorage(SettingObject):
+class DbmCacheStorage(object):
 
-    httpcache_dir = StringField(default='httpcache')
-    httpcache_expiration_secs = IntegerField(default=0)
-    httpcache_dbm_module = StringField(default="anydbm")
-    
-    def __init__(self, settings):
-        self.cachedir = data_path(self.httpcache_dir.to_value())
-        self.expiration_secs = self.httpcache_expiration_secs.to_value()
-        self.dbmodule = __import__(self.httpcache_dbm_module.to_value())
+    def __init__(self, settings=conf.settings):
+        self.cachedir = data_path(settings['HTTPCACHE_DIR'])
+        self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
+        self.dbmodule = __import__(settings['HTTPCACHE_DBM_MODULE'])
         self.dbs = {}
 
     def open_spider(self, spider):

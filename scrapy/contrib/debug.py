@@ -4,6 +4,7 @@ Extensions for debugging Scrapy
 See documentation in docs/topics/extensions.rst
 """
 
+import os
 import sys
 import signal
 import traceback
@@ -13,12 +14,10 @@ from pdb import Pdb
 from scrapy.utils.engine import format_engine_status
 from scrapy import log
 
-from scrapy.middleware import BaseMiddleware
 
-class StackTraceDump(BaseMiddleware):
+class StackTraceDump(object):
 
-    def __init__(self, settings, crawler=None):
-        super(StackTraceDump).__init__(settings)
+    def __init__(self, crawler=None):
         self.crawler = crawler
         try:
             signal.signal(signal.SIGUSR2, self.dump_stacktrace)
@@ -30,7 +29,7 @@ class StackTraceDump(BaseMiddleware):
 
     @classmethod
     def from_crawler(cls, crawler):
-        return cls(crawler.metas, crawler)
+        return cls(crawler)
 
     def dump_stacktrace(self, signum, frame):
         stackdumps = self._thread_stacks()

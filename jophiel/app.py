@@ -12,18 +12,7 @@ from jophiel.logger import get_logger
 from jophiel.utils import get_cls_by_name
 
 db = DatastoreProxy()
-pool = redis.ConnectionPool(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
 
-
-def get_redis(settings,pool):
-    password = settings.REDIS_PASSWORD
-    print redis.__file__
-    r = redis.Redis(connection_pool=pool) 
-    if password:
-        r.auth(password)
-    return r
-
-client = get_redis(settings,pool)
 logger = get_logger("jophiel")
 
 def import_tasks(tasks,tasklists): 
@@ -37,3 +26,5 @@ def import_tasks(tasks,tasklists):
 # Global task registry
 tasks = Registry()
 import_tasks(tasks,settings.TASK_LIST)
+
+conn = "redis://localhost:6379//"

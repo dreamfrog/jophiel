@@ -19,11 +19,7 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy.utils.ftp import ftp_makedirs_cwd
 from scrapy.exceptions import NotConfigured
 from scrapy.utils.misc import load_object
-
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import StringField
-from scrapy.meta import HashField
-from scrapy.meta import BooleanField
+from scrapy.conf import settings
 
 
 class IFeedStorage(Interface):
@@ -83,6 +79,29 @@ class FileFeedStorage(object):
     def store(self, file):
         file.close()
 
+class S3FeedStorage(BlockingFeedStorage):
+
+    def __init__(self, uri):
+        try:
+            import boto
+        except ImportError:
+            raise NotConfigured
+        self.connect_s3 = boto.connect_s3
+        u = urlparse(uri)
+        self.bucketname = u.hostname
+        self.access_key = u.username or settings['AWS_ACCESS_KEY_ID']
+        self.secret_key = u.password or settings['AWS_SECRET_ACCESS_KEY']
+        self.keyname = u.path
+
+    def _store_in_thread(self, file):
+        file.seek(0)
+        conn = self.connect_s3(self.access_key, self.secret_key)
+        bucket = conn.get_bucket(self.bucketname, validate=False)
+        key = bucket.new_key(self.keyname)
+        key.set_contents_from_file(file)
+        key.close()
+
+
 class FTPFeedStorage(BlockingFeedStorage):
 
     def __init__(self, uri):
@@ -112,60 +131,15 @@ class SpiderSlot(object):
         self.uri = uri
         self.itemcount = 0
 
+class FeedExporter(object):
 
-FEED_URI = None
-FEED_URI_PARAMS = None # a function to extend uri arguments
-FEED_FORMAT = 'jsonlines'
-FEED_STORE_EMPTY = False
-FEED_STORAGES = {}
-FEED_STORAGES_BASE = {
-    '': 'scrapy.contrib.feedexport.FileFeedStorage',
-    'file': 'scrapy.contrib.feedexport.FileFeedStorage',
-    'stdout': 'scrapy.contrib.feedexport.StdoutFeedStorage',
-    's3': 'scrapy.contrib.feedexport.S3FeedStorage',
-    'ftp': 'scrapy.contrib.feedexport.FTPFeedStorage',
-}
-FEED_EXPORTERS = {}
-FEED_EXPORTERS_BASE = {
-    'json': 'scrapy.contrib.exporter.JsonItemExporter',
-    'jsonlines': 'scrapy.contrib.exporter.JsonLinesItemExporter',
-    'csv': 'scrapy.contrib.exporter.CsvItemExporter',
-    'xml': 'scrapy.contrib.exporter.XmlItemExporter',
-    'marshal': 'scrapy.contrib.exporter.MarshalItemExporter',
-    'pickle': 'scrapy.contrib.exporter.PickleItemExporter',
-}
-
-class FeedExporter(BaseMiddleware):
-    
-    feed_url = StringField(default=None)
-    feed_url_params = StringField(default=None)
-    feed_format = StringField(default="jsonlines")
-    feed_store_empty = BooleanField(default=False)
-    feed_storage = HashField(default={
-        '': 'scrapy.contrib.feedexport.FileFeedStorage',
-        'file': 'scrapy.contrib.feedexport.FileFeedStorage',
-        'stdout': 'scrapy.contrib.feedexport.StdoutFeedStorage',
-        's3': 'scrapy.contrib.feedexport.S3FeedStorage',
-        'ftp': 'scrapy.contrib.feedexport.FTPFeedStorage',
-        })
-    feed_exporters = HashField(default={             
-        'json': 'scrapy.contrib.exporter.JsonItemExporter',
-        'jsonlines': 'scrapy.contrib.exporter.JsonLinesItemExporter',
-        'csv': 'scrapy.contrib.exporter.CsvItemExporter',
-        'xml': 'scrapy.contrib.exporter.XmlItemExporter',
-        'marshal': 'scrapy.contrib.exporter.MarshalItemExporter',
-        'pickle': 'scrapy.contrib.exporter.PickleItemExporter',
-        })
-    
-    def __init__(self, settings):
-        super(FeedExporter, self).__init__(settings)
-        
-        self.urifmt = self.feed_url.to_value()
+    def __init__(self):
+        self.urifmt = settings['FEED_URI']
         if not self.urifmt:
             raise NotConfigured
-        self.format = self.feed_format.to_value().lower()
-        self.storages = self._load_components(self.feed_storage)
-        self.exporters = self._load_components(self.feed_exporters)
+        self.format = settings['FEED_FORMAT'].lower()
+        self.storages = self._load_components('FEED_STORAGES')
+        self.exporters = self._load_components('FEED_EXPORTERS')
         if not self._storage_supported(self.urifmt):
             raise NotConfigured
         if not self._exporter_supported(self.format):
@@ -204,8 +178,9 @@ class FeedExporter(BaseMiddleware):
         slot.itemcount += 1
         return item
 
-    def _load_components(self, items):
-        conf = items.to_value()
+    def _load_components(self, setting_prefix):
+        conf = dict(settings['%s_BASE' % setting_prefix])
+        conf.update(settings[setting_prefix])
         d = {}
         for k, v in conf.items():
             try:

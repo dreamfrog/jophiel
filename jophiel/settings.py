@@ -131,6 +131,10 @@ INSTALLED_APPS = (
     #'tastypie',
     'jophiel',
     'redisboard',
+    'jophiel.jobs',
+	'djcelery',
+	'south',
+	'jophiel.demoapp',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -178,3 +182,16 @@ FILE_CHARSET = 'utf-8'
 TASK_LIST = [
              "jophiel.contrib.tasks.test.TestTask",
              ]
+
+QUEUE_BACKEND = "redis://localhost:6379//"
+
+BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis"
+CELERY_REDIS_HOST = "localhost"
+CELERY_REDIS_PORT = 6379
+CELERY_REDIS_DB = 0
+
+CELERY_IMPORTS = ('jophiel.celerytasks', )
+
+import djcelery
+djcelery.setup_loader()

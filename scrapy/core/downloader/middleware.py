@@ -7,15 +7,17 @@ See documentation in docs/topics/downloader-middleware.rst
 from scrapy.http import Request, Response
 from scrapy.middleware import MiddlewareManager
 from scrapy.utils.defer import mustbe_deferred
+from scrapy.utils.conf import build_component_list
 
-from scrapy.meta import HashField
-
- 
 class DownloaderMiddlewareManager(MiddlewareManager):
 
     component_name = 'downloader middleware'
-    download_middlewares = HashField(default={})
-    
+
+    @classmethod
+    def _get_mwlist_from_settings(cls, settings):
+        return build_component_list(settings['DOWNLOADER_MIDDLEWARES_BASE'], \
+            settings['DOWNLOADER_MIDDLEWARES'])
+
     def _add_middleware(self, mw):
         if hasattr(mw, 'process_request'):
             self.methods['process_request'].append(mw.process_request)

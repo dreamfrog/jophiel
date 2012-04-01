@@ -7,14 +7,12 @@ See documentation in docs/topics/downloader-middleware.rst
 from w3lib.http import basic_auth_header
 from scrapy.utils.python import WeakKeyCache
 
-from scrapy.middleware import BaseMiddleware
 
-class HttpAuthMiddleware(BaseMiddleware):
+class HttpAuthMiddleware(object):
     """Set Basic HTTP Authorization header
     (http_user and http_pass spider class attributes)"""
 
-    def __init__(self, settings):
-        super(HttpAuthMiddleware, self).__init__(settings)
+    def __init__(self):
         self._cache = WeakKeyCache(self._authorization)
 
     def _authorization(self, spider):

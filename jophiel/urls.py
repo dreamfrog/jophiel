@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -31,6 +30,10 @@ urlpatterns += patterns('',
     
 
 urlpatterns += patterns('',
-        #('^hello$', 'jophiel.views.index.hello'),
+        ('^jobs', include("jophiel.jobs.urls")),
         #('^pystache$', 'jophiel.views.index.pystache'),
        )
+
+urlpatterns += patterns('',
+		('^add','jophiel.demoapp.views.foo'),
+		)

@@ -4,11 +4,8 @@ originated it.
 """
 
 from scrapy.http import Request
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import IntegerField
 
-class RefererMiddleware(BaseMiddleware):
-    
+class RefererMiddleware(object):
     def process_spider_output(self, response, result, spider):
         def _set_referer(r):
             if isinstance(r, Request):

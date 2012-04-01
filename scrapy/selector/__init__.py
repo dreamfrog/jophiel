@@ -8,7 +8,7 @@ project. Otherwise, libxml2 will be tried first. If libxml2 is not available,
 lxml will be used.
 """
 
-from scrapy import settings
+from scrapy.conf import settings
 
 if settings['SELECTORS_BACKEND'] == 'lxml':
     from scrapy.selector.lxmlsel import *

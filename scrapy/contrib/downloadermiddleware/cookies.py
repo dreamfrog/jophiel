@@ -6,20 +6,16 @@ from scrapy import signals
 from scrapy.exceptions import NotConfigured
 from scrapy.http import Response
 from scrapy.http.cookies import CookieJar
+from scrapy.conf import settings
 from scrapy import log
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import BooleanField
 
-class CookiesMiddleware(BaseMiddleware):
+class CookiesMiddleware(object):
     """This middleware enables working with sites that need cookies"""
-    
-    cookies_debug = BooleanField(default=True)
-    cookies_enabled = BooleanField(default=True)
-    
-    def __init__(self, settings):
-        super(CookiesMiddleware, self).__init__(settings)
-        if not self.cookies_enabled.to_value():
+    debug = settings.getbool('COOKIES_DEBUG')
+
+    def __init__(self):
+        if not settings.getbool('COOKIES_ENABLED'):
             raise NotConfigured
         self.jars = defaultdict(CookieJar)
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -53,7 +49,7 @@ class CookiesMiddleware(BaseMiddleware):
         self.jars.pop(spider, None)
 
     def _debug_cookie(self, request, spider):
-        if self.cookies_debug.to_value():
+        if self.debug:
             cl = request.headers.getlist('Cookie')
             if cl:
                 msg = "Sending cookies to: %s" % request + os.linesep
@@ -61,7 +57,7 @@ class CookiesMiddleware(BaseMiddleware):
                 log.msg(msg, spider=spider, level=log.DEBUG)
 
     def _debug_set_cookie(self, response, spider):
-        if self.cookies_debug.to_value():
+        if self.debug:
             cl = response.headers.getlist('Set-Cookie')
             if cl:
                 msg = "Received cookies from: %s" % response + os.linesep

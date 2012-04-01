@@ -2,7 +2,7 @@
 
 from scrapy.exceptions import NotSupported, NotConfigured
 from scrapy.utils.httpobj import urlparse_cached
-from scrapy import settings
+from scrapy.conf import settings
 from scrapy.utils.misc import load_object
 
 
@@ -11,10 +11,9 @@ class DownloadHandlers(object):
     def __init__(self):
         self._handlers = {}
         self._notconfigured = {}
-        handlers = settings['DOWNLOAD_HANDLERS_BASE']
-        handlers.update(settings['DOWNLOAD_HANDLERS'])
+        handlers = settings.get('DOWNLOAD_HANDLERS_BASE')
+        handlers.update(settings.get('DOWNLOAD_HANDLERS', {}))
         for scheme, clspath in handlers.iteritems():
-            print clspath
             cls = load_object(clspath)
             try:
                 dh = cls()

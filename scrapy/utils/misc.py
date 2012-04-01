@@ -32,10 +32,8 @@ def load_object(path):
     except ValueError:
         raise ValueError, "Error loading object '%s': not a full path" % path
 
-    module, name = path[:dot], path[dot + 1:]
+    module, name = path[:dot], path[dot+1:]
     try:
-        
-        print name
         mod = __import__(module, {}, {}, [''])
     except ImportError, e:
         raise ImportError, "Error loading object '%s': %s" % (path, e)

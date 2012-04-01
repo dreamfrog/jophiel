@@ -12,3 +12,13 @@ class NoRegisterError(Exception):
 
 class NotImplementError(Exception):
     pass
+
+
+class NoRedisConnectionException(Exception):
+    pass
+
+class NoSuchJobError(Exception):
+    pass
+
+class UnpickleError(Exception):
+    pass

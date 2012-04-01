@@ -11,20 +11,15 @@ from scrapy.utils.misc import walk_modules
 from scrapy.utils.spider import iter_spider_classes
 from scrapy.xlib.pydispatch import dispatcher
 
-from scrapy.meta import SettingObject
-from scrapy.meta import ListField
 
-class SpiderManager(SettingObject):
+class SpiderManager(object):
 
     implements(ISpiderManager)
-    
-    spider_modules = ListField(default=[])
-    
-    def __init__(self, settings):
-        super(SpiderManager, self).__init__(settings)
-        self.modules = self.spider_modules.to_value()
+
+    def __init__(self, spider_modules):
+        self.spider_modules = spider_modules
         self._spiders = {}
-        for name in self.modules:
+        for name in self.spider_modules:
             for module in walk_modules(name):
                 self._load_spiders(module)
         dispatcher.connect(self.close_spider, signals.spider_closed)
@@ -32,6 +27,14 @@ class SpiderManager(SettingObject):
     def _load_spiders(self, module):
         for spcls in iter_spider_classes(module):
             self._spiders[spcls.name] = spcls
+
+    @classmethod
+    def from_settings(cls, settings):
+        return cls(settings.getlist('SPIDER_MODULES'))
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls.from_settings(crawler.settings)
 
     def create(self, spider_name, **spider_kwargs):
         try:

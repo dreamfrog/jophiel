@@ -17,20 +17,13 @@ from scrapy import log
 from .middleware import DownloaderMiddlewareManager
 from .handlers import DownloadHandlers
 
-from scrapy import settings
-
-from scrapy.meta import SettingObject
-from scrapy.meta import IntegerField
-from scrapy.meta import FloatField
-from scrapy.meta import BooleanField
-
 class Slot(object):
     """Downloader slot"""
 
-    def __init__(self, concurrency, delay, randomize_delay, settings):
+    def __init__(self, concurrency, delay, settings):
         self.concurrency = concurrency
         self.delay = delay
-        self.randomize_delay = randomize_delay
+        self.randomize_delay = settings.getbool('RANDOMIZE_DOWNLOAD_DELAY')
         self.active = set()
         self.queue = deque()
         self.transferring = set()
@@ -41,41 +34,49 @@ class Slot(object):
 
     def download_delay(self):
         if self.randomize_delay:
-            return random.uniform(0.5 * self.delay, 1.5 * self.delay)
+            return random.uniform(0.5*self.delay, 1.5*self.delay)
         return self.delay
 
-class Downloader(SettingObject):
-    
-    concurrent_requests = IntegerField(default=15)
-    concurrent_requests_per_domains = IntegerField(default=1)
-    concurrent_requests_per_ip = IntegerField(default=1)
-    download_delay = FloatField(default=0)
-    randomize_delay = BooleanField(default=False)
-    
-    def __init__(self, metas):
-        super(Downloader, self).__init__(metas)
+
+def _get_concurrency_delay(concurrency, spider, settings):
+    delay = settings.getfloat('DOWNLOAD_DELAY')
+    if hasattr(spider, 'DOWNLOAD_DELAY'):
+        warnings.warn("%s.DOWNLOAD_DELAY attribute is deprecated, use %s.download_delay instead" %
+            (type(spider).__name__, type(spider).__name__))
+        delay = spider.DOWNLOAD_DELAY
+    if hasattr(spider, 'download_delay'):
+        delay = spider.download_delay
+
+    # TODO: remove for Scrapy 0.15
+    c = settings.getint('CONCURRENT_REQUESTS_PER_SPIDER')
+    if c:
+        warnings.warn("CONCURRENT_REQUESTS_PER_SPIDER setting is deprecated, " \
+            "use CONCURRENT_REQUESTS_PER_DOMAIN instead", ScrapyDeprecationWarning)
+        concurrency = c
+    # ----------------------------
+
+    if hasattr(spider, 'max_concurrent_requests'):
+        concurrency = spider.max_concurrent_requests
+
+    if delay > 0:
+        concurrency = 1 # force concurrency=1 if download delay required
+
+    return concurrency, delay
+
+
+class Downloader(object):
+
+    def __init__(self, crawler):
+        self.settings = crawler.settings
         self.slots = {}
         self.active = set()
         self.handlers = DownloadHandlers()
-        self.total_concurrency = self.concurrent_requests.to_value()
-        self.domain_concurrency = self.concurrent_requests_per_domains.to_value()
-        self.ip_concurrency = self.concurrent_requests_per_ip.to_value()
-        
-        self.middleware = DownloaderMiddlewareManager(self.metas)
+        self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
+        self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
+        self.ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')
+        self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
 
-    def _get_concurrency_delay(self, concurrency, spider):
-        delay = self.download_delay.to_value()
-        if hasattr(spider, 'download_delay'):
-            delay = spider.download_delay
-    
-        if hasattr(spider, 'max_concurrent_requests'):
-            concurrency = spider.max_concurrent_requests
-    
-        if delay > 0:
-            concurrency = 1 # force concurrency=1 if download delay required
-    
-        return concurrency, delay
-    
+
     def fetch(self, request, spider):
         key, slot = self._get_slot(request, spider)
 
@@ -104,9 +105,8 @@ class Downloader(SettingObject):
                 concurrency = self.ip_concurrency
             else:
                 concurrency = self.domain_concurrency
-            concurrency, delay = self._get_concurrency_delay(concurrency, spider)
-            randomize_delay = self.randomize_delay.to_value()
-            self.slots[key] = Slot(concurrency, delay, randomize_delay, self.settings)
+            concurrency, delay = _get_concurrency_delay(concurrency, spider, self.settings)
+            self.slots[key] = Slot(concurrency, delay, self.settings)
         return key, self.slots[key]
 
     def _enqueue_request(self, request, spider, slot):

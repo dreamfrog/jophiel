@@ -13,8 +13,8 @@ from scrapy.utils.python import memoizemethod_noargs
 class XmlResponse(TextResponse):
 
     _template = r'''%s\s*=\s*["']?\s*%s\s*["']?'''
-    _encoding_re = _template % ('encoding', r'(?P<charset>[\w-]+)')
-    XMLDECL_RE = re.compile(r'<\?xml\s.*?%s' % _encoding_re, re.I)
+    _encoding_re  = _template % ('encoding', r'(?P<charset>[\w-]+)')
+    XMLDECL_RE  = re.compile(r'<\?xml\s.*?%s' % _encoding_re, re.I)
 
     @memoizemethod_noargs
     def _body_declared_encoding(self):

@@ -4,9 +4,8 @@ from scrapy.utils.gz import gunzip
 from scrapy.http import Response, TextResponse
 from scrapy.responsetypes import responsetypes
 
-from scrapy.middleware import BaseMiddleware
 
-class HttpCompressionMiddleware(BaseMiddleware):
+class HttpCompressionMiddleware(object):
     """This middleware allows compressed (gzip, deflate) traffic to be
     sent/received from web sites"""
 

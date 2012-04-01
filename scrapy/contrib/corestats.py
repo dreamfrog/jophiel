@@ -8,12 +8,9 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy.stats import stats
 
-from scrapy.middleware import BaseMiddleware
+class CoreStats(object):
 
-class CoreStats(BaseMiddleware):
-
-    def __init__(self, settings):
-        super(CoreStats, self).__init__(settings)
+    def __init__(self):
         dispatcher.connect(self.stats_spider_opened, signal=signals.stats_spider_opened)
         dispatcher.connect(self.stats_spider_closing, signal=signals.stats_spider_closing)
         dispatcher.connect(self.item_scraped, signal=signals.item_scraped)

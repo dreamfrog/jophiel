@@ -16,36 +16,24 @@ from twisted.mail.smtp import ESMTPSenderFactory
 
 from scrapy import log
 from scrapy.exceptions import NotConfigured
-from scrapy import settings
+from scrapy.conf import settings
 from scrapy.utils.signal import send_catch_log
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import BooleanField
-from scrapy.meta import ListField
-from scrapy.meta import IntegerField
 
 # signal sent when message is sent
 # args: to, subject, body, cc, attach, msg
 mail_sent = object()
 
 
-class MailSender(SettingObject):
-    
-    mail_host = StringField(default="")
-    mail_port = StringField(default="")
-    mail_user = StringField(default="")
-    mail_pass = StringField(default="")
-    mail_from = StringField(default="")
-    
-    def __init__(self, settings, smtphost=None, mailfrom=None, smtpuser=None, smtppass=None, \
+class MailSender(object):
+
+    def __init__(self, smtphost=None, mailfrom=None, smtpuser=None, smtppass=None, \
             smtpport=None, debug=False):
-        super(MailSender, self).__init__(settings)
-        self.smtphost = smtphost or self.mail_host.to_value()
-        self.smtpport = smtpport or self.mail_port.to_value()
-        self.smtpuser = smtpuser or self.mail_user.to_value()
-        self.smtppass = smtppass or self.mail_pass.to_value()
-        self.mailfrom = mailfrom or self.mail_from.to_value()
+        self.smtphost = smtphost or settings['MAIL_HOST']
+        self.smtpport = smtpport or settings.getint('MAIL_PORT')
+        self.smtpuser = smtpuser or settings['MAIL_USER']
+        self.smtppass = smtppass or settings['MAIL_PASS']
+        self.mailfrom = mailfrom or settings['MAIL_FROM']
         self.debug = debug
 
         if not self.smtphost or not self.mailfrom:

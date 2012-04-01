@@ -28,7 +28,7 @@ class HTMLImageLinkExtractor(object):
         ret = []
         def _add_link(url_sel, alt_sel=None):
             url = flatten([url_sel.extract()])
-            alt = flatten([alt_sel.extract()]) if alt_sel else (u'',)
+            alt = flatten([alt_sel.extract()]) if alt_sel else (u'', )
             if url:
                 ret.append(Link(unicode_to_str(url[0], encoding), alt[0]))
 

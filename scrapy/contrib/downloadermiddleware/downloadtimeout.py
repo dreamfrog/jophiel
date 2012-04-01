@@ -5,12 +5,10 @@ See documentation in docs/topics/downloader-middleware.rst
 """
 from scrapy.utils.python import WeakKeyCache
 
-from scrapy.middleware import BaseMiddleware
 
-class DownloadTimeoutMiddleware(BaseMiddleware):
+class DownloadTimeoutMiddleware(object):
 
-    def __init__(self, settings):
-        super(DownloadTimeoutMiddleware, self).__init__(settings)
+    def __init__(self):
         self._cache = WeakKeyCache(self._download_timeout)
 
     def _download_timeout(self, spider):

@@ -16,7 +16,7 @@ from time import time
 from operator import itemgetter
 from types import NoneType
 
-from scrapy import settings
+from scrapy.conf import settings
 
 live_refs = defaultdict(weakref.WeakKeyDictionary)
 
@@ -31,7 +31,7 @@ class object_ref(object):
         live_refs[cls][obj] = time()
         return obj
 
-if not settings['TRACK_REFS']:
+if not settings.getbool('TRACK_REFS'):
     object_ref = object
 
 def format_live_refs(ignore=NoneType):
@@ -46,7 +46,7 @@ def format_live_refs(ignore=NoneType):
             continue
         oldest = min(wdict.itervalues())
         s += "%-30s %6d   oldest: %ds ago" % (cls.__name__, len(wdict), \
-            now - oldest) + os.linesep
+            now-oldest) + os.linesep
     return s
 
 def print_live_refs(*a, **kw):

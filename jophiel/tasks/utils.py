@@ -4,7 +4,6 @@ Created on 2012-3-21
 @author: lzz
 '''
 from jophiel import app
-from jophiel.utils import get_cls_by_name
 
 def build_task(self,taskinfo):
     task_name = taskinfo["task_name"]

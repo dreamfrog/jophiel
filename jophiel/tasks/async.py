@@ -15,7 +15,6 @@ from jophiel.tasks import AsyncResult
 def async_task(task_id,task_name,queue,*args,**kwargs):
     taskcls = app.tasks[task_name]
     task = taskcls(task_id,*args,**kwargs)
-    taskinfo = package_task(task)
-    TaskQueue.enqueue(taskinfo)
+    TaskQueue.enqueue_cls(task)
     return AsyncResult(task_id,task)   
     

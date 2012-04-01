@@ -2,13 +2,11 @@
 
 from scrapy.utils.python import WeakKeyCache
 
-from scrapy.middleware import BaseMiddleware
 
-class UserAgentMiddleware(BaseMiddleware):
+class UserAgentMiddleware(object):
     """This middleware allows spiders to override the user_agent"""
 
-    def __init__(self, settings):
-        super(UserAgentMiddleware, self).__init__(settings)
+    def __init__(self):
         self.cache = WeakKeyCache(self._user_agent)
 
     def _user_agent(self, spider):

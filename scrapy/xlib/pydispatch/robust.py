@@ -3,8 +3,8 @@ from scrapy.xlib.pydispatch.dispatcher import Any, Anonymous, liveReceivers, get
 from scrapy.xlib.pydispatch.robustapply import robustApply
 
 def sendRobust(
-	signal=Any,
-	sender=Anonymous,
+	signal=Any, 
+	sender=Anonymous, 
 	*arguments, **named
 ):
 	"""Send signal from sender to all connected receivers catching errors

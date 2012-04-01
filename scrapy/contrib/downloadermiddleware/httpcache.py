@@ -11,39 +11,23 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy.http import Headers
 from scrapy.exceptions import NotConfigured, IgnoreRequest
-from scrapy.stats import stats
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.request import request_fingerprint
 from scrapy.utils.httpobj import urlparse_cached
 from scrapy.utils.misc import load_object
 from scrapy.utils.project import data_path
+from scrapy import conf
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import SettingObject
-from scrapy.meta import BooleanField
-from scrapy.meta import StringField
-from scrapy.meta import ListField
-from scrapy.meta import IntegerField
 
-class HttpCacheMiddleware(BaseMiddleware):
+class HttpCacheMiddleware(object):
 
-    httpcache_enabled = BooleanField(default=False)
-    httpcache_storage = StringField(default='scrapy.contrib.downloadermiddleware.httpcache.FilesystemCacheStorage')
-    httpcache_ignore_missing = BooleanField(default=False)
-    httpcache_ingore_shemes = ListField(default=['file'])
-    httpcache_ignore_codes = ListField(default=[])
-    
-    
-    def __init__(self, settings):
-        super(HttpCacheMiddleware, self).__init__(settings)
-        if not self.httpcache_enabled.to_value():
+    def __init__(self, settings=conf.settings):
+        if not settings.getbool('HTTPCACHE_ENABLED'):
             raise NotConfigured
-        
-        self.storage = load_object(self.httpcache_storage.to_value())(settings)
-        self.ignore_missing = self.httpcache_ignore_missing.to_value()
-        self.ignore_schemes = self.httpcache_ingore_shemes.to_value()
-        self.ignore_http_codes = map(int, self.httpcache_ignore_codes.to_value())
-        
+        self.storage = load_object(settings['HTTPCACHE_STORAGE'])(settings)
+        self.ignore_missing = settings.getbool('HTTPCACHE_IGNORE_MISSING')
+        self.ignore_schemes = settings.getlist('HTTPCACHE_IGNORE_SCHEMES')
+        self.ignore_http_codes = map(int, settings.getlist('HTTPCACHE_IGNORE_HTTP_CODES'))
         dispatcher.connect(self.spider_opened, signal=signals.spider_opened)
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
@@ -59,19 +43,13 @@ class HttpCacheMiddleware(BaseMiddleware):
         response = self.storage.retrieve_response(spider, request)
         if response and self.is_cacheable_response(response):
             response.flags.append('cached')
-            stats.inc_value('httpcache/hit', spider=spider)
             return response
-
-        stats.inc_value('httpcache/miss', spider=spider)
-        if self.ignore_missing:
+        elif self.ignore_missing:
             raise IgnoreRequest("Ignored request not in cache: %s" % request)
 
     def process_response(self, request, response, spider):
-        if (self.is_cacheable(request)
-            and self.is_cacheable_response(response)
-            and 'cached' not in response.flags):
+        if self.is_cacheable(request) and self.is_cacheable_response(response):
             self.storage.store_response(spider, request, response)
-            stats.inc_value('httpcache/store', spider=spider)
         return response
 
     def is_cacheable_response(self, response):
@@ -81,15 +59,12 @@ class HttpCacheMiddleware(BaseMiddleware):
         return urlparse_cached(request).scheme not in self.ignore_schemes
 
 
-class FilesystemCacheStorage(SettingObject):
-    httpcache_dir = StringField(default='httpcache')
-    httpcach_expiration_secs = IntegerField(default=0)
+class FilesystemCacheStorage(object):
 
-    def __init__(self, settings):
-        super(FilesystemCacheStorage, self).__init__(settings)
-        self.cachedir = data_path(self.httpcache_dir.to_value())
-        self.expiration_secs = self.httpcach_expiration_secs.to_value()
-        
+    def __init__(self, settings=conf.settings):
+        self.cachedir = data_path(settings['HTTPCACHE_DIR'])
+        self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
+
     def open_spider(self, spider):
         pass
 

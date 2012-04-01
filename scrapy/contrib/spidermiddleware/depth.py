@@ -10,33 +10,26 @@ from scrapy import log
 from scrapy.http import Request
 from scrapy.exceptions import ScrapyDeprecationWarning
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import IntegerField
-from scrapy.meta import BooleanField
+class DepthMiddleware(object):
 
-DEPTH_LIMIT = 0
-DEPTH_STATS = True
-DEPTH_PRIORITY = 0
+    def __init__(self, maxdepth, stats=None, verbose_stats=False, prio=1):
+        self.maxdepth = maxdepth
+        self.stats = stats
+        self.verbose_stats = verbose_stats
+        self.prio = prio
 
-class DepthMiddleware(BaseMiddleware):
-
-    depth_limit = IntegerField(default=0)
-    depth_stats = BooleanField(default=True)
-    depth_prority = IntegerField(default=1)
-    depth_stats_verbose = BooleanField(default=True)
-    
-    def __init__(self, settings):
-        super(DepthMiddleware, self).__init__(settings)
-        self.maxdepth = self.depth_limit.to_value()
-        usestats = self.depth_stats.to_value()
-        self.verbose_stats = self.depth_stats_verbose.to_value()
-        self.prio = self.depth_prority.to_value()
+    @classmethod
+    def from_settings(cls, settings):
+        maxdepth = settings.getint('DEPTH_LIMIT')
+        usestats = settings.getbool('DEPTH_STATS')
+        verbose = settings.getbool('DEPTH_STATS_VERBOSE')
+        prio = settings.getint('DEPTH_PRIORITY')
         if usestats:
             from scrapy.stats import stats
         else:
             stats = None
-        self.stats = stats
-        
+        return cls(maxdepth, stats, verbose, prio)
+
     def process_spider_output(self, response, result, spider):
         def _filter(request):
             if isinstance(request, Request):

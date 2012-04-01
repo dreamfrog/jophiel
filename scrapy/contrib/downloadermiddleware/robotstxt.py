@@ -13,17 +13,11 @@ from scrapy.exceptions import NotConfigured, IgnoreRequest
 from scrapy.http import Request
 from scrapy.utils.httpobj import urlparse_cached
 
-from scrapy.middleware import BaseMiddleware
-from scrapy.meta import BooleanField
-
-
-class RobotsTxtMiddleware(BaseMiddleware):
+class RobotsTxtMiddleware(object):
     DOWNLOAD_PRIORITY = 1000
-    robotstxt_obey = BooleanField(default=True)
 
-    def __init__(self, settings, crawler=None):
-        super(RobotsTxtMiddleware, self).__init__(settings)
-        if self.robotstxt_obey.to_value():
+    def __init__(self, crawler):
+        if not crawler.settings.getbool('ROBOTSTXT_OBEY'):
             raise NotConfigured
 
         self.crawler = crawler
@@ -33,17 +27,17 @@ class RobotsTxtMiddleware(BaseMiddleware):
         dispatcher.connect(self.spider_opened, signals.spider_opened)
         dispatcher.connect(self.spider_closed, signals.spider_closed)
 
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
     def process_request(self, request, spider):
         useragent = self._useragents[spider]
         rp = self.robot_parser(request, spider)
         if rp and not rp.can_fetch(useragent, request.url):
             log.msg("Forbidden by robots.txt: %s" % request, log.DEBUG)
             raise IgnoreRequest
-    
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(crawler.metas, crawler)
-    
+
     def robot_parser(self, request, spider):
         url = urlparse_cached(request)
         netloc = url.netloc

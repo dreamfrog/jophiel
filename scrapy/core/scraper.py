@@ -18,9 +18,6 @@ from scrapy.core.spidermw import SpiderMiddlewareManager
 from scrapy import log
 from scrapy.stats import stats
 
-from scrapy.meta import SettingObject
-from scrapy.meta import StringField
-from scrapy.meta import IntegerField
 
 class Slot(object):
     """Scraper slot (one per running spider)"""
@@ -62,18 +59,14 @@ class Slot(object):
     def needs_backout(self):
         return self.active_size > self.max_active_size
 
-class Scraper(SettingObject):
-    
-    item_processor = StringField(default="scrapy.contrib.pipeline.ItemPipelineManager")
-    concurrent_items = IntegerField(default=100)
-    
+class Scraper(object):
+
     def __init__(self, crawler):
-        super(Scraper, self).__init__(crawler.metas)
         self.slots = {}
-        self.spidermw = SpiderMiddlewareManager(crawler.metas)
-        itemproc_cls = load_object(self.item_processor.to_value())
-        self.itemproc = itemproc_cls(self.metas)
-        self.concurrent_items = self.concurrent_items.to_value()
+        self.spidermw = SpiderMiddlewareManager.from_crawler(crawler)
+        itemproc_cls = load_object(crawler.settings['ITEM_PROCESSOR'])
+        self.itemproc = itemproc_cls.from_crawler(crawler)
+        self.concurrent_items = crawler.settings.getint('CONCURRENT_ITEMS')
         self.crawler = crawler
 
     @defer.inlineCallbacks
