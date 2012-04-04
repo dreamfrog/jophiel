@@ -124,17 +124,17 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
+    
      'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
      'django.contrib.admindocs',
+     
     #'tastypie',
     'jophiel',
     'redisboard',
-    'jophiel.jobs',
 	'djcelery',
 	'south',
-	'jophiel.demoapp',
+	'jophiel.spiders',
+	'jophiel.news',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -191,7 +191,11 @@ CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6379
 CELERY_REDIS_DB = 0
 
-CELERY_IMPORTS = ('jophiel.celerytasks', )
+CELERY_IMPORTS = ('jophiel.spiders.tasks',)
 
 import djcelery
 djcelery.setup_loader()
+
+LOGIN_URL = "/login"
+
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"

@@ -10,9 +10,9 @@ xml_parser_options = libxml2.XML_PARSE_RECOVER + \
                      libxml2.XML_PARSE_NOERROR + \
                      libxml2.XML_PARSE_NOWARNING
 
-html_parser_options = libxml2.HTML_PARSE_RECOVER + \
-                      libxml2.HTML_PARSE_NOERROR + \
+html_parser_options = libxml2.HTML_PARSE_NOERROR + \
                       libxml2.HTML_PARSE_NOWARNING
+                      #libxml2.HTML_PARSE_RECOVER 
 
 utf8_encodings = set(('utf-8', 'UTF-8', 'utf8', 'UTF8'))
 

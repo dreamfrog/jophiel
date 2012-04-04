@@ -135,8 +135,8 @@ EXTENSIONS = {}
 
 EXTENSIONS_BASE = {
     'scrapy.contrib.corestats.CoreStats': 0,
-    'scrapy.webservice.WebService': 0,
-    'scrapy.telnet.TelnetConsole': 0,
+    #'scrapy.webservice.WebService': 0,
+    #'scrapy.telnet.TelnetConsole': 0,
     'scrapy.contrib.memusage.MemoryUsage': 0,
     'scrapy.contrib.memdebug.MemoryDebugger': 0,
     'scrapy.contrib.closespider.CloseSpider': 0,
@@ -258,7 +258,7 @@ URLLENGTH_LIMIT = 2083
 
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
-TELNETCONSOLE_ENABLED = 1
+TELNETCONSOLE_ENABLED = False
 TELNETCONSOLE_PORT = [6023, 6073]
 TELNETCONSOLE_HOST = '0.0.0.0'
 
