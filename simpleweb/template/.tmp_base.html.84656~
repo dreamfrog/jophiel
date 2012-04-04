@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        {% block title %}<title>本地搜索、公交查询、驾车导航</title>{% endblock %}
+        {% block meta %}
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta name="generator" content="HAPedit 3.1">
+        {% endblock %}
+        {% block common_style_js %}
+
+        {% include "common/common_header.html" %}
+        {% endblock %}
+        {% block message %}
+        {% include 'common/build_message.html' %}
+        {% endblock %}
+        {% include 'main_init.html' %}
+    </head>
+    {% include 'layout.html' %} 
+</html>

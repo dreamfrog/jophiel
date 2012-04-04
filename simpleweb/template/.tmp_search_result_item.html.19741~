@@ -1,0 +1,19 @@
+<div class="search_result_iterm">
+    <div>
+        <div>
+            <img src="map_media/images/sort/{{forloop.counter}}.bmp">
+        </div>
+        <div>
+            <a href="detail?cityname={{cityname}}&pguid={{search.id}}" target=_blank><span onmouseover="show_tip('{{search.x}}','{{search.y}}','{{forloop.counter}}')">{{search.attr.name}}</span></a>
+        </div>
+    </div>
+    <div>
+        地址：{{ search.attr.address}}
+    </div>
+    <div>
+        电话：{{ search.attr.telephone}}
+    </div>
+    <div>
+        类型：{{ search.attr.type}}{{ search.attr.category}}
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<form id="searchform" name="form1" method="get" action="list">
+    <table width="100%" align="left" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="142" rowspan="4">
+                <a href="/map?cityname={{ cityname }}"><img src="images/logo.png" width="140" height="68" hspace="0" align="left"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {% include 'searchinput.html' %}
+            </td>
+        </tr>
+    </table>
+</form>

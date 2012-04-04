@@ -1,0 +1,15 @@
+{%  include "gmap/gmap_element.html" %}
+<script type="text/javascript">
+	function load1(){
+			using('calendar', function(){
+				$('#cc').calendar({
+					width:180,
+					height:180
+				});
+			});
+		}
+
+    $(document).ready(function(){
+			initialize();
+	});
+</script>

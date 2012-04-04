@@ -1,0 +1,2 @@
+function MabcMapAPILoad(src){document.write('<'+'script src="'+src+'"'+' type="text/javascript"><'+'/script>');}
+MabcMapAPILoad("http://mapengine.mapabc.com/mapabcrasterengine/api/engmapabcRasterEngine.js");
