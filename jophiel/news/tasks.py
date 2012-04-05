@@ -5,18 +5,26 @@ Created on 2012-4-2
 '''
 
 from celery.task import task
+from celery.task.sets import TaskSet
+
 from .models import Feed
-from .models import Planet
 
-@task
-def fetch_feed():pass
+@task(ignore_result=True, serializer="pickle", compression="zlib")
+def fetch_feed(feed_id):
+    try:
+        feed = Feed.objects.get(id = feed_id)
+        feed.process_feed()
+    except:
+        pass
 
-@task
-def update_channels(planet_name):pass
-    
-@task
-def update_channel(channel_name):
-    channels = Feed.objects.filter(name = channel_name)
-    for channel in channels:
-        channel.update()
         
+@task(ignore_result=True, serializer="pickle", compression="zlib")   
+def run_download():
+    tasks = []
+    for feed in Feed.objects.filter(active=True).order_by('-updated'):
+        subtask = fetch_feed.subtask(feed.id)
+        tasks.append(subtask)
+        
+    subtasks = TaskSet(tasks)
+    subtasks.apply_async()
+    
