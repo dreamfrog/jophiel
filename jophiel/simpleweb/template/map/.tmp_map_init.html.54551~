@@ -1,0 +1,37 @@
+
+<script type="text/javascript">
+{% if gmap_global_include %}
+{% include gmap_global_include %}
+{% endif %}
+function initialize() {
+    map = new google.maps.Map(document.getElementById("map"), myOptions);
+    {% if gmap_map_init_js %}
+        {{ gmap_map_init_js }}
+    {% else %}
+
+    {% endif %}
+    
+    {{ gmap_overlays_init_js }}
+    
+	{% if gmap_overlays_include %}
+	{% include gmap_overlays_include %}
+	{% endif %}
+	
+	  for (var i = 0; i < messages.length; i++) {
+            var location = new google.maps.LatLng(messages[i].y, messages[i].x);
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+            poiMarker.push(marker);
+            var j = i + 1;
+            marker.setTitle(j.toString());
+            attachSecretMessage(marker, i);
+        }
+        showRegion(map);
+        
+        google.maps.event.addListener(map, 'click', onClickCallback);
+	
+}
+</script>
+

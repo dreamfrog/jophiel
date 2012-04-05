@@ -1,0 +1,2 @@
+class NewsException(Exception):
+    pass

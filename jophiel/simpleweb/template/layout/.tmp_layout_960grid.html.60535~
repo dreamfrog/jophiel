@@ -1,0 +1,195 @@
+<style type="text/css">
+    .ss_result_info {
+        background: #E8ECF9;
+        height: 4%;
+    }
+    
+    .ss_result_info:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+    * html .ss_result_info {
+        height: 1%;
+    }
+    
+    .container_16 {
+        width: 99%;
+        height: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12, .grid_13, .grid_14, .grid_15, .grid_16 {
+        display: inline;
+        float: left;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    
+    .container_12 .grid_1 {
+        width: 6.333%;
+    }
+    
+    .container_12 .grid_2 {
+        width: 14.666%;
+    }
+    
+    .container_12 .grid_4 {
+        width: 31.333%;
+    }
+    
+    .container_12 .grid_5 {
+        width: 39.666%;
+    }
+    
+    .container_12 .grid_7 {
+        width: 56.333%;
+    }
+    
+    .container_12 .grid_8 {
+        width: 64.666%;
+    }
+    
+    .container_12 .grid_10 {
+        width: 81.333%;
+    }
+    
+    .container_12 .grid_11 {
+        width: 89.666%;
+    }
+    
+    /* =Grid >> 16 Columns
+     --------------------------------------------------------------------------------*/
+    .container_12 .grid_3 .omega, .container_16 .grid_4 .omega {
+        width: 24%;
+        margin-right: 0%;
+    }
+    
+    .container_12 .grid_6 .omega, .container_16 .grid_8 .omega {
+        width: 49%;
+        margin-right: 0%;
+    }
+    
+    .container_12 .grid_9 .omega, .container_16 .grid_12 .omega {
+        width: 74%;
+        margin-right: 0%;
+    }
+    
+    .container_12 .grid_12 .omega, .container_16 .grid_16 .omega {
+        width: 99%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_1 .omega {
+        width: 5.25%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_2 .omega {
+        width: 11.5%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_3 .omega {
+        width: 17.75%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_5 .omega {
+        width: 30.25%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_6 .omega {
+        width: 36.5%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_7 .omega {
+        width: 42.75%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_9 .omega {
+        width: 55.25%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_10 .omega {
+        width: 61.5%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_11 .omega {
+        width: 67.75%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_13 .omega {
+        width: 80.25%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_14 .omega {
+        width: 86.5%;
+        margin-right: 0%;
+    }
+    
+    .container_16 .grid_15 .omega {
+        width: 92.75%;
+        margin-right: 0%;
+    }
+    
+    .container_12 .grid_9, .container_16 .grid_12 {
+        width: 76%;
+        margin-right: 0%;
+		margin-left: 0%;
+    }
+</style>
+<div class="container_16" style="margin-left:0;margin-right:0">
+    <div class="grid_16" style="height:30px;">
+        <div class="container_16" style="margin-left:0%;">
+            <div class="grid_2" style="margin-left:0%;">
+                {% include 'common/guide.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="grid_16" style="height:60px">
+        <div id="">
+            {% include 'common/form.html' %}
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="grid_4 omega " style="height:85%;margin-right:0">
+        <div class="box" style="height:5%">
+            <div style="">
+                <div style="width:20%;float:left">
+                    搜索结果
+                </div>
+                {% if count %}<span style="float:left">：{{count}}条，用时{{ searchtime }}秒</span>
+                {% endif %}
+                <div class="clear">
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="box" style="height:95%;overflow:auto">
+            {% include 'search/search_results_list.html' %}
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="grid_12" style="height:85%;">
+        <div id="map">
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+</div>

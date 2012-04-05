@@ -1,0 +1,299 @@
+import LogModule
+from MyPymongo import * 
+import datetime
+
+DEFAULT_LOGNAME="Database"
+logger=LogModule.getLogger(DEFAULT_LOGNAME)
+
+class  DatabaseError(Exception):pass
+
+class ClustersIndex:pass
+
+
+class MemoryClusterDatabase:
+    def __init__ (self,database):
+        self._db=database
+        self._records=self._db.getRecords()
+        self._reverseIndex=self._db.getReverseIndex()
+        self._maxClusterId=1
+    def insertRecords (self,records):
+        self._records.clear()
+        self._records=records
+
+    def getNewClusterId (self):
+        self._maxClusterId=self._maxClusterId+1
+        return self._maxClusterId
+
+    def getClusterGroupById (self,clusterId):
+        if self._records.has_key(clusterId):
+            return self._records[clusterId]
+        return []
+
+    def insertCluster (self,clusterId,relationGroup):
+        self._records[clusterId]=relationGroup
+
+    def modifyCluster (self,clusterId,relationGroup):
+        self._records[clusterId]=relationGroup
+
+    def deleteCluster (self,clusterId):
+        if self._records.has_key(clusterId):
+            del self._records[clusterId]
+            return 0
+        return -1
+
+    def findClusterId (self,primeId):
+        if self._reverseIndex.has_key(primeId):
+            return self._reverseIndex[primeId]
+        return 0
+
+    def insertIndex (self,relationId,clusterId):
+        self._reverseIndex[relationId]=clusterId
+
+    def modifyIndex (self,clusterId,relations):
+        for relationId in relations:
+            self._reverseIndex[relationId]=clusterId
+
+    def modifyClusterIndex (self,cluster):
+        clusterId=cluster.getClusterId()
+        relations=cluster.getRelationGroup()
+        self.modifyIndex(clusterId,relations)
+
+    def deleteIndex (self,relationId):
+        if self._reverseIndex.has_key(relationId):
+            del self._reverseIndex[relationId]
+
+    def initialize (self):pass
+
+    def finish (self):pass
+
+class MemoryDatabase:
+    def __init__ (self,records={}):
+        self._records=records
+        self._reverseIndex={}
+        for key in self._records.keys() :
+            for value in self._records[key] :
+                self._reverseIndex[value]=key
+
+    def getRecords (self):
+        return self._records
+
+    def getReverseIndex(self):
+        return self._reverseIndex
+
+    def finish (self):pass
+    
+    def initialize (self):pass
+
+class ClusterStorage:
+    CLUSTERIDNAME="key"
+    VALUES="value"
+    UPDATETIME="update"
+
+    INDEXNAME="key"
+    INDEXVALUE="value"
+    
+    MAXCLUSTERID="maxclusterid"
+
+    def __init__ (self,manager):
+        self._dbmanager=manager
+        #self._clusterIdGenerate=manager.getClusterIdGenerate()
+        self._updatetime='20091222'
+
+    """generate the new cluster Id, increase the old one and save it in database"""
+    def getNewClusterId (self):
+         conn=self._dbmanager.getClusterIdConn()
+         idValue=conn.find_one()
+         
+         if idValue==None:
+             logger.warning("max cluster key is not exist in database")
+             idValue={self.MAXCLUSTERID:0}
+
+         result=idValue[self.MAXCLUSTERID]+1
+         conn.update(idValue,{self.MAXCLUSTERID:result},True)
+         return result
+
+    """create the cluster for inserting  mongo database"""
+    def createClusterValue (self,clusterId,relationGroup):
+        result={
+            self.CLUSTERIDNAME:clusterId,
+            self.VALUES:relationGroup,
+            self.UPDATETIME:self.getUpdatetime()
+            }
+        return result
+
+    """create the value for searching cluster in database"""
+    def createClusterSearchValue (self,clusterId):
+        result={
+            self.CLUSTERIDNAME:clusterId
+            }
+        return result
+    
+    """return the update time"""
+    def getUpdatetime (self):
+        return datetime.datetime.utcnow()
+
+    """find the cluster from the database by the cluster Id"""
+    def getClusterGroupById (self,clusterId):
+        conn=self._dbmanager.getClusterConn(clusterId)
+        spec=self.createClusterSearchValue(clusterId)
+        result=conn.find_one(spec)
+        if result==None:
+            return []
+        return result[self.VALUES]
+
+    """insert the new cluster into database"""
+    def insertCluster (self,clusterId,relationGroup):
+        conn=self._dbmanager.getClusterConn(clusterId)
+        result=self.createClusterValue(clusterId,relationGroup)
+        conn.insert(result)
+        logger.info("insert [%d]:[%s],chunkname=%s",clusterId,relationGroup,conn.name)
+
+    def modifyCluster (self,clusterId,relationGroup):
+        conn=self._dbmanager.getClusterConn(clusterId)
+        spec=self.createClusterSearchValue(clusterId)
+        result=self.createClusterValue(clusterId,relationGroup)
+        conn.update(spec,result,True)
+        logger.info("modify [%d]:%s chunkname=%s",clusterId,relationGroup,conn.name)
+
+    def deleteCluster (self,clusterId):
+        relationGroup=[]
+        conn=self._dbmanager.getClusterConn(clusterId)
+        spec=self.createClusterSearchValue(clusterId)
+        result=self.createClusterValue(clusterId,relationGroup)
+        conn.update(spec,result,True)
+        logger.info("delete [%d]:%s chunkname=%s",clusterId,relationGroup,conn.name)
+        
+
+    def createIndexSearchValue (self,primeId):
+        result={
+               self.INDEXNAME:primeId 
+            }
+        return result
+
+    def createIndexValue (self,clusterId,relationId):
+        result={
+            self.INDEXNAME:relationId,
+            self.INDEXVALUE:clusterId
+            }
+        return result
+
+    def findClusterId (self,primeId):
+        conn=self._dbmanager.getIndexConn(primeId)
+        spec=self.createIndexSearchValue(primeId)
+        value=conn.find_one(spec)
+        if value==None:
+            return 0
+        return value[self.INDEXVALUE]
+        
+    def insertIndex (self,relationId,clusterId):
+        conn=self._dbmanager.getIndexConn(relationId)
+        result=self.createIndexValue(relationId,clusterId)
+        conn.insert(result)
+
+    def modifyIndex (self,clusterId,relations):
+ 
+        for relationId in relations :
+            conn=self._dbmanager.getIndexConn(relationId)
+            spec=self.createIndexSearchValue(relationId)
+            result=self.createIndexValue(clusterId,relationId)
+            conn.update(spec,result,True)
+
+    def deleteIndex (self,relationId):
+        conn=self._dbmanager.getIndexConn(relationId)        
+        spec=self.createIndexSearchValue(relationId)
+        conn.remove(spec)
+
+    def initialize (self):pass
+
+    def finish (self):
+        if self._dbmanager:
+            self._dbmanager.finish()
+            
+"""manage the connection from the mongo database"""
+class MongoDatabaseManager:
+    CLUSTERTBNAME="clusterId"
+    CLUSTERINDEXTBNAME="ClusterIndex"
+    MAXCLUSTERIDTBNAME="maxclusterid"
+
+    def __init__ (self,conn,indexconn=None):
+        self._connection=conn
+        self._indexconnection=indexconn
+        self._connection.buildIndex(None,"key")
+
+        if self._indexconnection:
+            self._indexconnection.buildIndex(None,"key")
+        else:
+            self._connection.buildIndex(self.CLUSTERINDEXTBNAME,"key")
+
+    def getClusterConn (self,clusterId):
+        return self._connection.getCollectionConnection(self.CLUSTERTBNAME,clusterId)
+
+    def getIndexConn (self,keyId):
+        if self._indexconnection:
+            return self._indexconnection.getCollectionConnection(self.CLUSTERINDEXTBNAME,keyId)
+        else:
+            return self._connection.getCollectionConnection(self.CLUSTERINDEXTBNAME)
+
+    def getClusterIdConn (self):
+        return self._connection.getCollectionConnection(self.MAXCLUSTERIDTBNAME)
+    
+    def initialize (self): pass
+
+    def finish (self ):
+        if self._connection:
+            self._connection.disconnect()
+
+class DbConnection:
+    defaultkey='1'
+    def __init__ (self,mongoconnection):
+        self._conn=mongoconnection
+        self._key=self.defaultkey
+
+    def  insert(self,value):
+        self._conn.insert(self._key,value)
+
+    def getCollectionConnection (self,name,clusterId=None):
+        
+        #return self._conn[name]
+        if not clusterId:
+            return self._conn[name]
+        else:
+            return self._conn.getChunkConn(str(clusterId))
+
+    def getCollectionName (self,clusterId):
+        return self._conn.getChunkName(clusterId)
+
+    def buildIndex (self,cname,*targ,**karg):
+        self._conn.build_index(cname,*targ,**karg)
+            
+    def disconnect(self):
+        self._conn.disconnect()
+
+
+if __name__=="__main__":
+    c=Connection("127.0.0.1",27017,"minimap",True,100,"admin","lse")
+    dbc=DbConnection(c)
+    manager=MongoDatabaseManager(dbc)
+    db=ClusterStorage(manager)
+    db.insertCluster('12',['12','12','34'])
+    db.insertCluster('13',['12','12','35'])
+    db.insertCluster('15',['12','12','36'])
+    db.modifyCluster('12',[])
+    db.modifyCluster('15',['344'])
+    db.insertIndex('12','12')
+    db.modifyIndex('32','12')
+    db.modifyIndex('34','12')
+    db.deleteCluster('12')
+    db.modifyCluster('2333',['11'])
+    print db.getClusterGroupById('12')
+    print db.findClusterId('12')
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+    print db.getNewClusterId()
+

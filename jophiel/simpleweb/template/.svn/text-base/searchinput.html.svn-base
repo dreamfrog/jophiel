@@ -1,0 +1,22 @@
+  <table>
+	  <tr>
+	     <td align="center" width="35" class="style19">在</td>
+	  <td width="80" class="style19">
+	  	{{form.cityname}}
+	  </td>
+	      	<td class="style19" align="left">市&nbsp;</td>
+	     <td align="center" width="35" class="style19">找</td>
+	     <td>
+	     	{{form.kw}}
+	     </td>
+	    	<td width="55" align="left">
+	    		<input type="submit" value="搜索" />
+	    	</td>
+	     <td>
+	     	<input value="map" name="tag" id="tag" type="hidden" />
+	     </td>
+	     <td>
+	     	<input value="{{map}}" name="map" id="map" type="hidden" />
+	     </td>
+	 </tr>
+  </table>

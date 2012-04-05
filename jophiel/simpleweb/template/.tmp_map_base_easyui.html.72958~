@@ -1,0 +1,17 @@
+{%  include "gmap/gmap_element.html" %}
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+        $('#tt').tabs({
+            border: false,
+            fit: "true",
+        });
+        $('#tt').tabs('add', {
+            title: 'New Tab ',
+            content: 'Tab Body ',
+            iconCls: 'icon-save',
+            closable: true
+        });
+        initialize();
+    });
+</script>

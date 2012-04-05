@@ -1,0 +1,35 @@
+{% extends "sentry/layout.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Login" %} | {{ block.super }}{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block page_header %}{% endblock %}
+{% block bodyclass %}{% endblock %}
+
+{% block content %}
+    <section class="body">
+       {% if next %}
+            <p class="alert alert-info">{% trans "Please login to continue." %}</p>
+        {% endif %}
+
+        {% if form.errors %}
+            <p class="alert alert-error">{% trans "Your username and password didn't match. Please try again." %}</p>
+        {% endif %}
+
+        <form class="form-stacked" action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+
+            {% for field in form %}
+                {% include "sentry/partial/_form_field.html" %}
+            {% endfor %}
+
+            <fieldset class="form-actions">
+                <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+            </fieldset>
+        </form>
+    </section>
+{% endblock %}

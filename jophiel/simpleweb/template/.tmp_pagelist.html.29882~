@@ -1,0 +1,40 @@
+<style type="text/css">
+    #pagination {
+        margin: 0 auto 0 auto; /* in full to help IE5Mac */
+        padding: 0;
+    }
+    
+    #pagination ul {
+        display: inline;
+        margin: 0;
+        /*padding: 0.5em;*/
+        list-style: none;
+        border: 1px solid #000;
+    }
+    
+    #pagination ul li {
+        display: inline;
+        margin: 0;
+       /*padding: 0.5em;*/
+    }
+    
+    .current-page {
+        font-weight: bold;
+    }
+    
+</style>
+<div id="pagination">
+    <ul>
+    {% for item in pagearr %}
+    {% ifnotequal item.key  pagecur %}
+    <li>
+        <a href="/list?cityname={{cityname}}&kw={{keyword}}&page={{item.value}}&map={{map}}">[{{item.key}}]</a>
+    </li>
+    {% else %}
+    <li class="current-page">
+        <b>{{item.key}}</b>
+    </li>
+    {% endifnotequal %}
+    {% endfor %}
+	</ul>
+</div>

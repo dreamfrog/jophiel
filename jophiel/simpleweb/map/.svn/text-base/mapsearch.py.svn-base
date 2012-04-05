@@ -1,0 +1,175 @@
+#coding utf-8
+from settings import * 
+import httplib, urllib
+from xml.dom.minidom import parse, parseString
+#coding=utf8
+
+class PoiSearch:
+    COUNT_NODE="count"
+    SEARCHTIME_NODE="searchtime"
+    PINYIN_NODE="pinyin"
+    POI_NODE="poi" 
+    
+    PAGE_SIZE="8"
+    
+    def __init__(self):
+        self.count='0'
+        self.searchtime='0'
+        self.suggestions=[]
+        self.searchresult=[]
+    def get_count(self):
+        return self.count
+    
+    def get_searchtime(self):
+        time=float(self.searchtime)/1000
+        return str(time)
+    
+    def get_suggestions(self):
+        return self.suggestions
+    def get_searchresult(self):
+        return self.searchresult
+        
+    def get_poi_info(self,params):
+        conn = httplib.HTTPConnection(SEARCH_SERVER_IP)
+        conn.request("GET", SEARCH_SERVER_IP_CGI+"?"+params)
+        response = conn.getresponse()
+        data = response.read()
+        return data
+    
+    def get_search_params(self,**kwd):
+        kw= kwd["keyword"].encode("gbk")
+        params = urllib.urlencode(
+                      {'data_type': kwd["data_type"],
+                       'query_type':  kwd["query_type"],
+                       'citycode': kwd["city_code"],
+                       'keyword': kw,
+                       'number': kwd["pgnum"],
+                       'batch': kwd["batch"],
+                       'memo': kwd["memo"],
+                       'highlight': kwd["highlight"],
+                       'keytype': kwd["keytype"],
+                       'field': kwd["field"],
+                       'xyenc': kwd["xyenc"]
+                       }
+                    )
+        return params
+    
+    def get_detail_params(self,**kwd):
+        params = urllib.urlencode(
+                                  {
+                                  'query_type':  kwd["query_type"],
+                                  'citycode':kwd["citycode"],
+                                  'ID':kwd["pguid"],
+                                  'xyenc':kwd["xyenc"]
+                                  }
+                                )
+        return params+"&"+"data_type="+kwd["data_type"]
+    
+    def search_poi(self,city_code,keyword="",batch="",data_type=["mpoi"],query_type="tquery",**kwd):
+        
+        search_type=""
+        if len(data_type)>0:
+            search_type=data_type[0]
+            for type in data_type[1:]:
+                search_type+="+"+type
+        
+        params=self.get_search_params(city_code=city_code, 
+                                      keyword=keyword, 
+                                      pgnum=self.PAGE_SIZE,
+                                      batch=batch, 
+                                      data_type=search_type, 
+                                      query_type=query_type, 
+                                      memo="", 
+                                      highlight="false",
+                                      keytype="", 
+                                      field="", 
+                                      xyenc="")
+        self.search(params)
+    
+    def search_detail(self,city_code,pguid):
+        params=self.get_detail_params(citycode=city_code,
+                                      pguid=pguid,
+                                      data_type='mpoi',
+                                      query_type='IDQ',
+                                      xyenc='true'
+                                      )
+        print params
+        self.search(params)
+
+                
+    def search(self,params):
+        print params
+        try:
+            data=self.get_poi_info(params)
+            rep=self.convert_xml_encode(data)
+            self.parse_response(rep)
+        except:
+            import sys
+            print "unexpect error,%s,%s %s"%(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])     
+    
+    def parse_response(self,resp):
+        dom = parseString(resp)
+        self.get_basic_info(dom)
+        self.get_searchinfo(dom)
+     
+    def get_datas(self,dom,nodename):
+        value=[]
+        datas=dom.getElementsByTagName(nodename)
+        for data in datas:
+            for node in data.childNodes:
+                if node.nodeType == node.TEXT_NODE or node.nodeType == node.CDATA_SECTION_NODE:
+                    value.append(node.data)
+        return value
+    
+    def get_field_datas(self,dom,field,nodename):
+        values=[]
+        fields=dom.getElementsByTagName(field)
+        for field in fields:
+            value=self.get_datas(field,nodename)
+            values.extend(value)
+        return values
+        
+    def get_textvalue(self,parentnodes):
+        result=""
+        for node in parentnodes.childNodes:
+            if node.nodeType == node.TEXT_NODE or node.nodeType == node.CDATA_SECTION_NODE:
+                result+=node.data
+        return result
+        
+    def get_basic_info(self,dom):
+        
+        values=self.get_datas(dom,self.COUNT_NODE)
+        if len(values)>0:
+            self.count=values[0]
+        
+        values=self.get_datas(dom,self.SEARCHTIME_NODE)
+        if len(values)>0:
+            self.searchtime=values[0]
+        
+        values=self.get_field_datas(dom,self.PINYIN_NODE,"data")
+        self.suggestions=values
+    
+    def get_searchinfo(self,dom):
+        
+        fields=dom.getElementsByTagName(self.POI_NODE)
+        for field in fields: 
+            element={}
+            for node in field.childNodes:
+                element[node.nodeName]=self.get_textvalue(node)
+            self.searchresult.append(element)
+            
+       
+    def convert_xml_encode(self,resp):
+        ret=resp.replace("GBK","utf-8")
+        return ret.decode("GBK").encode("utf-8")
+    
+if __name__=="__main__":
+    poi=PoiSearch()
+    poi.search_poi("021","zhong",'',"10")
+    
+    print poi.count
+    print poi.searchtime
+    print poi.suggestions
+    for search in poi.searchresult:
+        print search
+            

@@ -1,0 +1,15 @@
+<div class="searchresult" style="height: 238px;">
+    <div class="suggestion">
+        {% if suggestions %}
+        <div class="STYLE5">
+            您是不是要找：
+            {% for suggestion in suggestions %}
+			<a href="/list?cityname={{cityname}}&citycode={{ci}}&kw={{suggestion}}&p=&map={{map}}"><span class="jiucuo">{{suggestion}}</span></a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="resultpanel">
+        {% include 'listsearch.html' %}
+    </div>
+</div>

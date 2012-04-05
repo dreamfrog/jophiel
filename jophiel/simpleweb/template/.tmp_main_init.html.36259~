@@ -1,0 +1,10 @@
+{%  include "gmap/gmap_element.html" %}
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+        using("layout", function(){
+			
+        })        
+        initialize();
+    });
+</script>

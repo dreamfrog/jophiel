@@ -1,0 +1,13 @@
+<form id="searchform" name="form1" method="get" action="list">
+    <div class="search_form">
+        <div class="search_icon">
+            <a href="/map?cityname={{ cityname }}"><img src="images/logo.png" height="60" hspace="0" align="left"></a>
+        </div>
+        <div class="search_input" width="653px" height="40px">
+        	<input name="cityname" value="北京" />
+			搜索
+            <input name="kw" />
+			<input type="submit" value="搜索" />
+        </div>
+    </div>
+</form>
