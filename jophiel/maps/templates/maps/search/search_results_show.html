@@ -1,0 +1,16 @@
+
+<div class="" >
+    <div class="suggestion">
+        {% if suggestions %}
+        <div class="STYLE5">
+            您是不是要找：
+            {% for suggestion in suggestions %}
+			<a href="/list?cityname={{cityname}}&citycode={{ci}}&kw={{suggestion}}&p=&map={{map}}"><span class="jiucuo">{{suggestion}}</span></a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div id="search_result_lists">
+        {% include 'maps/search/search_results_list.html' %}
+    </div>
+</div>

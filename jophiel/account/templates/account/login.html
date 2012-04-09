@@ -1,0 +1,28 @@
+{% extends "account/base.html" %}
+{% load i18n mezzanine_tags %}
+
+{% block meta_title %}{% trans "Login" %}{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
+{% block body_id %}account{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+<li>{% trans "Account" %}</li>
+{% endblock %}
+
+{% block main %}
+
+<fieldset>
+	<legend>{% trans "Login" %}</legend>
+    <form method="post">
+    {% csrf_token %}
+    {% fields_for form %}
+    <div class="form-actions">
+        <input class="btn btn-primary btn-large" name="login" type="submit" value="{% trans "Login" %}">
+    </div>
+    </form>
+</fieldset>
+
+
+{% endblock %}
+

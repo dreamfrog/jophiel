@@ -1,0 +1,2 @@
+{% load pagination_tags %}
+{% include 'layout_classic.html' %}

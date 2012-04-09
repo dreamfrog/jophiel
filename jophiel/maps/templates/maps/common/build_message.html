@@ -1,0 +1,103 @@
+<script type="text/javascript">
+function buidlMessageInfo(poi){
+    var html = "<div>" +
+    "<div>" + poi.name+"</div>" +
+    "<div>" + poi.address +
+    "</div>"; 
+	
+	if ( poi.description){
+		html+="<div>" + poi.description +
+	    "</div>" ;
+	}
+    html+="<div><a href='" + poi.url + "'>" + poi.domain + "</a></div>" +
+    "<div>" +
+    "<form name='form1' method='get' action='list'>" +
+    "<input type='hidden' name='searchtype' value='around'>" +
+    "<input type='hidden' name='cityname' value='北京'>" +
+    "<input type='hidden' name='lat' value='" + poi.y + "'>" +
+    "<input type='hidden' name='lng' value='" + poi.x + "'>" +
+    "<input type='text' name='kw' >" +
+    "<input type='submit' value='周边搜'>" +
+    "距离<input type='text' name='distance' value='3000'> " +
+    "</form>" +
+    "</div>" +
+    "</div>";
+    return html;
+}
+
+function buidlClickMessageInfo(lat, lng){
+    var html = "<div>" +
+    "<form name='form1' method='get' action='list'>" +
+    "<input type='hidden' name='searchtype' value='around'>" +
+    "<input type='hidden' name='cityname' value='北京'>" +
+    "<input type='hidden' name='lat' value='" +
+    lat +
+    "'>" +
+    "<input type='hidden' name='lng' value='" +
+    lng +
+    "'>" +
+    "<input type='text' name='kw' >" +
+    "<div>" +
+    "<input type='submit' value='周边搜'>" +
+    "</div>" +
+    "<div>" +
+    "距离" +
+    "</div>" +
+    "<div>" +
+    "<input type='text' name='distance' value='3000'> " +
+    "</div>" +
+    "</form>" +
+    "</div>"
+    return html;
+}
+
+</script>
+
+<script type="text/javascript">
+var messages = [];
+var message;
+{% for search in searchresult %}  
+
+{% endfor %}	
+
+var jsonmessages =[];
+var jsonmessage;
+{% for search in jsonresult %}  
+jsonmessage=jsonlint.parse('{{search|escapejs}}');
+message={
+	x:jsonmessage.lseattr.geo.x ,
+	y:jsonmessage.lseattr.geo.y,
+	id:jsonmessage.id,
+	url:jsonmessage.attr.url,
+	domain:jsonmessage.meta.domain,
+	name:jsonmessage.attr.name,
+	address:jsonmessage.attr.address,
+	description:jsonmessage.attr.introduce,
+	category:jsonmessage.attr.category,
+	telephone:jsonmessage.attr.telephone
+};
+
+message.showinfo=buidlMessageInfo(message);
+messages.push(message);
+{% endfor %}
+
+
+var click_messages = {
+    showinfo: "<div>" +
+    "<div>" +
+    "<form name='form1' method='get' action='list'>" +
+    "<input type='hidden' name='searchtype' value='around'>" +
+    "<input type='hidden' name='cityname' value='北京'>" +
+    "<input type='hidden' name='lat' value=''>" +
+    "<input type='hidden' name='lng' value=''>" +
+    "<input type='text' name='kw' >" +
+    "<input type='submit' value='周边搜'>" +
+    "距离<input type='text' name='distance' value='1000'> " +
+    "</form>" +
+    "</div>" +
+    "</div>"
+}
+
+
+
+</script>

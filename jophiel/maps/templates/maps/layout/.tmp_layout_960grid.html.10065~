@@ -1,0 +1,45 @@
+<div class="yui3-g" style="">
+    <div class="yui3-u-1" style="height:30px;">
+        <div class="yui3-g" style="margin-left:0%;">
+            <div class="yui3-u-1-8" style="margin-left:0%;">
+                {% include 'common/guide.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="yui3-u-1" style="height:55px">
+        <div id="">
+            {% include 'common/form.html' %}
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="yui3-u-1" style="height:25px">
+        <div class="yui3-g" style="height:25px;vertical-align:middle">
+            <div class="yui3-u-1-4" style="background:#E8ECF9;height:100%;margin-left:auto; margin-right:auto">
+                <div style="width:20%;float:left">
+                    搜索结果
+                </div>
+                {% if count %}<span style="float:left">：{{count}}条，用时{{ searchtime }}秒</span>
+                {% endif %}
+                <div class="clear">
+                </div>
+            </div>
+            <div class="yui3-u-3-4" style="background:#D5DDF3;height:100%;vertical-align:bottom">
+                {% include 'common/city_choose.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="yui3-u-1" style="height:83%">
+        <div class="yui3-g">
+            <div class="yui3-u-1-4">
+                <div class="" style="height:100%;overflow:auto">
+                    {% include 'search/search_results_list.html' %}
+                </div>
+            </div>
+            <div class="yui3-u-3-4" style="height:100%;">
+                <div id="map" style="width:99.8%">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
