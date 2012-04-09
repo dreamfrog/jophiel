@@ -1,6 +1,0 @@
-<div class="ss_result_info">
-	<div style="width:20%;float:left">搜索结果</div>
-	{% if count %}
-		<span style="float:left">：{{count}}条，用时{{ searchtime }}秒</span>
-	{% endif %}
-</div>

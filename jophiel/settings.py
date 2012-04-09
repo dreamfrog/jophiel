@@ -1,5 +1,11 @@
-# Django settings for jophiel project.
+import os
 
+# If True, the south application will be automatically added to the
+# INSTALLED_APPS setting. This setting is not defined in
+# mezzanine.conf.defaults as is the case with the above settings.
+USE_SOUTH = True# Django settings for jophiel project.
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -43,39 +49,38 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
-
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = 'media'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+MEDIA_URL = STATIC_URL + "media/"
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
+
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + "grappelli/"
 
-import os
-# Additional locations of static files  
-HERE = os.path.dirname(__file__)
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(HERE, "static"),
+    os.path.join(PROJECT_ROOT, "static"),
 )
 
 
@@ -100,42 +105,103 @@ TEMPLATE_LOADERS = (
     #'jinja2_loader.Loader',
 )
 
+# List of processors used by RequestContext to populate the context.
+# Each one should be a callable that takes the request object as its
+# only parameter and returns a dictionary to add to the context.
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.static",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "mezzanine.conf.context_processors.settings",
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+
+    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+    "mezzanine.core.middleware.TemplateForHostMiddleware",
+    "mezzanine.core.middleware.DeviceAwareFetchFromCacheMiddleware",
+    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
+INTERNAL_IPS = ('127.0.0.1',)
+
 ROOT_URLCONF = 'jophiel.urls'
+
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(HERE, "templates")
+    os.path.join(PROJECT_ROOT, "templates")
 )
 
 INSTALLED_APPS = (
-    'grappelli',
+    #'grappelli',
 	'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    "django.contrib.redirects",
+    "django.contrib.sitemaps",
+    'django.contrib.markup',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
     
-     'django.contrib.admin',
-     'django.contrib.admindocs',
-     'south', 
-     'redisboard',    
+)
+
+# Store these package names here as they may change in the future since
+# at the moment we are using custom forks of them.
+PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
+PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+#########################
+# OPTIONAL APPLICATIONS #
+#########################
+
+# These will be added to ``INSTALLED_APPS``, only if available.
+INSTALLED_APPS =INSTALLED_APPS + ( 
+    "debug_toolbar",
+    "django_extensions",
+    PACKAGE_NAME_FILEBROWSER,
+    PACKAGE_NAME_GRAPPELLI,
+    'south', 
+    'redisboard',    
+    
+    "mezzanine.boot",
+    "mezzanine.conf",
+    "mezzanine.core",
+    "mezzanine.generic",
+    "mezzanine.blog",
+    "mezzanine.forms",
+    "mezzanine.pages",
+    "mezzanine.galleries",
+	"mezzanine.twitter",
      
-    #'tastypie',
+    'tastypie',
     'jophiel',
-	'djcelery',
-	'jophiel.spiders',
-	'jophiel.news',
+    'jophiel.djcelery',
+    'jophiel.feeds',
+    'jophiel.maps',
+    'jophiel.account',
+     
+    #'raven.contrib.django',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -145,58 +211,77 @@ INSTALLED_APPS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {        
+        'null': {
+            'level':'DEBUG',
+            'class':'django.utils.log.NullHandler',
+        },
+        'sentry': {
+            'level': 'DEBUG',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
         }
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
+        'django.db.backends': {
             'level': 'ERROR',
-            'propagate': True,
+            'handlers': ['console'],
+            'propagate': False,
         },
-    }
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['null'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['null'],
+            'propagate': False,
+        },
+        'jophiel.news': {
+            'level': 'DEBUG',
+            'handlers': ['console','sentry'],
+            'propagate': False,
+        },
+    },
 }
 
-LOG_FILE = "jophiel.log"
-
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_PASSWORD = ""
-
-HBASE_PROFILE = True
-HBASE_THRIFT_HOST = "localhost"
-HBASE_THRIFT_PORT = 9090
-HBASE_DEFALT_MAX_VERSIONS = 3
 
 
-DEFAULT_CONTENT_TYPE = 'text/html'
-DEFAULT_CHARSET = 'utf-8'
+DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
-# Encoding of files read from disk (template and initial SQL files).
-FILE_CHARSET = 'utf-8'
+try:
+    from .local_settings import *
+except:
+    pass
 
+AUTH_PROFILE_MODULE = 'account.Profile'
 
-TASK_LIST = [
-             "jophiel.contrib.tasks.test.TestTask",
-             ]
+# URLs used for login/logout when ACCOUNTS_ENABLED is set to True.
+ACCOUNTS_ENABLED  = True
+LOGIN_URL = "/account/"
+LOGOUT_URL = "/account/logout/"
+####################
+# DYNAMIC SETTINGS #
+####################
 
-QUEUE_BACKEND = "redis://localhost:6379//"
+# set_dynamic_settings() will rewrite globals based on what has been
+# defined so far, in order to provide some better defaults where
+# applicable.
+from mezzanine.utils.conf import set_dynamic_settings
+set_dynamic_settings(globals())
 
-BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis"
-CELERY_REDIS_HOST = "localhost"
-CELERY_REDIS_PORT = 6379
-CELERY_REDIS_DB = 0
-
-CELERY_IMPORTS = ('jophiel.spiders.tasks',)
-
-import djcelery
-djcelery.setup_loader()
-
-LOGIN_URL = "/login"
-
-CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"

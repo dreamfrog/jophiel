@@ -1,7 +1,0 @@
-<script type="text/javascript">
-    var map;
-    var clickMarker;
-    var poiMarker = [];
-    var infoWindows = [];
-
-</script>

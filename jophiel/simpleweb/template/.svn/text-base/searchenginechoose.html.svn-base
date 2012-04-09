@@ -1,6 +1,0 @@
-  <table>
-  	<tr align='left'>
-  		<td>搜索引擎选择</td>
-  		<td>{{form.enginechoose}}</td>
-  	</tr>
-  </table>

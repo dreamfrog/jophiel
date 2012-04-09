@@ -1,9 +1,0 @@
-<link rel="stylesheet" type="text/css" href="map_media/css/reset-fonts-grids.css">
-<link rel="stylesheet" type="text/css" href="map_media/css/base.css">
-<link href="map_media/images/css/search_suggest.css" rel="stylesheet" type="text/css" />
-<link href="map_media/images/css/page.css" rel="stylesheet" type="text/css" />
-<link href="map_media/images/css/ai_web.css" rel="stylesheet" type="text/css" />
-<link href="map_media/css/style.css" rel="stylesheet" type="text/css" />
-<link href="map_media/schema/default/layout.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="map_media/easyui/easyloader.js">
-</script>
