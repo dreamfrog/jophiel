@@ -9,9 +9,7 @@ from django.conf import settings as django_settings
 
 from mezzanine import __version__
 
-
 registry = {}
-
 
 def register_setting(name="", label="", editable=False, description="",
         default=None, append=False):

@@ -1,6 +1,6 @@
 from optparse import make_option
 from django.core.management.base import NoArgsCommand
-from jophiel.news.models import Article
+from jophiel.feeds.models import Article
 
 class Command(NoArgsCommand):
     help = "Can be run as a cronjob or directly to purge old articles."

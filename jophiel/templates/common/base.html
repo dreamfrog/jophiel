@@ -59,13 +59,6 @@ $(function() {
 </div>
 
 <div class="container">
-
-{% for message in messages %}
-<div class="alert alert-{{ message.tags }}" data-alert="alert">
-<a class="close" href="#" onclick="$(this).parent().fadeOut('fast'); return false;">×</a>{{ message }}
-</div>
-{% endfor %}
-
 <h1>{% block title %}{% endblock %}</h1>
 
 <ul class="breadcrumb">
@@ -73,8 +66,6 @@ $(function() {
 {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
 {% endspaceless %}
 </ul>
-
-</div>
 
 <div class="container">
 <div class="row">
@@ -88,8 +79,8 @@ $(function() {
 </div>
 
 <div class="span3 right">
-
-    {% include "includes/user_panel.html" %}
+    {% include "common/includes/message_panel.html" %}
+    {% include "common/includes/user_panel.html" %}
     <div class="panel">
     {% block right_panel %}
     {% if "mezzanine.twitter"|is_installed %}
@@ -105,20 +96,11 @@ $(function() {
 <footer>
 <div class="container">
 {% page_menu "common/pages/menus/footer.html" %}
-<br style="clear:both">
-<p>
-    {% trans "Powered by" %}
-    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% if "cartridge.shop"|is_installed %},
-    <a href="http://cartridge.jupo.org">Cartridge</a>{% endif %}
-    {% trans "and" %}
-    <a href="http://www.djangoproject.com">Django</a>
-    <span class="separator">|</span>
-    Theme by <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>
-    {% if "mezzanine.mobile"|is_installed %}
-    <span class="separator">|</span>
-    <a href="{% url set_device "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
-    {% endif %}
-</p>
+
+{% block footer %}
+{% include "common/includes/footer.html" %}
+{% endblock %}
+
 </div>
 </footer>
 

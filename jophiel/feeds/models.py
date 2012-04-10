@@ -6,15 +6,17 @@ import md5
 
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 from .constants import (NEWS_EXPIRE_ARTICLES_DAYS, 
                         NEWS_BLOCKED_HTML,NEWS_BLOCKED_REGEX, NEWS_NO_HTML_TITLES)
 from . import config
-from jophiel.contrib.feedparser import feedparser as parser
 from jophiel.contrib import feedparser
 from jophiel.contrib.feedparser import sanitize
 from jophiel.contrib.scrapely import extractors,htmlpage
+
+from .utils import fetch_feed
 
 import logging
 log = logging.getLogger("jophiel.news")
@@ -45,6 +47,8 @@ class Feed(models.Model):
     image_title = models.CharField(max_length=255,default="") #Alternative text of the associated image (*).
      
     article_num = models.IntegerField(default = 0)
+    
+    user = models.ManyToManyField(User,through = "UserFeeds")
      
     class Meta:
         ordering = ('name',)
@@ -54,7 +58,7 @@ class Feed(models.Model):
         return "<%s>:<%s>" %(self.name,self.url)
     
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % (self.url)
 
     def has_item(self, id_):
         """Check whether the item exists in the channel."""
@@ -71,11 +75,6 @@ class Feed(models.Model):
             return None
         return article
     
-    def fetch_feed(self):
-        info = parser.parse(self.url,
-                                etag=self.url_etag, modified=self.url_modified,
-                                agent=config.user_agent)
-        return info
 
     def update_entry(self,info):
         
@@ -145,7 +144,7 @@ class Feed(models.Model):
                 log.error("article can not be added",exc_info=True,)
         return article_num
     
-    def update_feed(self,data):
+    def process_feed(self,data):
         
         self.update_entry(data)
         self.save()
@@ -170,10 +169,6 @@ class Feed(models.Model):
             entry_num = self.update_articles(data.entries)
         self.article_num += entry_num
         self.save()  
-                       
-    def process_feed(self):
-        data = self.fetch_feed()
-        self.update_feed(data)
 
     def get_title(self):
         for name in ("name","title","url"):
@@ -186,6 +181,12 @@ class Feed(models.Model):
     
     def get_article_num(self):
         return self.article_num
+
+class UserFeeds(models.Model):
+    user = models.ForeignKey(User)
+    feed = models.ForeignKey(Feed)
+    date_joined = models.DateField(auto_now_add = True)
+    alias_name = models.CharField(max_length = 255,blank = True)
     
 class FeedMeta(models.Model):
     name = models.CharField(max_length=255,blank=True)  #Name of the feed owner, or feed title.   

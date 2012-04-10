@@ -16,6 +16,7 @@ from jophiel.feeds.exceptions import NewsException
 from jophiel.feeds.models import Feed, FeedMeta,Article
 
 from django.core.management.base import BaseCommand, CommandError
+from jophiel.feeds.utils import fetch_feed
 
 class Command(BaseCommand):
     args = '<feed_name feed_url>'
@@ -41,4 +42,5 @@ class Command(BaseCommand):
                 except:
                     feed = Feed(name = feed_name,url = feed_url)
         
-                feed.process_feed()
+                data = fetch_feed(feed.url)
+                feed.process_feed(data)

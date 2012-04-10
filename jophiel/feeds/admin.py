@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Planet, Feed, Article
-from .models import FeedMeta
+from .models import FeedMeta,UserFeeds
 
 
 class FeedAdmin(admin.ModelAdmin):
@@ -15,7 +15,11 @@ class FeedMetaAdmin(admin.ModelAdmin):
     list_display = ('feed','name', 'title','image_url','image_link')
     search_fields = ['name', 'title']
 
+class UserFeedsAdmin(admin.ModelAdmin):
+    list_display = ('user','feed')
+
 admin.site.register(Planet)
 admin.site.register(Feed, FeedAdmin)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(FeedMeta,FeedMetaAdmin)
+admin.site.register(UserFeeds,UserFeedsAdmin)

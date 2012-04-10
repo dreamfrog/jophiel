@@ -137,7 +137,7 @@ class AccountManager(object):
 
     @classmethod
     def check_user(cls,**data):
-        username = data['user_email']
+        username = data['email']
         try:
             return User.objects.get(username=username)
         except User.DoesNotExist:
@@ -145,7 +145,7 @@ class AccountManager(object):
       
     @classmethod
     def create_user(cls, **data):               
-        user = User(username=data['user_email'],email=data['user_email'])
+        user = User(username=data['email'],email=data['email'])
         if "password" in data:
             user.is_active = True
             password = data['password']
@@ -155,7 +155,7 @@ class AccountManager(object):
         user.set_password(password)
         user.save()
         profile = user.get_profile()
-        if data['private']:
-            profile.private = True
+        #if data['private']:
+        #    profile.private = True
         profile.save()
         return user, password

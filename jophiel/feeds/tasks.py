@@ -17,7 +17,6 @@ def fetch_feed(feed_id):
     except:
         pass
 
-        
 @task(ignore_result=True, serializer="pickle", compression="zlib")   
 def feed_period_download():
     tasks = []

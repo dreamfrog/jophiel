@@ -70,20 +70,17 @@ def logout(request):
             _('You have been logged out.'))
     return HttpResponseRedirect("/")
 
-def get_signup_form(data = {}):
-    if settings.USING_PASSWORD_REGISTER:
-        signup_form = NewUserWithPasswordForm(data)
-    else:
-        signup_form  = NewUserForm(data)
-    return signup_form
-
 def login(request, context=None,template='account/login.html', status=200):
     if not context:
         context = {}
     if not "reset_form" in context:
         context['reset_form'] = auth.forms.PasswordResetForm()
     if not "signup_form" in context:
-        context['signup_form'] = get_signup_form()
+        if settings.USING_PASSWORD_REGISTER:
+            signup_form = NewUserWithPasswordForm()
+        else:
+            signup_form  = NewUserForm()
+        context['signup_form'] = signup_form
 
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('account-show'))
@@ -97,7 +94,8 @@ def login(request, context=None,template='account/login.html', status=200):
             if user is not None:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.add_message(request, messages.INFO,_('You are now logged in.'))
+                    messages.add_message(request, messages.INFO,
+                                         _('You are now logged in.'))
                     return HttpResponseRedirect(settings.SITE_URL + reverse('account-show'))
                 else:
                     messages.add_message(request, messages.ERROR,
@@ -107,36 +105,46 @@ def login(request, context=None,template='account/login.html', status=200):
     else:
         form = UserLoginForm()
         
-    context.update({"form": form})
+    context.update({"login_form": form})
     return render(request, template, context, status=status)
 
 @require_POST
 def signup(request):
     if request.user.is_authenticated():
         messages.add_message(request, messages.ERROR,_('You are currently logged in, you cannot signup.'))
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse("account-show"))
     
-    form = UserLoginForm()
-    signup_form = get_signup_form(request.POST)
+    login_form = UserLoginForm()
+    if settings.USING_PASSWORD_REGISTER:
+        signup_form = NewUserWithPasswordForm(request.POST)
+    else:
+        signup_form  = NewUserForm(request.POST)
+
     if signup_form.is_valid():
         user = AccountManager.check_user(**signup_form.cleaned_data)
         if user:
             messages.add_message(request, messages.ERROR,_('this email has been registered,please input another')) 
-            return render(request,"account/account.html",{
-                        "form": form,
+            return render(
+                        request,"account/login.html",{
+                        "login_form": login_form,
                         "signup_form": signup_form  }                   
                     )
         user = signup_form.create_new_user()
         if not user.is_active:
             messages.add_message(request, messages.SUCCESS,
                     _('Please check your emails for a mail from us with a confirmation link.'))
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse("home"))
         else:
+            user = auth.authenticate(username=signup_form.cleaned_data['email'], 
+                                     password=signup_form.cleaned_data['password'])
+            auth.login(request, user)
+            messages.add_message(request, messages.INFO, _('You are now logged in.'))
             return HttpResponseRedirect(reverse("account-show"))
         
     return render(request, 'account/login.html',
-            {"form": form,
-            "signup_form": signup_form,
+            {
+                "login_form": login_form,
+                "signup_form": signup_form,
             }, status=400)
 
 @require_POST
