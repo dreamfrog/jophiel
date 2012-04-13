@@ -1,0 +1,12 @@
+{% load i18n mezzanine_tags %}
+
+<div class="panel">
+<div>
+  <a href="?{{querystring}}" >全部内容</a>
+</div>
+{%  for feed in feeds_list %}
+    <div>
+      <a href="?feed_id={{feed.id}}&{{querystring}}" > {{feed.get_title }}({{feed.get_article_num}})</a>
+    </div>
+{% endfor %}
+</div>

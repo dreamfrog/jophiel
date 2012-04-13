@@ -11,7 +11,7 @@ v1_api.register(ArticleResource())
 
 urlpatterns = patterns('feeds.views',
     url(r"^$",view = "index",name = "feed_list"),
-    #url(r"^list",view = "article_list",name="articles")
+    url(r"^upload",view = "upload_seed",name="feed_upload")
 )
 
 """api"""

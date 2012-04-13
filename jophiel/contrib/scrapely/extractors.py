@@ -5,8 +5,8 @@ Extractors collection
 import re
 import urlparse
 
-from w3lib.html import remove_entities, remove_comments
-from w3lib.url import safe_url_string
+from jophiel.contrib.w3lib.html import remove_entities, remove_comments
+from jophiel.contrib.w3lib.url import safe_url_string
 
 from .htmlpage import HtmlPage, HtmlTag, HtmlTagType
 

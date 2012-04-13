@@ -1,5 +1,4 @@
 import datetime
-import feedparser
 import re
 import time
 import md5

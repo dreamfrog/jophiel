@@ -97,3 +97,5 @@ def article_passes(self, article, whitelist_queryset):
 class FeedCategoryRelationship(models.Model):
     feed = models.ForeignKey(Feed)
     category = models.ForeignKey(Category)
+    
+    

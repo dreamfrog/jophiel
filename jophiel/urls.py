@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from jophiel.common.views import TV
+from jophiel.utils.views import TV
 
 LG = settings.LANGUAGE_CODE
 from mezzanine.core.views import direct_to_template
@@ -17,7 +17,8 @@ urlpatterns = patterns('',
         ('^feeds/',include("jophiel.feeds.urls")),
         ('^maps/',include("jophiel.maps.urls")),
         (r'^grappelli/', include('grappelli.urls')),  
-        (r"^account/",include('account.urls')),      
+        (r"^account/",include('account.urls')), 
+        (r"^news/",include("jophiel.news.urls")),     
     )
 
 urlpatterns += patterns("",

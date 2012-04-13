@@ -78,17 +78,17 @@ $(function() {
     {% block main %}{% endblock %}
 </div>
 
+{% block right %}
 <div class="span3 right">
     {% include "common/includes/message_panel.html" %}
     {% include "common/includes/user_panel.html" %}
-    <div class="panel">
     {% block right_panel %}
-    {% if "mezzanine.twitter"|is_installed %}
-    {% include "twitter/tweets.html" %}
-    {% endif %}
+       <div class="panel">
+       </div>
     {% endblock %}
-    </div>
+
 </div>
+{% endblock %}
 
 </div>
 </div>

@@ -1,0 +1,27 @@
+{% extends "common/base.html" %}
+
+{% load i18n mezzanine_tags news_tags%}
+{% block main %}
+	{% if article_list.object_list %}
+	  <div class="post_list">
+	    {% for article in article_list.object_list %}
+	    <div>
+	      <h3 class="title"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+	      <p class="date">{{ article.publish|date:"Y F d" }}</p>
+	      <p class="tease">{{ article.get_summary_text|safe|slice:":300"}}</p>
+	    </div>
+	    {% endfor %}
+	    </div>
+		{% article_for article_list %}
+	{% else %}
+	  <div class="post_list">
+	  暂没有内容显示，请添加信息源
+	  </div>		
+	{% endif %}
+	
+{% endblock %}
+
+{% block right_panel %}
+	{% include "feeds/feeds_upload.html" %}
+	{% feed_for feeds_list %}
+{% endblock %}

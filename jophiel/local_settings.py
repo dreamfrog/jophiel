@@ -36,7 +36,7 @@ CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6379
 CELERY_REDIS_DB = 0
 
-CELERY_IMPORTS = ('jophiel.spiders.tasks',)
+CELERY_IMPORTS = ('feeds.tasks','news.tasks')
 
 import djcelery
 djcelery.setup_loader()
@@ -47,25 +47,6 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 # Set your DSN value
 SENTRY_DSN = 'http://5414a038f9bd491db1a7372f1ce272d6:6a76fafcfebb41e98c80e6fb0e2e4ec4@127.0.0.1:9000/2'
-
-# Store these package names here as they may change in the future since
-# at the moment we are using custom forks of them.
-PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
-PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
-
-#########################
-# OPTIONAL APPLICATIONS #
-#########################
-
-# These will be added to ``INSTALLED_APPS``, only if available.
-_OPTIONAL_APPS = ( 
-    "debug_toolbar",
-    "django_extensions",
-    PACKAGE_NAME_FILEBROWSER,
-    PACKAGE_NAME_GRAPPELLI,
-		
-	#'raven.contrib.django',
-)
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 

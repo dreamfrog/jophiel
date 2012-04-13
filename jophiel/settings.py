@@ -166,21 +166,16 @@ INSTALLED_APPS = (
     
 )
 
+#########################
+# OPTIONAL APPLICATIONS #
+#########################
 # Store these package names here as they may change in the future since
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
-#########################
-# OPTIONAL APPLICATIONS #
-#########################
-
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
-    "debug_toolbar",
-    "django_extensions",
-    PACKAGE_NAME_FILEBROWSER,
-    PACKAGE_NAME_GRAPPELLI,
     'south', 
     'redisboard',    
     
@@ -200,9 +195,25 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'jophiel.feeds',
     'jophiel.maps',
     'jophiel.account',
+    'jophiel.news',
      
+    "debug_toolbar",
+    "django_extensions",
+    PACKAGE_NAME_FILEBROWSER,
+    PACKAGE_NAME_GRAPPELLI,
+        
     #'raven.contrib.django',
 )
+
+#########################
+# OPTIONAL APPLICATIONS #
+#########################
+
+# These will be added to ``INSTALLED_APPS``, only if available.
+_OPTIONAL_APPS = ( 
+
+)
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -269,7 +280,7 @@ try:
 except:
     pass
 
-AUTH_PROFILE_MODULE = 'account.Profile'
+AUTH_PROFILE_MODULE = 'account.profile'
 
 # URLs used for login/logout when ACCOUNTS_ENABLED is set to True.
 ACCOUNTS_ENABLED  = True

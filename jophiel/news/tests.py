@@ -6,11 +6,20 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-
+from .utils import url_first_page_fetch,fetch_url_content
 
 class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+    #def testFetchContent(self):
+    #    url = "http://cloud.csdn.net/a/20120412/2804464.html"
+    #    links = url_first_page_fetch(url)
+    #    for link in links:
+    #        result = fetch_url_content(url)
+    #        if result:
+    #            summary,text =result
+                #print text
+    def testExtractContent(self):
+        url = "http://data.book.163.com/book/section/000BNdDB/000BNdDB7.html?zhuanlan"
+        result = fetch_url_content(url)
+        if result:
+            summary,text =result   
+            print text       

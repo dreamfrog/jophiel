@@ -215,7 +215,6 @@ class Document:
                 # transform <div>s that do not contain other block elements into <p>s
                 if  not REGEXES['divToPElementsRe'].search(''.join(map(unicode, elem.contents))):
                     self.debug("Altering div(#%s.%s) to p" % (elem.get('id', ''), elem.get('class', '')))
-                    print elem
                     elem.name = "p"
                     
 

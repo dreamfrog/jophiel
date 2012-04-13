@@ -8,20 +8,23 @@ from celery.task import task
 from celery.task.sets import TaskSet
 
 from .models import Feed
+from . import utils 
 
 @task(ignore_result=True, serializer="pickle", compression="zlib")
 def fetch_feed(feed_id):
     try:
         feed = Feed.objects.get(id = feed_id)
-        feed.process_feed()
+        data = utils.fetch_feed(feed.url)
+        feed.process_feed(data)
     except:
-        pass
+        import traceback 
+        traceback.print_exc()
 
 @task(ignore_result=True, serializer="pickle", compression="zlib")   
 def feed_period_download():
     tasks = []
     for feed in Feed.objects.filter(active=True).order_by('-updated'):
-        subtask = fetch_feed.subtask(feed.id)
+        subtask = fetch_feed.subtask((feed.id,))
         tasks.append(subtask)
         
     subtasks = TaskSet(tasks)

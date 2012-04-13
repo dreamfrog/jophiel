@@ -1742,7 +1742,9 @@ class UnicodeDammit:
     # values that aren't in Python's aliases and can't be determined
     # by the heuristics in find_codec.
     CHARSET_ALIASES = { "macintosh" : "mac-roman",
-                        "x-sjis" : "shift-jis" }
+                        "x-sjis" : "shift-jis",
+                        "gb2312" : "gb18030"
+                         }
 
     def __init__(self, markup, overrideEncodings=[],
                  smartQuotesTo='xml', isHTML=False):
@@ -1760,11 +1762,12 @@ class UnicodeDammit:
         for proposedEncoding in overrideEncodings:
             u = self._convertFrom(proposedEncoding)
             if u: break
+            
         if not u:
             for proposedEncoding in (documentEncoding, sniffedEncoding):
                 u = self._convertFrom(proposedEncoding)
                 if u: break
-
+        
         # If no luck and we have auto-detection library, try that:
         if not u and chardet and not isinstance(self.markup, unicode):
             u = self._convertFrom(chardet.detect(self.markup)['encoding'])
@@ -1815,7 +1818,6 @@ class UnicodeDammit:
             self.originalEncoding = proposed
         except Exception, e:
             # print "That didn't work!"
-            # print e
             return None
         #print "Correct encoding: %s" % proposed
         return self.markup
@@ -1916,6 +1918,7 @@ class UnicodeDammit:
 
 
     def find_codec(self, charset):
+        charset = charset.lower() if charset else charset
         return self._codec(self.CHARSET_ALIASES.get(charset, charset)) \
                or (charset and self._codec(charset.replace("-", ""))) \
                or (charset and self._codec(charset.replace("-", "_"))) \

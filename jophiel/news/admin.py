@@ -1,5 +1,10 @@
+'''
+Created on 2012-4-11
+
+@author: lzz
+'''
 from django.contrib import admin
-from .models import Task
+from .models import UrlSeeds,ExtractResults
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('domain', 'name', 'priority', 'created')
@@ -7,4 +12,5 @@ class TaskAdmin(admin.ModelAdmin):
     ordering = ['priority', 'created']
     search_fields = ('description', 'name')
 
-admin.site.register(Task, TaskAdmin)
+admin.site.register(UrlSeeds)
+admin.site.register(ExtractResults)

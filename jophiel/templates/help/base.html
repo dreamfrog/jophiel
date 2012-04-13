@@ -1,20 +1,10 @@
-{% extends 'base.html' %}
-{% load url from future %}
-{% load i18n %}
+{% extends "common/base.html" %}
 
-{% block nav_help %}active{% endblock %}
-{% block body %}
-<div class="span-18">
-  {% block helpbody %}{% endblock %}
-</div>
-<div class="span-6 last">
-  <h3>{% blocktrans %}Help Pages{% endblocktrans %}</h3>
-  <ul>
-    <li><a href="{% url 'help-index' %}">{% trans "General Information" %}</a></li>
-    <li><a href="{% url 'help-about' %}">{% trans "About Froide" %}</a></li>
-    <li><a href="{% url 'help-making_requests' %}">{% trans "Making Requests" %}</a></li>
-    <li><a href="{% url 'help-your_privacy' %}">{% trans "Your Privacy" %}</a></li>
-    <li><a href="{% url 'help-foi_officers' %}">{% trans "For FoI Officers" %}</a></li>
-  </ul>
-</div>
+{% load i18n mezzanine_tags %}
+
+{% block meta_title %}{% trans "About" %}{% endblock %}
+{% block title %}{% trans "About" %}{% endblock %}
+
+{% block main %}
+	欢迎是能够用jophiel
 {% endblock %}

@@ -12,7 +12,6 @@ from celery.task import task
 from multiprocessing import Process
 import signal
 
-
 @task
 def urlopen(url):
     print("Opening: %r" % (url, ))

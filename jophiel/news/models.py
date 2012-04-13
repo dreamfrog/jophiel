@@ -67,4 +67,19 @@ class URLResult(models.Model):
 
     def short_url(self):
         return re.sub('^([a-z]+:\/\/)?([^\/]+)', '', self.url)
+ 
 
+class UrlSeeds(models.Model):
+    url = models.CharField(max_length=255,unique = True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+
+class ExtractResults(models.Model):
+    url = models.CharField(max_length=255,unique = True)
+    content = models.TextField(blank = True)
+    title = models.TextField( blank = True)
+    summary = models.TextField(blank = True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('created_date',)

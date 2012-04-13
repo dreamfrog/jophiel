@@ -23,34 +23,35 @@
             "status": 2,
             "_order": 1,
             "parent": null,
-            "description": "Blog",
-            "title": "Blog",
+            "description": "Feed",
+            "title": "Feed",
             "in_footer": true,
             "titles": "Blog",
             "content_model": "richtextpage",
             "in_navigation": true,
-            "slug": "blog",
+            "slug": "feeds",
             "site": 1
         }
     },
+    
     {
-        "pk": 7,
+        "pk": 2,
         "model": "pages.page",
         "fields": {
             "status": 2,
-            "_order": 2,
+            "_order": 1,
             "parent": null,
-            "description": "Gallery",
-            "title": "Gallery",
+            "description": "Maps",
+            "title": "Maps",
             "in_footer": true,
-            "titles": "Gallery",
-            "content_model": "gallery",
+            "titles": "Maps",
+            "content_model": "richtextpage",
             "in_navigation": true,
-            "slug": "gallery",
+            "slug": "maps",
             "site": 1
         }
     },
-
+    
     {
         "pk": 8,
         "model": "pages.page",
@@ -67,8 +68,8 @@
             "slug": "gallery",
             "site": 1
         }
-    },    
-    
+    },
+      
     {
         "pk": 1,
         "model": "pages.richtextpage",

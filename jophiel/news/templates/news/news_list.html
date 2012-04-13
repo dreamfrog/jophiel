@@ -1,0 +1,25 @@
+{% extends "common/base.html" %}
+
+{% load i18n mezzanine_tags news_tags%}
+{% block main %}
+	{% if news_list %}
+	  <div class="post_list">
+	    {% for article in news_list %}
+	    <div>
+	      <a href="{{ article.url}}" > {{ article.title }}</a> {{artile.created_date}}
+	      <p>{{ article.content|slice:":400" }}</p>
+	    </div>
+	    
+	    {% endfor %}
+	    </div>
+	{% else %}
+	  <div class="post_list">
+	  暂没有内容显示，请添加信息源
+	  </div>		
+	{% endif %}
+	
+{% endblock %}
+
+{% block right_panel %}
+	{% include "news/feeds_upload.html" %}
+{% endblock %}

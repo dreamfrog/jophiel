@@ -113,6 +113,7 @@ def _remove_crufty_html(content):
 def _parse_methods():
     def unicode_cleansed(content, base_href):
         content = UnicodeDammit(content, isHTML=True).markup
+        #print content.encode("utf-8")
         cleaned = _remove_crufty_html(content)
         debug("Cleaned content: %s" % (cleaned,))
         return beautiful_soup(cleaned, base_href)
