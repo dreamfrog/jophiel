@@ -184,10 +184,10 @@ INSTALLED_APPS =INSTALLED_APPS + (
     "mezzanine.core",
     "mezzanine.generic",
     "mezzanine.blog",
-    "mezzanine.forms",
+    #"mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-	"mezzanine.twitter",
+	#"mezzanine.twitter",
      
     'tastypie',
     'jophiel',

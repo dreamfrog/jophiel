@@ -22,8 +22,7 @@ logger = logging.getLogger("jophiel.feeds")
 
 
 def default_article_sql(request):
-    sql = """select feeds_article.* from feeds_article
-             where 1=1 and 
+    sql = """select feeds_article.* from feeds_article where 1=1 and 
            """        
     if request.GET.get('feed_id',None):
         sql += " feeds_article.feed_id = %s and "%request.GET["feed_id"]
@@ -31,12 +30,10 @@ def default_article_sql(request):
     return sql
 
 def user_article_sql(request):
-    sql = """select feeds_article.* from 
-                 feeds_article ,feeds_feed,feeds_userfeeds 
+    sql = """select feeds_article.* from feeds_article ,feeds_feed,feeds_userfeeds 
                  where feeds_article.feed_id = feeds_feed.id and
                  """  
-    sql += """feeds_feed.id = feeds_userfeeds.feed_id 
-            and feeds_userfeeds.user_id = %s 
+    sql += """feeds_feed.id = feeds_userfeeds.feed_id  and feeds_userfeeds.user_id = %s 
             and """ %request.user.id  
             
     if request.GET.get('feed_id',None):

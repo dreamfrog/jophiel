@@ -8,13 +8,13 @@ from celery.task import task
 from celery.task.sets import TaskSet
 
 from .models import Feed
-from . import utils 
+from jophiel.common.content import fetch_feed
 
 @task(ignore_result=True, serializer="pickle", compression="zlib")
 def fetch_feed(feed_id):
     try:
         feed = Feed.objects.get(id = feed_id)
-        data = utils.fetch_feed(feed.url)
+        data = fetch_feed(feed.url)
         feed.process_feed(data)
     except:
         import traceback 

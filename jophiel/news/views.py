@@ -16,15 +16,26 @@ from mezzanine.utils import views
 
 import logging 
 logger = logging.getLogger("jophiel.news")
+
 from .models import ExtractResults,UrlSeeds
 from .forms import FeedAddForm 
 from .tasks import url_extract_task
 
+from .models import UrlSeeds
+
+def process_page(request,qs,page_num):
+    qs = views.paginate(qs,page_num,5,8)
+    return qs  
+
 def index(request):
     context = {}
     lists = ExtractResults.objects.all()
-    context["news_list"] = lists
+    page_num = request.GET.get("page",1)
+    qs = process_page(request,lists,page_num)
+    context["news_list"] = qs
     context["feedupload_form"] = FeedAddForm()
+    seeds = UrlSeeds.objects.all()
+    context["feeds_list"] = qs    
     return views.render(request,"news/index.html",context)    
 
 @login_required
