@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/72/trunk/sitescraper
+END
+common.py
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/71/trunk/sitescraper/common.py
+END
+HtmlXpath.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/71/trunk/sitescraper/HtmlXpath.py
+END
+HtmlDoc.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/70/trunk/sitescraper/HtmlDoc.py
+END
+HtmlAttributes.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/72/trunk/sitescraper/HtmlAttributes.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/72/trunk/sitescraper/__init__.py
+END
+HtmlModel.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/71/trunk/sitescraper/HtmlModel.py
+END
