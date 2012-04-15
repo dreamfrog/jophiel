@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # TODO: this is just stuff from utils.py - should be splitted / moved
-from cms.utils.i18n import get_default_language
+from .i18n import get_default_language
 from distutils.version import LooseVersion
 from django.conf import settings
 from django.core.files.storage import get_storage_class
@@ -40,7 +40,6 @@ def get_template_from_request(request, obj=None, no_current_page=False):
 
 
 def get_language_from_request(request, current_page=None):
-    from cms.models import Page
     """
     Return the most obvious language according the request
     """
@@ -54,13 +53,6 @@ def get_language_from_request(request, current_page=None):
         if not language in dict(settings.CMS_LANGUAGES).keys():
             language = None
 
-    # TODO: This smells like a refactoring oversight - was current_page ever a page object? It appears to be a string now
-    if language is None and isinstance(current_page, Page):
-        # in last resort, get the first language available in the page
-        languages = current_page.get_languages()
-
-        if len(languages) > 0:
-            language = languages[0]
 
     if language is None:
         # language must be defined in CMS_LANGUAGES, so check first if there
@@ -69,15 +61,6 @@ def get_language_from_request(request, current_page=None):
         language = get_default_language()
 
     return language
-
-
-def get_page_from_request(request):
-    from warnings import warn
-    from cms.utils.page_resolver import get_page_from_request as new
-    warn("'cms.utils.get_page_from_request' is deprecated in favor of "
-         "'cms.utils.page_resolver.get_page_from_request' and will be removed "
-         "in Django-CMS 2.2.", DeprecationWarning)
-    return new(request)
 
 
 """

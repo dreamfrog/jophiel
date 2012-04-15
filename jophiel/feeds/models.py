@@ -1,17 +1,8 @@
-import datetime
-import re
 import time
 import md5
 
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-
-from jophiel import config 
-from jophiel.contrib import feedparser
-from jophiel.contrib.feedparser import sanitize
-from jophiel.contrib.scrapely import extractors,htmlpage
 
 from jophiel.common.feed import parse_feed_meta,parse_feed_content,parse_feed_status,get_feed_date
 from jophiel.common import dateutil
@@ -38,7 +29,7 @@ class Feed(models.Model):
     updated = models.DateTimeField(blank = True,auto_now_add = True) # Correct UTC-Normalised update time of the feed.
     last_updated = models.DateTimeField(blank = True,auto_now_add = True) #Correct UTC-Normalised time the feed was last updated.
     
-    #feed other info
+    #feed other info should remove
     title = models.TextField(default = "")    #One-line title (*).
     author = models.CharField(max_length=255,default="") #Name of the author (*).
     link = models.URLField(blank=True)  
@@ -59,14 +50,13 @@ class Feed(models.Model):
         self.url_status = status
         
         if self.url_status in ('304','410','408'):
-            log.warning("Feed %s: status = s% ", self.url_status,self)
+            log.warning("Feed %s: status = s% ", self,self.url_status)
             return            
         elif int(self.url_status) >= 400:
             log.error("Error %s while updating feed %s",self.url_status, self)
-            return   
-             
+            return    
         #todo:the feed moved need to be processed 
-        if self.url_status == '301' and \
+        elif self.url_status == '301' and \
            (info.has_key("entries") and len(info.entries)>0):
             log.warning("Feed has moved from <%s> to <%s>", self.url, info.url)
             self.orig_url = self.url
@@ -78,7 +68,6 @@ class Feed(models.Model):
         if modify:
             self.url_modified = modify
         self.save()
-        
            
     def update_articles(self, entries):
         """Update entries from the feed.
@@ -121,9 +110,7 @@ class Feed(models.Model):
             self.image_link = feedmeta.image_link
             self.image_url = feedmeta.image_url
             self.article_num = feedmeta.article_num
-        
-
-
+      
     def get_title(self):
         for name in ("name","title","url"):
             value = getattr(self,name)
@@ -297,7 +284,6 @@ class Article(models.Model):
             if hasattr(self,key) and getattr(self,key):
                 return getattr(self,key)
         return ""
-
 
     def update_entry(self, entry):
         result = parse_feed_content(entry)

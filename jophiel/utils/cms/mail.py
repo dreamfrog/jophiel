@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.contrib.sites.models import Site
 
-from cms.utils.urlutils import urljoin
+from .urlutils import urljoin
 
 def send_mail(subject, txt_template, to, context=None, html_template=None, fail_silently=True):
     """

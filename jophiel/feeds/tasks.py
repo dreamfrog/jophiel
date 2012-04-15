@@ -8,7 +8,7 @@ from celery.task import task
 from celery.task.sets import TaskSet
 
 from .models import Feed
-from jophiel.common.content import fetch_feed
+from jophiel.common.feed import fetch_feed
 
 @task(ignore_result=True, serializer="pickle", compression="zlib")
 def fetch_feed(feed_id):

@@ -24,10 +24,6 @@ DEFAULT_CHARSET = 'utf-8'
 FILE_CHARSET = 'utf-8'
 
 
-TASK_LIST = [
-             "jophiel.contrib.tasks.test.TestTask",
-             ]
-
 QUEUE_BACKEND = "redis://localhost:6379//"
 
 BROKER_URL = "redis://localhost:6379/0"
@@ -37,9 +33,6 @@ CELERY_REDIS_PORT = 6379
 CELERY_REDIS_DB = 0
 
 CELERY_IMPORTS = ('feeds.tasks','news.tasks')
-
-import djcelery
-djcelery.setup_loader()
 
 LOGIN_URL = "/login"
 
@@ -67,3 +60,6 @@ SITE_URL = 'http://localhost:8000'
 USING_PASSWORD_REGISTER = True
 
 TASTYPIE_FULL_DEBUG = True
+
+import djcelery
+djcelery.setup_loader()

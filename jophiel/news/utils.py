@@ -21,7 +21,7 @@ from celery.task.sets import TaskSet
 
 import urlparse
 from jophiel.contrib.scrapely import extractors
-from jophiel.utils import html2text
+from jophiel.contrib import html2text
 
 def get_url_domain(url):
     host_name = parse_url(url).hostname
