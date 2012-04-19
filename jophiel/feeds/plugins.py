@@ -56,7 +56,7 @@ class ArticleListBlock(BaseBlock):
     default_place = 'meta'
     fixed_place = True
     is_addable = False
-    help_text = ugettext_lazy('Block represents global feed lists')
+    help_text = ugettext_lazy('Block represents Article lists')
     verbose_name = ugettext_lazy('feed List block')
     render_template = "feeds/articles_list.html"
     

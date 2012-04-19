@@ -6,6 +6,7 @@ encoding//jophiel/account/migrations/0002_auto__add_field_profile_private.py=utf
 encoding//jophiel/account/migrations/0003_auto__add_field_profile_address.py=utf-8
 encoding//jophiel/account/migrations/0004_auto__del_field_profile_address.py=utf-8
 encoding//jophiel/contrib/bloomfilter/pybloom.py=utf-8
+encoding//jophiel/contrib/pyphantomjs/resources.py=utf-8
 encoding//jophiel/djcelery/migrations/0001_initial.py=utf-8
 encoding//jophiel/djcelery/migrations/0002_v25_changes.py=utf-8
 encoding//jophiel/maps/cityinfo.py=utf-8
