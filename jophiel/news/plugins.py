@@ -84,6 +84,6 @@ class ArticleListBlock(BaseBlock):
                      "article_query":querystring.urlencode()
                      })    
         
-plugins.register(FeedsListBlock)
-plugins.register(FeedsUploadBlock)
-plugins.register(ArticleListBlock)
+#plugins.register(FeedsListBlock)
+#plugins.register(FeedsUploadBlock)
+#plugins.register(ArticleListBlock)

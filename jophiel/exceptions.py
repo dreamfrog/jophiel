@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2012-4-7
 
 @author: lzz
 '''
 
-# -*- coding: utf-8 -*-
 class PluginAlreadyRegistered(Exception):
     pass
 

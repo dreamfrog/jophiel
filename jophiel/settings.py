@@ -116,7 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-    "mezzanine.conf.context_processors.settings",
+    "jophiel.conf.context_processors.settings",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -128,10 +128,10 @@ MIDDLEWARE_CLASSES = (
     
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 
-    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
-    "mezzanine.core.middleware.TemplateForHostMiddleware",
-    "mezzanine.core.middleware.DeviceAwareFetchFromCacheMiddleware",
-    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    "jophiel.core.middleware.TemplateForDeviceMiddleware",
+    "jophiel.core.middleware.TemplateForHostMiddleware",
+    "jophiel.core.middleware.DeviceAwareFetchFromCacheMiddleware",
+    "jophiel.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.comments',
     
 )
 
@@ -176,27 +177,20 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
-    'south', 
-    'redisboard',    
-    
-    "mezzanine.boot",
-    "mezzanine.conf",
-    "mezzanine.core",
-    "mezzanine.generic",
-    "mezzanine.blog",
-    "mezzanine.forms",
-    "mezzanine.pages",
-    "mezzanine.galleries",
-	#"mezzanine.twitter",
-     
+    #'redisboard', 
+    'south',    
     'tastypie',
+    
+    'jophiel.conf',
+    'jophiel.core',
+    
     'jophiel',
-	'jophiel.plugins',
-    'jophiel.djcelery',
-    'jophiel.feeds',
-    'jophiel.maps',
-    'jophiel.account',
-    'jophiel.news',
+    'account',
+	'plugins',
+    
+    'feeds',
+    'maps',
+    'news',
      
     "debug_toolbar",
     "django_extensions",
@@ -287,6 +281,8 @@ AUTH_PROFILE_MODULE = 'account.profile'
 ACCOUNTS_ENABLED  = True
 LOGIN_URL = "/account/"
 LOGOUT_URL = "/account/logout/"
+
+SITE_TITLE = "Jophiel"
 ####################
 # DYNAMIC SETTINGS #
 ####################
@@ -294,6 +290,6 @@ LOGOUT_URL = "/account/logout/"
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
 # applicable.
-from mezzanine.utils.conf import set_dynamic_settings
+from jophiel.utils.mezzanine.conf import set_dynamic_settings
 set_dynamic_settings(globals())
 

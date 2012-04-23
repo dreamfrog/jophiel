@@ -6,7 +6,7 @@ Created on 2012-4-10
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from mezzanine.conf import register_setting
+from jophiel.conf import register_setting
 
 register_setting(
     name="SITE_TITLE",
