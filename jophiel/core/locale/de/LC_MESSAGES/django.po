@@ -1,0 +1,291 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Yassine Elassad <yassine.elassad@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mezzanine\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-15 07:00-0430\n"
+"PO-Revision-Date: 2012-03-11 23:55+0000\n"
+"Last-Translator: Sebastián Ramírez Magrí <sebasmagri@gmail.com>\n"
+"Language-Team: German (http://www.transifex.net/projects/p/mezzanine/"
+"language/de/)\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: admin.py:28
+msgid "Meta data"
+msgstr "Metadaten"
+
+#: fields.py:23
+#, python-format
+msgid "Could not import the value of settings.RICHTEXT_WIDGET_CLASS: %s"
+msgstr ""
+
+#: forms.py:35
+msgid "Email Address"
+msgstr ""
+
+#: forms.py:36
+msgid "Password"
+msgstr ""
+
+#: forms.py:64
+msgid "This email is already registered"
+msgstr ""
+
+#: forms.py:84
+msgid "Invalid email/password"
+msgstr ""
+
+#: forms.py:86
+msgid "Your account is inactive"
+msgstr ""
+
+#: forms.py:116 models.py:221
+msgid "Order"
+msgstr "Bestellung"
+
+#: models.py:27
+msgid "Title"
+msgstr "Title"
+
+#: models.py:28
+msgid "URL"
+msgstr "URL"
+
+#: models.py:77
+msgid "View on site"
+msgstr "Seite Sicht"
+
+#: models.py:87
+msgid "Description"
+msgstr "Beschreibung"
+
+#: models.py:88
+msgid "Keywords"
+msgstr "Schlüsselwöter"
+
+#: models.py:134
+msgid "Draft"
+msgstr "Vorlage"
+
+#: models.py:135
+msgid "Published"
+msgstr ""
+
+#: models.py:146
+msgid "Status"
+msgstr "Status"
+
+#: models.py:148
+msgid "Published from"
+msgstr "Veröffentlicht von"
+
+#: models.py:149
+msgid "With published checked, won't be shown until this time"
+msgstr ""
+
+#: models.py:151
+msgid "Expires on"
+msgstr "Endet am"
+
+#: models.py:152
+msgid "With published checked, won't be shown after this time"
+msgstr ""
+
+#: models.py:179
+msgid "Content"
+msgstr "Inhalt"
+
+#: models.py:275
+msgid "Author"
+msgstr "Autor"
+
+#: views.py:33
+msgid "Successfully logged in"
+msgstr ""
+
+#: views.py:39
+msgid "Successfully signed up"
+msgstr ""
+
+#: views.py:53
+msgid "Successfully logged out"
+msgstr ""
+
+#: views.py:89
+msgid "Permission denied"
+msgstr "Zugang verweigert"
+
+#: templates/404.html:6
+msgid "Page not found"
+msgstr "Seite könnte nicht gefunden werden"
+
+#: templates/404.html:10
+msgid "The page you requested does not exist."
+msgstr "Die aufgerufenen Seite könnte nicht gefunden werden"
+
+#: templates/500.html:6
+msgid "Error"
+msgstr "Fehler"
+
+#: templates/500.html:10
+msgid "Sorry, an error occurred."
+msgstr ""
+
+#: templates/account.html:4 templates/account.html.py:5
+msgid "Login / Signup"
+msgstr ""
+
+#: templates/account.html:10
+msgid "Account"
+msgstr ""
+
+#: templates/account.html:16 templates/account.html.py:21
+msgid "Login"
+msgstr ""
+
+#: templates/account.html:27 templates/account.html.py:32
+msgid "Signup"
+msgstr ""
+
+#: templates/base.html:49
+msgid "Search"
+msgstr ""
+
+#: templates/base.html:105
+msgid "Powered by"
+msgstr ""
+
+#: templates/base.html:108
+msgid "and"
+msgstr ""
+
+#: templates/base.html:114
+msgid "View Mobile Site"
+msgstr ""
+
+#: templates/index.html:5 templates/index.html.py:8 templates/index.html:12
+#: templates/search_results.html:10 templates/admin/index.html:15
+msgid "Home"
+msgstr "Home"
+
+#: templates/index.html:16
+msgid "This is the homepage."
+msgstr ""
+
+#: templates/search_results.html:5 templates/search_results.html.py:6
+#: templates/search_results.html:13
+msgid "Search Results"
+msgstr "Treffer "
+
+#: templates/search_results.html:20
+msgid "No results were found matching your query: "
+msgstr "Für diese Suchkriterien wurden keine Einträge gefunden"
+
+#: templates/search_results.html:22
+msgid "Showing"
+msgstr ""
+
+#: templates/search_results.html:22
+msgid "to"
+msgstr "an"
+
+#: templates/search_results.html:22 templates/includes/pagination.html:7
+msgid "of"
+msgstr ""
+
+#: templates/search_results.html:23
+msgid "results matching your query:"
+msgstr ""
+
+#: templates/search_results.html:32
+msgid "read more"
+msgstr "mehr lesen"
+
+#: templates/admin/base_site.html:64
+msgid "Forgot password?"
+msgstr "Passwort Vergessen?"
+
+#: templates/admin/base_site.html:67
+msgid "Interface:"
+msgstr "Schnittstelle:"
+
+#: templates/admin/base_site.html:70
+#: templates/includes/editable_toolbar.html:7
+#: templates/includes/editable_toolbar.html:9
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/admin/base_site.html:73
+msgid "Site"
+msgstr "Seite"
+
+#: templates/admin/index.html:17 templates/admin/includes/dropdown_menu.html:3
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/admin/includes/app_list.html:20
+msgid "Add"
+msgstr ""
+
+#: templates/admin/includes/app_list.html:27
+msgid "Change"
+msgstr ""
+
+#: templates/admin/includes/dynamic_inline_stacked.html:6
+#: templates/admin/includes/dynamic_inline_tabular.html:6
+msgid "Add another"
+msgstr ""
+
+#: templates/admin/includes/recent_actions.html:4
+msgid "Recent Actions"
+msgstr ""
+
+#: templates/admin/includes/recent_actions.html:5
+msgid "My Actions"
+msgstr ""
+
+#: templates/admin/includes/recent_actions.html:9
+msgid "None available"
+msgstr ""
+
+#: templates/includes/account_panel.html:5
+#: templates/includes/editable_toolbar.html:11
+msgid "Log out"
+msgstr ""
+
+#: templates/includes/account_panel.html:6
+msgid "Logged in as: "
+msgstr ""
+
+#: templates/includes/account_panel.html:9
+msgid "Log in or sign up"
+msgstr ""
+
+#: templates/includes/account_panel.html:10
+msgid "Not logged in"
+msgstr ""
+
+#: templates/includes/editable_form.html:16
+msgid "Save"
+msgstr ""
+
+#: templates/includes/editable_form.html:17
+msgid "Cancel"
+msgstr ""
+
+#: templates/includes/editable_form.html:25
+msgid "Edit"
+msgstr ""
+
+#: templates/includes/pagination.html:7
+msgid "Page"
+msgstr ""
