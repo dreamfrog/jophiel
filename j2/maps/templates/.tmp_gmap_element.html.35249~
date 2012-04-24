@@ -1,0 +1,49 @@
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">
+</script>
+
+<script type="text/javascript" src="map_media/js/mapfunc.js">
+</script>
+
+{% include "map_varaible.html" %}
+
+{% include "build_message.html" %}
+
+{% include "map_init.html" %}
+
+<script type="text/javascript">
+ 
+</script>
+<script type="text/javascript">
+    
+ 
+    
+	function initialize1(){
+        var myLatlng = new google.maps.LatLng(-25.363882, 131.044922);
+        var myOptions = {
+            zoom: 4,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        
+        map = new google.maps.Map(document.getElementById("map"), myOptions);
+        
+        for (var i = 0; i < messages.length; i++) {
+        
+            var location = new google.maps.LatLng(messages[i].y, messages[i].x);
+            
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+            poiMarker.push(marker);
+            var j = i + 1;
+            marker.setTitle(j.toString());
+            attachSecretMessage(marker, i);
+        }
+        showRegion(map);
+        
+        google.maps.event.addListener(map, 'click', onClickCallback);
+    }
+    $(document).ready(initialize);
+</script>

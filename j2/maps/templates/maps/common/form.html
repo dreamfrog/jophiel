@@ -1,0 +1,14 @@
+<form id="searchform" name="form1" method="get" action="list">
+    <div class="search_form">
+        <div class="search_icon">
+            <img src="{{ STATIC_URL }}map_media/images/logo.png" hspace="0"height="40px" align="left" />
+        </div>
+        <div class="search_input">
+            <input class="search_city" name="cityname" type="hidden" value="北京">
+            <input class="search_keyword" name="kw" width="400px" type="textarea">
+			<input class="search_submit" type="submit" value="搜索"  onclick="doSearch(this)">
+        	<input type='hidden' name='lat' value=''>
+        	<input type='hidden' name='lng' value=''>
+		</div>
+    </div>
+</form>

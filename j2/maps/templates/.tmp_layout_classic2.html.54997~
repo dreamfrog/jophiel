@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        {% block title %}<title>本地搜索、公交查询、驾车导航--高德真诚为您服务！</title>
+        {% endblock %}
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+        <meta name="generator" content="HAPedit 3.1">
+        <link rel="stylesheet" type="text/css" href="css/reset-fonts-grids.css">
+        <link rel="stylesheet" type="text/css" href="css/base.css">
+        <link href="images/css/search_suggest.css" rel="stylesheet" type="text/css" />
+        <link href="images/css/page.css" rel="stylesheet" type="text/css" />
+        <link href="images/css/ai_web.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="js/jquery-1.4.2.min.js">
+        </script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js">
+        </script>
+        {% include 'map_element.html' %}
+        <style type="text/css">
+            html, body {
+                margin: 0;
+                padding: 0
+            }
+            
+            body {
+                font: 76% arial, sans-serif;
+                text-align: center
+            }
+            
+            p {
+                margin: 0 10px 10px
+            }
+            
+            a {
+                display: block;
+                color: #981793;
+                padding: 10px
+            }
+            
+            div#header h1 {
+                height: 80px;
+                line-height: 80px;
+                margin: 0;
+                padding-left: 10px;
+                background: #EEE;
+                color: #79B30B
+            }
+            
+            div#container {
+                text-align: left
+            }
+            
+            div#content p {
+                line-height: 1.4
+            }
+            
+            div#navigation {
+                background: #B9CAFF
+            }
+            
+            div#extra {
+                background: #FF8539
+            }
+            
+            div#footer {
+                background: #333;
+                color: #FFF
+            }
+            
+            div#footer p {
+                margin: 0;
+                padding: 5px 10px
+            }
+            
+            div#container {
+                width: 700px;
+                margin: 0 auto
+            }
+            
+            div#content {
+                float: right;
+                width: 500px
+            }
+            
+            div#navigation {
+                float: left;
+                width: 200px
+            }
+            
+            div#extra {
+                clear: both;
+                width: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <h1>Header</h1>
+            </div>
+            <div id="wrapper">
+                <div id="content">
+                    {% block right %}
+                    {% include 'detail_map_openlayers.html' %}
+                    {% endblock %}
+                </div>
+            </div>
+            <div id="navigation">
+                {% block left %} 
+                {% include 'searchresult.html' %}  
+                {% endblock %} 
+            </div>
+            <div id="extra">
+                <p>
+                    <strong>3) More stuff here.</strong>
+                    very text make long column make filler fill make column column silly filler text silly column fill silly fill column text filler make text silly filler make filler very silly make text very very text make long filler very make column make silly column fill silly column long make silly filler column filler silly long long column fill silly column very 
+                </p>
+            </div>
+            <div id="footer">
+                <p>
+                    Here it goes the footer
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

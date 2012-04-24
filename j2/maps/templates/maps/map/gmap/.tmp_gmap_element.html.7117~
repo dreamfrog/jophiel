@@ -1,0 +1,6 @@
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="map_media/js/mapfunc.js"></script>
+
+{% include "gmap/map_varaible.html" %}
+{% include "gmap/map_init.html" %}
+

@@ -1,0 +1,52 @@
+<div region="north" border="false" style="">
+            <div id="ss_search_header">
+                {% include 'maps/common/guide.html' %}
+            </div>
+            <div id="">
+                {% include 'maps/common/form.html' %}
+            </div>
+        </div>
+        <div region="west" style="width:300px;padding:1px;overflow:hidden">
+            <style type="text/css">
+                .ss_result_info {
+                    background: #E8ECF9;
+					height:4%;
+                }
+                
+                .ss_result_info:after {
+                    content: ".";
+                    display: block;
+                    height: 0;
+                    clear: both;
+                    visibility: hidden;
+                }
+                * html .ss_result_info {
+                    height: 1%;
+                }
+            </style>
+            <div class="ss_result_info">
+                <div style="width:20%;float:left">
+                    搜索结果
+                </div>
+                {% if count %}<span style="float:left">：{{count}}条，用时{{ searchtime }}秒</span>
+                {% endif %}
+            </div>
+            <div class="" style="height:96%;overflow:auto">
+                <div class="">
+                    {% include 'maps/search/search_results_list.html' %}
+                </div>
+            </div>
+        </div>
+        <div region="center" style="padding:1px;overflow:hidden">
+            <div class="toolbar" style="width:100%;background:#efefef;">
+                <div style="padding:2px;background:#efefef;width:600px;height:20px">
+                    <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-cancel">Cancel</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-reload">Reload</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-search">Search</a>
+                    <a href="#" class="easyui-linkbutton" plain="true">Text Button</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-print">Print</a>
+				</div>
+            </div>
+            <div id="map" style="padding:1px;height:95%;">
+            </div>
+        </div>

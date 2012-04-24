@@ -1,0 +1,180 @@
+<div id="fadeinbox" style="filter:progid:DXImageTransform.Microsoft.Pixelate(duration=1);-moz-opacity:0;">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="right">
+	<tr>
+		<td align="right" style="padding-right:0px">
+			<div id="mapabc_map"  style="width: 100%; height: 500px;"></div>
+		</td>
+	</tr>
+</table>
+</div>
+
+<script language="JavaScript">
+  function   tdMOver(obj)   
+  {   
+  	obj.style.color   =   "red";   
+  }   
+  function   tdMOut(obj)   
+  {   
+  	obj.style.color   =   "blue";   
+  }
+</script>
+
+<script>
+ var display_flag ="road";
+ var init_x ="{{ init_x }}";
+ var init_y ="{{ init_y }}";
+ var js_result_arr = new Array();
+ var map="big"
+ var cityname="{{cityname}}"
+ {% for result_arr in searchresult %}
+	js_result_arr[{{ forloop.counter}}-1] = new Array();
+	js_result_arr[{{ forloop.counter }}-1][0]={{ forloop.counter}};
+	js_result_arr[{{ forloop.counter }}-1][1]="{{ result_arr.name }}";
+	js_result_arr[{{ forloop.counter }}-1][2]="{{ result_arr.tel }}"; 
+	js_result_arr[{{ forloop.counter }}-1][3]="{{ result_arr.address }}";
+	js_result_arr[{{ forloop.counter }}-1][4]="{{ result_arr.x }}";
+	js_result_arr[{{ forloop.counter }}-1][5]="{{ result_arr.y }}";
+	js_result_arr[{{ forloop.counter }}-1][6]="{{ result_arr.coor }}";
+	js_result_arr[{{ forloop.counter }}-1][7]="{{ result_arr.ename }}";
+	js_result_arr[{{ forloop.counter }}-1][8]="{{ result_arr.eaddress }}";
+ {% endfor %}
+ 
+</script>
+
+
+<script>
+	var mapOptions = new MabcMapOptions();
+	mapOptions.mapWinId = "mapabc_map";
+	mapObj = new MabcMap(mapOptions); 
+	var map_width = window.screen.width*0.90-225;
+	var map_height = window.screen.height-get_div_y('hr_pos')-200;
+	
+	var tmp_mapaa = map_width+","+map_height;
+	mapObj.setMapSize(tmp_mapaa);
+	mapObj.enabledZoomingByWheel();
+	
+	if(init_x!="" && init_y!="")
+	{
+		set_center();
+	}
+	
+	drawPoints();
+	if(js_result_arr.length == 0)
+	{
+		mapObj.setMapZoom("10");
+	}
+	//mapObj.setViewAdjustType("auto");
+	function drawPoints()
+	{
+		for(var i=0; i<js_result_arr.length;i++)   
+		{
+			tmp_number = js_result_arr[i][0];
+			tmp_name = js_result_arr[i][1]; 
+			tmp_ename = "<strong>EnName : </strong>" + js_result_arr[i][7] + "<br>";
+			tmp_tel = "";
+			tmp_address = "";
+			tmp_x = js_result_arr[i][4];
+			tmp_y = js_result_arr[i][5];
+			if(js_result_arr[i][2].length >0)
+			{
+				tmp_tel = "电话："+js_result_arr[i][2]+"<br>";
+			}
+			if(js_result_arr[i][3].length >0)
+			{
+				tmp_address = "地址："+js_result_arr[i][3] + "  [" + js_result_arr[i][8] + "]";
+			}
+			
+ 		//添加另外一个点
+		var point = new MabcPointObject();//创建点实例2, 这个点与第1个点位置一样，偏移量不同，其他属性默认
+		//point.serial_id = "myPoint_" + (new Date().valueOf()+""+Math.random()*10000);//设置点的serial_id
+		point.serial_id = tmp_number;
+		point.coord = tmp_x+","+tmp_y; 		//"116.3969,39.91744";//设置点坐标，格式：经度,纬度
+		//pointStyle属性值集合
+		point.pointStyle.iconURL = "/images/order/"+tmp_number+".png";//图标地址
+		point.pointStyle.size.iconWidth = 20;//图标宽度
+		point.pointStyle.size.iconHeight = 25;//图标高度
+		point.pointStyle.offset.iconX = -17;//图标X方向偏移量
+		point.pointStyle.offset.iconY = -17;//图标Y方向偏移量
+		point.pointStyle.offset.infoWindowX  = 12;//tipX方向偏移量
+		point.pointStyle.offset.infoWindowY  = 0;//tipY方向偏移量
+		point.pointStyle.tipId = "tipStyleTest";//同样设置点使用id为tipStyleTest 的tip模板
+		point.pointStyle.tipParam.ELEMENT1 = "<img src="+"/images/sort/"+tmp_number+".bmp>"+"&nbsp;"+tmp_name;
+		point.pointStyle.mindisscroll = 0;
+		point.pointStyle.maxdisscroll = 19;
+		
+		if(tmp_tel.length == 0)
+		{
+			tmp_tel = "&nbsp;";
+		}
+		if(tmp_address.length == 0)
+		{
+			tmp_address = "&nbsp;";
+		}
+		point.pointStyle.tipParam.ELEMENT2 = "<span style=\'color:orange;\'>" + tmp_ename + "</span>" + "<span style=\'color:green;\'>"+tmp_tel+"</span>"+tmp_address;
+		point.pointStyle.tipParam.ELEMENT3 = "<a style=\'color:blue;text-decoration:underline;\' href=index_s.php?cityname="+cityname+"&x="+tmp_x+"&y="+tmp_y+"&area="+tmp_name+"&s=no"+">查找周边</a>&nbsp;&nbsp;<a style=\'color:blue;text-decoration:underline;\' href=bus.php?cityname="+cityname+"&x="+tmp_x+"&y="+tmp_y+"&begin="+tmp_name+">从这里出发</a>&nbsp;&nbsp;<a style=\'color:blue;text-decoration:underline;\' href=bus.php?cityname="+cityname+"&x="+tmp_x+"&y="+tmp_y+"&end="+tmp_name+">到这里去</a>";
+		
+		mapObj.addPoint(point);//标点
+		
+		var aTipStyle = new MabcTipStyle();
+		aTipStyle.tipId = "tipStyleTest";//设置tip_Id
+		aTipStyle.tipTemplate = "<div align='left'><span style=\"color:red\"><tipcont>ELEMENT1</tipcont></span><br><span style=\"color:purple\"><tipcont>ELEMENT2</tipcont></span><br><br><span style=\"color:purple\"><tipcont>ELEMENT3</tipcont></span></div>";//设置tip模板内容
+		mapObj.addTipStyle(aTipStyle);//注册tip模板到系统
+		
+		//mapObj.openInfoWindow("point",tmp_number);
+		}
+		mapObj.setViewAdjustType("auto");
+	}
+	function onClickPOI(mapId,pointId)
+	{
+		mapObj.openInfoWindow("point",pointId);
+	}
+	
+	function show_tip(para_y,para_x,tip_id)
+	{
+		mapObj.openInfoWindow("point",tip_id);
+		
+		if(display_flag == "road")
+		{
+			mapObj.removePoly(9981);
+		
+			var mytype = "polyline"; //这里增加的是线,如果增加多边形此项设为polygon
+			var polyObj = new MabcPolyObject();//生成一个MabcPolyObject实例
+			polyObj.serial_id = "9981"//设置实例的id，id唯一性由用户应用中维护
+		
+			//polyObj.coord = "116.37852516,39.987549;116.378352,39.98754504;116.37684288,39.987495;116.37847908,39.98770704";//设置坐标
+			var tmp_number = tip_id -1;
+			polyObj.coord = js_result_arr[tmp_number][6];//设置坐标
+			polyObj.polyStyle.graphyType = mytype;//设置类型，polyline或polygon
+			polyObj.polyStyle.showTip = true;//设置tip提示框的显示
+			polyObj.polyStyle.showLabel = false;//设置显示标注
+			polyObj.polyStyle.lineWeight = 8;//设置线的宽度为10像素
+			polyObj.polyStyle.lineColor = "#0000EE";//设置线条的颜色
+			polyObj.polyStyle.lineOpacity = 0.5;//设置线条不透明度
+			polyObj.polyStyle.labelContent = polyObj.serial_id;//设置标注的内容
+			polyObj.polyStyle.positionNum.tip = 1;//设置提示框的位置为线尾
+			polyObj.polyStyle.positionNum.label = 1;//设置标注的位置为线尾
+		
+			mapObj.addPoly(polyObj);//加线
+		}
+		mapObj.setViewAdjustType("auto");
+	}
+	
+	function set_center()
+	{
+		var point = new MabcPointObject();//创建点实例2, 这个点与第1个点位置一样，偏移量不同，其他属性默认
+		point.serial_id = 111;
+		point.coord = init_x+","+init_y; 		//"116.3969,39.91744";//设置点坐标，格式：经度,纬度
+		//pointStyle属性值集合
+		point.pointStyle.iconURL = "http://" + location.host + "/images/flag.gif";//图标地址
+		point.pointStyle.size.iconWidth = 20;//图标宽度
+		point.pointStyle.size.iconHeight = 25;//图标高度
+		point.pointStyle.offset.iconX = -17;//图标X方向偏移量
+		point.pointStyle.offset.iconY = -17;//图标Y方向偏移量
+		point.pointStyle.tipId = "tipStyleTest1";//同样设置点使用id为tipStyleTest 的tip模板
+		point.pointStyle.mindisscroll = 0;
+		point.pointStyle.maxdisscroll = 19;
+		
+		mapObj.addPoint(point);//标点
+	}
+</script>
+

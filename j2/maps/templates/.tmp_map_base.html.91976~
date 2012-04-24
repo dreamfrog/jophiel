@@ -1,0 +1,4 @@
+{%  include "gmap/gmap_element.html" %}
+<script type="text/javascript">
+    $(document).ready(initialize);
+</script>
