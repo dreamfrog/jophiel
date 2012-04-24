@@ -1,9 +1,0 @@
-<div id="search_result_items">
-    {% for search in searchresult %}
-   		{% include "search_result_item.html" %}
-    {% endfor %}
-</div>
-
-<div>
-{% include "search_result_pagination.html" %}
-</div>

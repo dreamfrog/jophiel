@@ -1,3 +1,0 @@
-<body class="easyui-layout">
-    {% include 'layout/main_layout.html' %} 
-</body>

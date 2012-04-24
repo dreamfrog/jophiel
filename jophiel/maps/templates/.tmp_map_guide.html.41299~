@@ -1,9 +1,0 @@
-<style type="text/css">
-.ss_map_guide {
-    width: 10%;
-	background:#E8ECF9
-}
-</style>
-<div class="ss_map_guide">
-    <a href="www.baidu.com">城市选择</a>
-</div>

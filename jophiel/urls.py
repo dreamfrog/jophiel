@@ -15,7 +15,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
         url("^$", direct_to_template, {"template": "common/index.html"}, name="home"),
         ('^admin/',include(admin.site.urls)),   
-        ('^feeds/',include("jophiel.web.feeds.urls")),
+        ('^feeds/',include("jophiel.feeds.urls")),
         #('^maps/',include("jophiel.maps.urls")),
         (r"^account/",include('account.urls')), 
         #(r"^news/",include("jophiel.news.urls")),     
