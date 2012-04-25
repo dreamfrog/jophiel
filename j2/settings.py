@@ -17,10 +17,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sqlite.db', # Or path to database file if using sqlite3.
-        'USER': '', # Not used with sqlite3.
-        'PASSWORD': '', # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'jophiel', # Or path to database file if using sqlite3.
+        'USER': 'root', # Not used with sqlite3.
+        'PASSWORD': 'zhong', # Not used with sqlite3.
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
@@ -80,7 +80,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, "static"),
+    #os.path.join(PROJECT_ROOT, "static"),
 )
 
 
@@ -116,7 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-    "jophiel.conf.context_processors.settings",
+    'j2.context_processors.settings',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,20 +125,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
-
-    "jophiel.core.middleware.TemplateForDeviceMiddleware",
-    "jophiel.core.middleware.TemplateForHostMiddleware",
-    "jophiel.core.middleware.DeviceAwareFetchFromCacheMiddleware",
-    "jophiel.core.middleware.AdminLoginInterfaceSelectorMiddleware",
-    
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-ROOT_URLCONF = 'jophiel.urls'
+ROOT_URLCONF = 'j2.urls'
 
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
@@ -150,7 +143,6 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    #'grappelli',
 	'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -161,42 +153,24 @@ INSTALLED_APPS = (
     "django.contrib.redirects",
     "django.contrib.sitemaps",
     'django.contrib.markup',
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.comments',
-    
 )
 
 #########################
 # OPTIONAL APPLICATIONS #
 #########################
-# Store these package names here as they may change in the future since
-# at the moment we are using custom forks of them.
-PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
-PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
-    #'redisboard', 
     'south',    
     'tastypie',
-    
-    'jophiel.conf',
-    'jophiel.core',
-    
-    'jophiel',
-    'account',
-	'plugins',
-    
-    'feeds',
-    'maps',
-    'news',
+    'j2', 
+    'j2.account',
+    'j2.feeds',
+    'j2.maps',
+    'j2.news',
      
     "debug_toolbar",
     "django_extensions",
-    PACKAGE_NAME_FILEBROWSER,
-    PACKAGE_NAME_GRAPPELLI,
-        
     #'raven.contrib.django',
 )
 
@@ -283,13 +257,4 @@ LOGIN_URL = "/account/"
 LOGOUT_URL = "/account/logout/"
 
 SITE_TITLE = "Jophiel"
-####################
-# DYNAMIC SETTINGS #
-####################
-
-# set_dynamic_settings() will rewrite globals based on what has been
-# defined so far, in order to provide some better defaults where
-# applicable.
-from jophiel.utils.mezzanine.conf import set_dynamic_settings
-set_dynamic_settings(globals())
-
+SITE_TAGLINE = "Web Information Aggregration"

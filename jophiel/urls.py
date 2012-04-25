@@ -15,10 +15,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
         url("^$", direct_to_template, {"template": "common/index.html"}, name="home"),
         ('^admin/',include(admin.site.urls)),   
-        ('^feeds/',include("jophiel.feeds.urls")),
-        #('^maps/',include("jophiel.maps.urls")),
-        (r"^account/",include('account.urls')), 
-        #(r"^news/",include("jophiel.news.urls")),     
+        #(r"^account/",include('account.urls')), 
     )
 
 from jophiel.conf import settings
@@ -42,10 +39,6 @@ urlpatterns += patterns("",
     ("^", include("jophiel.core.urls")),
     ("^", include("jophiel.generic.urls")),
 )
-
-#urlpatterns += patterns("",
-#    ("^", include("mezzanine.pages.urls")),
-#)
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
 # pages can use JS, CSS and images.

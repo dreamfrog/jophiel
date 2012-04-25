@@ -8,10 +8,10 @@ from django.conf.urls.defaults import *
 
 from django.conf.urls.defaults import *
 from tastypie.api import Api
+from . import views 
 
-
-urlpatterns = patterns('news.views',
-    url(r"^$",view = "index",name = "news_list"),
-    url(r"^upload",view = "news_upload",name="news_upload")
+urlpatterns = patterns('',
+    url(r"^$",view = views.index,name = "news_list"),
+    url(r"^upload",view = views.news_upload,name="news_upload")
 )
 

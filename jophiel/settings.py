@@ -17,10 +17,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sqlite.db', # Or path to database file if using sqlite3.
-        'USER': '', # Not used with sqlite3.
-        'PASSWORD': '', # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'jophiel', # Or path to database file if using sqlite3.
+        'USER': 'root', # Not used with sqlite3.
+        'PASSWORD': 'zhong', # Not used with sqlite3.
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
@@ -128,10 +128,10 @@ MIDDLEWARE_CLASSES = (
     
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 
-    "jophiel.core.middleware.TemplateForDeviceMiddleware",
-    "jophiel.core.middleware.TemplateForHostMiddleware",
-    "jophiel.core.middleware.DeviceAwareFetchFromCacheMiddleware",
-    "jophiel.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    #"jophiel.core.middleware.TemplateForDeviceMiddleware",
+    #"jophiel.core.middleware.TemplateForHostMiddleware",
+    #"jophiel.core.middleware.DeviceAwareFetchFromCacheMiddleware",
+    #"jophiel.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -177,38 +177,16 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
-    #'redisboard', 
+    'redisboard', 
     'south',    
     'tastypie',
-    
-    'jophiel.conf',
-    'jophiel.core',
-    
     'jophiel',
-    'account',
-	'plugins',
-    
-    'feeds',
-    'maps',
-    'news',
-     
+    'djcelery',    
     "debug_toolbar",
     "django_extensions",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
-        
-    #'raven.contrib.django',
 )
-
-#########################
-# OPTIONAL APPLICATIONS #
-#########################
-
-# These will be added to ``INSTALLED_APPS``, only if available.
-_OPTIONAL_APPS = ( 
-
-)
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -271,14 +249,14 @@ LOGGING = {
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
 try:
-    from .local_settings import *
+    from local_settings import *
 except:
     pass
 
 AUTH_PROFILE_MODULE = 'account.profile'
 
 # URLs used for login/logout when ACCOUNTS_ENABLED is set to True.
-ACCOUNTS_ENABLED  = True
+ACCOUNTS_ENABLED  = False
 LOGIN_URL = "/account/"
 LOGOUT_URL = "/account/logout/"
 
@@ -290,6 +268,6 @@ SITE_TITLE = "Jophiel"
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
 # applicable.
-from jophiel.utils.mezzanine.conf import set_dynamic_settings
+from utils.mezzanine.conf import set_dynamic_settings
 set_dynamic_settings(globals())
 

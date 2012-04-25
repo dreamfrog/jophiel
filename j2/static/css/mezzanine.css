@@ -27,11 +27,11 @@ img {box-shadow:0 0 10px #bbb;}
 .breadcrumb {margin:20px 0 25px 0;}
 .breadcrumb .divider {margin:0 5px;}
 .breadcrumb strong {color:#333;}
-footer {background:rgba(220,220,220, 0.1); padding:30px 0; text-align:center;}
+footer {background:rgba(220,220,220, 0.1); padding:0px 0; text-align:center;}
 footer .container {text-align:left; display:inline-block; width:auto;}
 footer li {float:left; list-style-type:none;}
 footer li li {float:none; clear:both; width:120px; padding:10px 0; margin-right:30px;}
-footer p {margin-top:40px; text-align:center; font-size:12px;}
+footer p {margin-top:0px; text-align:center; font-size:12px;}
 footer .separator {opacity:0.3; margin:0 10px;}
 @media (max-width: 979px) {footer .separator {display:block; visibility:hidden; width:1px; height:1px;}}
 .pagination {margin:40px 0;}
@@ -78,12 +78,6 @@ a.btn-large, input.btn-large {width:auto; min-width:100px; margin-right:10px;}
 .share-twitter {background:#00a3d4 !important;}
 .share-facebook {background:#4667a6 !important;}
 .featured-thumb {float:right; width:90px; height:90px; margin:0 0 10px 10px;}
-
-
-/* Tweets */
-.tweets img {float:left; margin-right:8px; width:32px; height:32px;}
-.tweets li {margin-bottom:15px;}
-.timespan {color:#bbb; margin-left:0; float:none;}
 
 
 /* Ratings */

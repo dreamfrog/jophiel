@@ -1,16 +1,10 @@
 eclipse.preferences.version=1
 encoding//doc/source/conf.py=utf-8
 encoding//doc/source/interface.rst=UTF-8
-encoding//jophiel/account/migrations/0001_initial.py=utf-8
-encoding//jophiel/account/migrations/0002_auto__add_field_profile_private.py=utf-8
-encoding//jophiel/account/migrations/0003_auto__add_field_profile_address.py=utf-8
-encoding//jophiel/account/migrations/0004_auto__del_field_profile_address.py=utf-8
+encoding//j2/exceptions.py=utf-8
 encoding//jophiel/contrib/bloomfilter/pybloom.py=utf-8
 encoding//jophiel/contrib/pyphantomjs/resources.py=utf-8
 encoding//jophiel/exceptions.py=utf-8
-encoding//jophiel/monitor/djcelery/migrations/0001_initial.py=utf-8
-encoding//jophiel/monitor/djcelery/migrations/0002_v25_changes.py=utf-8
-encoding//jophiel/plugins/pools.py=utf-8
 encoding//jophiel/utils/cms/__init__.py=utf-8
 encoding//jophiel/utils/cms/copy_plugins.py=utf-8
 encoding//jophiel/utils/cms/django_load.py=utf-8

@@ -25,17 +25,16 @@
             </ul>
 
 	        <form action="" class="navbar-search pull-left">
-	        <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+	           <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
 	        </form>
 	    	<ul class="nav pull-right">
 	          <li class="dropdown">
 	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	            {% if request.user.is_authenticated %}
-	            	{{ request.user.username }}
+	              {{ request.user.username }}
 	            {% else %}
-	            	{% trans "Log in or Sign up" %} 
+	              {% trans "Log in or Sign up" %} 
 	            {% endif %}
-	            
 	            <b class="caret"></b></a>
 	            <ul class="dropdown-menu">
 	              <li><a href="{% url account-login %}?next={{ request.path }}">{% trans "Login in" %}</a></li>
@@ -54,7 +53,8 @@
 <div class="row">
 
 <div class="span9 middle">
-    {% block main %}{% endblock %}
+    {% block main %}
+    {% endblock %}
 </div>
 
 {% block right %}
@@ -74,7 +74,7 @@
 {% endblock %}
 </div>
 
-<footer class="footer">
+<footer>
 {% block footer %}
 {% include "common/includes/footer.html" %}
 {% endblock %}
