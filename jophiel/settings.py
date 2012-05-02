@@ -127,12 +127,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
-
-    #"jophiel.core.middleware.TemplateForDeviceMiddleware",
-    #"jophiel.core.middleware.TemplateForHostMiddleware",
-    #"jophiel.core.middleware.DeviceAwareFetchFromCacheMiddleware",
-    #"jophiel.core.middleware.AdminLoginInterfaceSelectorMiddleware",
-    
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -150,7 +144,6 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    #'grappelli',
 	'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -180,8 +173,7 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'redisboard', 
     'south',    
     'tastypie',
-    'jophiel',
-    'djcelery',    
+    'jophiel',   
     "debug_toolbar",
     "django_extensions",
     PACKAGE_NAME_FILEBROWSER,
@@ -245,7 +237,6 @@ LOGGING = {
 }
 
 
-
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
 try:
@@ -268,6 +259,5 @@ SITE_TITLE = "Jophiel"
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
 # applicable.
-from utils.mezzanine.conf import set_dynamic_settings
+from utils.conf import set_dynamic_settings
 set_dynamic_settings(globals())
-

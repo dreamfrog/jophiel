@@ -5,8 +5,7 @@ from django import template
 from django.template.context import Context
 from django.template.loader import get_template, select_template
 
-from jophiel.utils.mezzanine.device import templates_for_device
-
+from jophiel.utils.device import templates_for_device
 
 class Library(template.Library):
     """

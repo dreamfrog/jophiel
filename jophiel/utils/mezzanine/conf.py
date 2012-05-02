@@ -76,19 +76,6 @@ def set_dynamic_settings(s):
     # are loaded in the correct order.
     move("INSTALLED_APPS", "django.contrib.admin", len(s["INSTALLED_APPS"]))
 
-    # Add missing apps if existing apps depend on them.
-    if "mezzanine.blog" in s["INSTALLED_APPS"]:
-        append("INSTALLED_APPS", "mezzanine.generic")
-    if "mezzanine.generic" in s["INSTALLED_APPS"]:
-        s["COMMENTS_APP"] = "mezzanine.generic"
-        append("INSTALLED_APPS", "django.contrib.comments")
-
-    # Ensure mezzanine.boot is first.
-    try:
-        move("INSTALLED_APPS", "mezzanine.boot", 0)
-    except ValueError:
-        pass
-
     # Remove caching middleware if no backend defined.
     if not (s.get("CACHE_BACKEND") or s.get("CACHES")):
         s["MIDDLEWARE_CLASSES"] = [mw for mw in s["MIDDLEWARE_CLASSES"] if not

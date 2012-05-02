@@ -1,9 +1,18 @@
-__version__ = "0.1.4"
+"""Django Celery Integration."""
+from __future__ import absolute_import
 
+VERSION = (0, 1, 4)
 
-
-import os
 import sys
+import os
+
+__version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
+__author__ = "Ask Solem"
+__contact__ = "ask@celeryproject.org"
+__homepage__ = "http://celeryproject.org"
+__docformat__ = "restructuredtext"
+__license__ = "BSD (3 clause)"
+
 
 
 def set_dynamic_settings(s):
