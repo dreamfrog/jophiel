@@ -1,0 +1,31 @@
+{% extends "common/base.html" %}
+
+{% block title %}Spider{% endblock %}
+
+
+{% block left %}
+<ul class="nav nav-list">
+      <li class="nav-header">List header</li>
+      <li class="active"><a href="#"><i class="icon-white icon-home"></i> Home</a></li>
+      <li><a href="#"><i class="icon-book"></i> Library</a></li>
+      <li><a href="#"><i class="icon-pencil"></i> Applications</a></li>
+      <li class="nav-header">Another list header</li>
+      <li><a href="#"><i class="icon-user"></i> Profile</a></li>
+      <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
+      <li class="divider"></li>
+      <li><a href="#"><i class="icon-flag"></i> Help</a></li>
+    </ul>
+{% endblock %}
+
+{% block main %}
+<form action="/create" method="post">
+{% csrf_token %}
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }}: {{ field }}
+        </div>
+    {% endfor %}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}
