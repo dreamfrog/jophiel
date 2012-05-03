@@ -19,7 +19,7 @@ from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
 from . import loaders
-from .admin_utils import action, display_field, fixedwidth
+from .utils.admin_utils import action, display_field, fixedwidth
 from .models import (TaskState, WorkerState,
                      PeriodicTask, IntervalSchedule, CrontabSchedule)
 from .humanize import naturaldate
@@ -103,7 +103,7 @@ class ModelMonitor(admin.ModelAdmin):
 class TaskMonitor(ModelMonitor):
     detail_title = _("Task detail")
     list_page_title = _("Tasks")
-    rate_limit_confirmation_template = "djcelery/confirm_rate_limit.html"
+    rate_limit_confirmation_template = "admin/djcelery/confirm_rate_limit.html"
     date_hierarchy = "tstamp"
     fieldsets = (
             (None, {

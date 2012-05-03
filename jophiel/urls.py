@@ -30,3 +30,8 @@ urlpatterns += patterns("",
         name="celery-task_status"),
     url(r'^tasks/?$', views.registered_tasks, name='celery-tasks'),
 )
+
+urlpatterns += patterns("",
+                        (r"^account/",include('account.urls')), 
+                        url(r'^crawl',include("spider.urls")),
+                        )

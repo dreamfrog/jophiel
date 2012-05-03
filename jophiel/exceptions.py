@@ -11,10 +11,8 @@ class PluginAlreadyRegistered(Exception):
 class PluginNotRegistered(Exception):
     pass
 
-class AppAlreadyRegistered(Exception):
+class AppAllreadyRegistered(Exception):
     pass
-
-AppAllreadyRegistered = AppAlreadyRegistered # backwards compatibility, will be dropped in 2.3
 
 class NotImplemented(Exception):
     pass
@@ -42,3 +40,5 @@ class Deprecated(Exception): pass
 class DuplicatePlaceholderWarning(Warning): pass
 
 class DontUsePageAttributeWarning(Warning): pass
+
+class ImproperlyConfigured(Exception):pass

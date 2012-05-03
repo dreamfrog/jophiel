@@ -1,10 +1,11 @@
 """
 """
+from django.conf import settings
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404, HttpResponseNotModified, \
   HttpResponse
 
-from jophiel import settings
 from django.shortcuts import render_to_response
 
 def dashboard(request):

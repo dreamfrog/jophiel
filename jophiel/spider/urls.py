@@ -10,6 +10,7 @@ from django.conf import settings
 from . import views
 
 urlpatterns = patterns('',
-        ('^$',views.list), 
+        ('^$',views.index), 
         ('^detail/',views.detail),
+        ('^create/',views.create),
     )

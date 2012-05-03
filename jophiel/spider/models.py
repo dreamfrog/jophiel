@@ -5,6 +5,7 @@ Created on 2012-5-2
 '''
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 class Spider(models.Model):
     name = models.CharField(_(u"name"), max_length=200, unique=True,

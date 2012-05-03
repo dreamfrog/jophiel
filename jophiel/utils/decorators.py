@@ -2,6 +2,8 @@ from functools import wraps
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from .render import render_to_response,get_login_url
+
 from .helpers import *
 
 def login_required(func):

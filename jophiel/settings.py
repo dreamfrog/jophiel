@@ -127,7 +127,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -173,9 +173,12 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'redisboard', 
     'south',    
     'tastypie',
+    'base',
+    'account',
     'jophiel',   
-    "debug_toolbar",
+    #"debug_toolbar",
     "django_extensions",
+    'jophiel.spider',
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
