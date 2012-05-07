@@ -172,7 +172,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 INSTALLED_APPS =INSTALLED_APPS + ( 
     'redisboard', 
     'south',    
-    'tastypie',
+    #'tastypie',
     'base',
     'account',
     'jophiel',   

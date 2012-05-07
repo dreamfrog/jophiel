@@ -118,7 +118,6 @@ class DatastoreProxy(BaseBackend):
                 m = ttypes.Mutation()
                 m.column = column_name + ":" if ":" not in column_name else column_name                    
                 m.value = column_value
- 
                 mutations.append(m)
             client.mutateRow(table_name, row_key, mutations)
         except ttypes.IOError, io:
@@ -140,17 +139,17 @@ class DatastoreProxy(BaseBackend):
         client = self.connection
         try:
             column_list = []
+
             for name in column_names:
                 column_name = name +":" if ":" not in name else name
                 column_list.append(column_name) 
-                column_results = client.getRowWithColumns(table_name, row_key, column_list)
-                values = {}
-                for columns in column_results:
-                    for column_name,cell in columns.columns.items():
-                        values[column_name] = cell.value
-                
-                if values:
-                    elist.append(values)
+            column_results = client.getRowWithColumns(table_name, row_key, column_list)
+            values = {}
+            for columns in column_results:
+                for column_name,cell in columns.columns.items():
+                    values[column_name] = cell.value
+            if values:
+                elist.append(values)
                     
         except ttypes.IOError, io:
             logger.error("IOError: %s in get %s %s %s"

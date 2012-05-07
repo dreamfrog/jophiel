@@ -24,7 +24,7 @@ def index(request):
     context = {}
     print "hello"
     context["form"] = SpiderForm()
-    return render(request,"jophiel/base.html",context)
+    return render(request,"spiders/create_spider.html",context)
 
 def detail(request):pass
 

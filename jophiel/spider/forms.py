@@ -14,4 +14,6 @@ class SpiderForm(forms.Form):
     params = JSONFormField( label = _("Spider Params"),
                               help_text = _("input json parameters"),
                               widget=forms.Textarea())
+    urls = forms.CharField(label = _("Start Urls"),
+                            widget = forms.Textarea())
     
