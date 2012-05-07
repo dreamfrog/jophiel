@@ -177,7 +177,7 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'account',
     'jophiel',   
     #"debug_toolbar",
-    "django_extensions",
+    #"django_extensions",
     'jophiel.spider',
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,

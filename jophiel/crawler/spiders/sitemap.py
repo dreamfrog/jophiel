@@ -1,10 +1,10 @@
 import re
 
-from scrapy.spider import BaseSpider
-from scrapy.http import Request, XmlResponse
-from scrapy.utils.sitemap import Sitemap, sitemap_urls_from_robots
-from scrapy.utils.gz import gunzip
-from scrapy import log
+from .base import BaseSpider
+from ..http import Request, XmlResponse
+from ..utils.sitemap import Sitemap, sitemap_urls_from_robots
+from ..utils.gz import gunzip
+import logging 
 
 class SitemapSpider(BaseSpider):
 
@@ -34,7 +34,7 @@ class SitemapSpider(BaseSpider):
             elif is_gzipped(response):
                 body = gunzip(response.body)
             else:
-                log.msg("Ignoring non-XML sitemap: %s" % response, log.WARNING)
+                self.log("Ignoring non-XML sitemap: %s" % response, logging.WARNING)
                 return
 
             s = Sitemap(body)

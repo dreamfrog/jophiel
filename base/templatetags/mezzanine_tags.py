@@ -21,7 +21,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag("includes/form_fields.html", takes_context=True)
+@register.inclusion_tag("common/includes/form_fields.html", takes_context=True)
 def fields_for(context, form):
     """
     Renders fields for a form.

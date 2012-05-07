@@ -19,15 +19,17 @@
     {% if settings.SITE_TAGLINE %}<p class="tagline">{{ settings.SITE_TAGLINE }}</p>{% endif %}
     <div class="nav-collapse">
             <ul class="nav">
+              {% block navfields %}
               <li class="active"><a href="#">{% trans "Home" %} </a></li>
               <li class=""><a href="#">{% trans "Feeds" %} </a></li>
               <li class="active"><a href="#">{% trans "Home" %} </a></li>
+              {% endblock %}
             </ul>
 
-	        <form action="" class="navbar-search pull-left">
-	           <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
-	        </form>
 	    	<ul class="nav pull-right">
+	    	 <form action="" class="navbar-search">
+               <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+            </form>
 	          <li class="dropdown">
 	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	            {% if request.user.is_authenticated %}

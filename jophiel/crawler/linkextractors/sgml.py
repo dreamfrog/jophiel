@@ -9,7 +9,7 @@ from w3lib.url import safe_url_string
 
 from scrapy.selector import HtmlXPathSelector
 from ..link import Link
-from ..linkextractor import IGNORED_EXTENSIONS
+from ..conf import IGNORED_EXTENSIONS
 from ..utils.misc import arg_to_iter
 from ..utils.python import FixedSGMLParser
 from ..utils.python import unique as unique_list
