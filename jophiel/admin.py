@@ -222,7 +222,6 @@ admin.site.register(WorkerState, WorkerMonitor)
 
 # ### Periodic Tasks
 
-
 class LaxChoiceField(forms.ChoiceField):
 
     def valid_value(self, value):

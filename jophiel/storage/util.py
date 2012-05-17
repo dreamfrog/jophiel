@@ -7,7 +7,6 @@ available for use by others working with pycassa.
 import random
 import uuid
 import time
-import datetime
 
 __all__ = ['convert_time_to_uuid', 'convert_uuid_to_time', 'OrderedDict']
 

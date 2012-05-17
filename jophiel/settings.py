@@ -17,7 +17,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',
+        #'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'jophiel', # Or path to database file if using sqlite3.
         'USER': 'root', # Not used with sqlite3.
         'PASSWORD': 'zhong', # Not used with sqlite3.
@@ -170,15 +171,16 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
-    'redisboard', 
+    #'redisboard', 
     'south',    
     #'tastypie',
     'base',
     'account',
     'jophiel',   
-    #"debug_toolbar",
-    #"django_extensions",
-    'jophiel.spider',
+    'crawler',
+    "debug_toolbar",
+    "django_extensions",
+    'spider',
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
@@ -258,6 +260,9 @@ SITE_TITLE = "Jophiel"
 ####################
 # DYNAMIC SETTINGS #
 ####################
+
+
+CELERY_ALWAYS_EAGER = True 
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where

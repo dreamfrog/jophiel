@@ -8,10 +8,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 class Spider(models.Model):
-    name = models.CharField(_(u"name"), max_length=200, unique=True,
-                        help_text=_(u"Spider Name,Unique"))
-    params = models.TextField(_(u"Keyword arguments"),
-                              blank=True, default="{}",
-                              help_text=_("JSON encoded  params"))
     
+    name = models.CharField( max_length=200, unique=True,primary_key =True)
+    description = models.TextField(default="")
+    params = models.TextField(default="{}")
+    urls = models.TextField(default="")
     
+    create_time = models.DateTimeField(auto_now=True)
+
+

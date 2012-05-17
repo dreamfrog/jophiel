@@ -4,16 +4,20 @@ Downloader Middleware manager
 See documentation in docs/topics/downloader-middleware.rst
 """
 from collections import defaultdict
-
-from ..http import Request, Response
+from jophiel.crawler.http import Request, Response
+from jophiel.crawler import conf
+from jophiel.crawler.utils.conf import build_component_list
+from jophiel.crawler.utils.misc import load_object
 
 class DownloaderMiddlewareManager(object):
 
-    def __init__(self, *middlewares):
-        self.middlewares = middlewares
+    def __init__(self):
         self.methods = defaultdict(list)
-        for mw in middlewares:
-            self._add_middleware(mw)
+        self.middlewares =[]     
+        for clspath in build_component_list(conf.DOWNLOAD_MIDDLEWARES,{}):
+            mwcls = load_object(clspath)
+            self.middlewares.append(mwcls)
+            self._add_middleware(mwcls)
 
     def _add_middleware(self, mw):
         if hasattr(mw, 'process_request'):
@@ -24,6 +28,8 @@ class DownloaderMiddlewareManager(object):
             self.methods['process_exception'].insert(0, mw.process_exception)
 
     def download(self, download_func, request, spider):
+        print self.methods
+        print self.middlewares
         def process_request(request):
             for method in self.methods['process_request']:
                 response = method(request=request, spider=spider)
@@ -66,4 +72,7 @@ class DownloaderMiddlewareManager(object):
                 response = download_func(request=request, spider=spider)
                 return process_response(response)
         except  Exception, e:
+            import traceback
+            import sys
+            traceback.print_exc(file=sys.stdout)
             return process_exception(e)

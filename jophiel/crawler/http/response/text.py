@@ -8,7 +8,7 @@ See documentation in docs/topics/request-response.rst
 import re
 import codecs
 from .dammit import UnicodeDammit
-from . import Response
+from jophiel.crawler.http import Response
 from jophiel.crawler.utils.python import memoizemethod_noargs
 from jophiel.crawler.utils.encoding import encoding_exists, resolve_encoding
 from jophiel.crawler import conf

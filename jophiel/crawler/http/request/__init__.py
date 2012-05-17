@@ -14,6 +14,12 @@ from jophiel.crawler.utils.trackref import object_ref
 from jophiel.crawler.utils.decorator import deprecated
 from jophiel.crawler.utils.url import escape_ajax
 
+
+
+import hashlib
+from jophiel.crawler.utils.url import canonicalize_url
+from jophiel.crawler.w3lib.http import headers_dict_to_raw,headers_raw_to_dict
+
 class Request(object_ref):
 
     def __init__(self, url, callback=None, method='GET', headers=None, body=None, 
@@ -36,7 +42,36 @@ class Request(object_ref):
         self.dont_filter = dont_filter
 
         self._meta = dict(meta) if meta else None
-
+    
+    @classmethod
+    def request_fingerprint(cls,request, include_headers=None):
+        """
+        Return the request fingerprint.
+        
+        The request fingerprint is a hash that uniquely identifies the resource the
+        request points to. For example, take the following two urls:
+        
+        http://www.example.com/query?id=111&cat=222
+        http://www.example.com/query?cat=222&id=111
+    
+        """
+        if include_headers:
+            include_headers = tuple([h.lower() for h in sorted(include_headers)])
+        fp = hashlib.sha1()
+        fp.update(request.method)
+        fp.update(canonicalize_url(request.url))
+        fp.update(request.body or '')
+        if include_headers:
+            for hdr in include_headers:
+                if hdr in request.headers:
+                    fp.update(hdr)
+                    for v in request.headers.getlist(hdr):
+                        fp.update(v)
+        return fp.hexdigest()
+    @property
+    def request_path(self):
+        return Request.request_fingerprint(self)       
+        
     @property
     def meta(self):
         if self._meta is None:

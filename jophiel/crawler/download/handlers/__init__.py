@@ -14,9 +14,8 @@ DOWNLOAD_HANDLERS = {
 class DownloadHandlers(object):
 
     def __init__(self):
-        self._handlers = {}
+        self._handlers = DOWNLOAD_HANDLERS
         self._notconfigured = {}
-        self.handlers = DOWNLOAD_HANDLERS
 
     def download_request(self, request, spider):
         scheme = urlparse_cached(request).scheme
@@ -26,4 +25,4 @@ class DownloadHandlers(object):
             msg = self._notconfigured.get(scheme, \
                     'no handler available for that scheme')
             raise NotSupported("Unsupported URL scheme '%s': %s" % (scheme, msg))
-        return handler(request, spider)
+        return handler.download_request(request)

@@ -3,15 +3,20 @@ Created on 2012-4-29
 
 @author: lzz
 '''
+import redis
 from celery.task.base import Task
 from celery.task.sets import TaskSet
 
-import redis
 
-class DebugTask(Task):
+class CommonTask(Task):
     abstract = True
 
+    def after_return(self, *args, **kwargs):
+        print("Task returned: %r" % (self.request, ))
+        
+
 class RedisTask(Task):
+    abstract = True
     _db = None
     
     @property
@@ -23,9 +28,3 @@ class RedisTask(Task):
     
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print("Task returned: %r" % (self.request, ))
-        
-"""
-from celery.execute import send_task
-result = send_task("tasks.add", [2, 2])
-result.get()
-"""

@@ -36,22 +36,20 @@ class HTTPClient(object):
         self.url = urldefrag(request.url)[0]
         self.method = request.method
         self.body = request.body or None
-        self.headers = Headers(request.headers)
         self.response_headers = None
         self.response_body = None
         self.timeout = request.meta.get('download_timeout') or timeout
         self.start_time = time()
-        self._set_connection_attributes(request)
-
+        
+        self.headers = {}
+        #need make some modify for multi headers,but it is necessary
+        for key, values in request.headers.iteritems():
+            for value in values:
+                if value:
+                    self.headers[key] = value
         # set Host header based on url
-        self.headers.setdefault('Host', self.netloc)
+        # self.headers.setdefault('Host', self.netloc)
 
-        # set Content-Length based len of body
-        if self.body is not None:
-            self.headers['Content-Length'] = len(self.body)
-            # just in case a broken http/1.1 decides to keep connection alive
-            self.headers.setdefault("Connection", "close")
-            
         self._set_connection_attributes(request)
         self._set_proxy(request)
         self._build_http()
@@ -68,10 +66,11 @@ class HTTPClient(object):
         self.force_exception_to_status_code = True
         
     def fetch(self):
+        print self.headers
         self.response_headers, self.response_body = self.http.request(self.url, self.method, 
-                                          body=self.body, headers=self.headers)
+                                          body=self.body,headers = self.headers)
         self.headers_time = time()
-        return self._build_response(self.response_body, self.request)
+        return self._build_response(self.response_headers,self.response_body, self.request)
         
     def _set_proxy(self,request):
         self.proxy_info = None
@@ -85,11 +84,17 @@ class HTTPClient(object):
     def _set_connection_attributes(self, request):
         parsed = urlparse_cached(request)
         self.scheme, self.netloc, self.host, self.port, self.path = _parsed_url_args(parsed)
+    
+    def _set_body(self,request):
+        # set Content-Length based len of body
+        if self.body is not None:
+            self.headers['Content-Length'] = len(self.body)
+            # just in case a broken http/1.1 decides to keep connection alive
+            self.headers.setdefault("Connection", "close")        
 
-
-    def _build_response(self, body, request):
+    def _build_response(self, response_heades,body, request):
         request.meta['download_latency'] = self.headers_time-self.start_time
-        status = int(self.status)
+        status = int(self.response_headers.status)
         headers = Headers(self.response_headers)
         respcls = responsetypes.from_args(headers=headers, url=self.url,body=body)
         return respcls(url=self.url, status=status, headers=headers, body=body)

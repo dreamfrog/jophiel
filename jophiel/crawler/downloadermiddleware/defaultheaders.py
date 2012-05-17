@@ -3,18 +3,17 @@ DefaultHeaders downloader middleware
 
 See documentation in docs/topics/downloader-middleware.rst
 """
-from scrapy import conf
-from scrapy.utils.python import WeakKeyCache
+from jophiel.crawler.utils.python import WeakKeyCache
+from jophiel.crawler import conf  
 
+DEFAULT_REQUEST_HEADERS  = conf.DEFAULT_REQUEST_HEADERS
+
+def default_headers(spider):
+    return DEFAULT_REQUEST_HEADERS.items()
 
 class DefaultHeadersMiddleware(object):
 
-    def __init__(self, settings=conf.settings):
-        self._headers = WeakKeyCache(self._default_headers)
-
-    def _default_headers(self, spider):
-        return spider.settings.get('DEFAULT_REQUEST_HEADERS').items()
-
-    def process_request(self, request, spider):
-        for k, v in self._headers[spider]:
+    @classmethod
+    def process_request(cls, request, spider):
+        for k, v in default_headers(spider):
             request.headers.setdefault(k, v)

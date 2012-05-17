@@ -13,26 +13,26 @@ from .utils.misc import load_object
 from .utils.python import isbinarytext
 from .utils.py26 import get_data
 
-from django.conf import settings
+from . import conf
 
 class ResponseTypes(object):
 
     CLASSES = {
-        'text/html': 'johpiel.crawler.http.HtmlResponse',
-        'application/atom+xml': 'johpiel.crawler.http.XmlResponse',
-        'application/rdf+xml': 'johpiel.crawler.http.XmlResponse',
-        'application/rss+xml': 'johpiel.crawler.http.XmlResponse',
-        'application/xhtml+xml': 'johpiel.crawler.http.HtmlResponse',
-        'application/xml': 'johpiel.crawler.http.XmlResponse',
-        'application/json': 'johpiel.crawler.http.TextResponse',
-        'application/javascript': 'johpiel.crawler.http.TextResponse',
-        'application/x-javascript': 'johpiel.crawler.http.TextResponse',
-        'text/xml': 'johpiel.crawler.http.XmlResponse',
-        'text/*': 'johpiel.crawler.http.TextResponse',
+        'text/html': 'jophiel.crawler.http.HtmlResponse',
+        'application/atom+xml': 'jophiel.crawler.http.XmlResponse',
+        'application/rdf+xml': 'jophiel.crawler.http.XmlResponse',
+        'application/rss+xml': 'jophiel.crawler.http.XmlResponse',
+        'application/xhtml+xml': 'jophiel.crawler.http.HtmlResponse',
+        'application/xml': 'jophiel.crawler.http.XmlResponse',
+        'application/json': 'jophiel.crawler.http.TextResponse',
+        'application/javascript': 'jophiel.crawler.http.TextResponse',
+        'application/x-javascript': 'jophiel.crawler.http.TextResponse',
+        'text/xml': 'jophiel.crawler.http.XmlResponse',
+        'text/*': 'jophiel.crawler.http.TextResponse',
     }
 
     def __init__(self):
-        self.CLASSES.update(settings.get('RESPONSE_CLASSES', {}))
+        self.CLASSES.update(conf.RESPONSE_CLASSES)
         self.classes = {}
         self.mimetypes = MimeTypes()
         mimedata = get_data('scrapy', 'mime.types')

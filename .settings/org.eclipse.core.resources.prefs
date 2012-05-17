@@ -17,4 +17,5 @@ encoding//jophiel/utils/encoding.py=utf-8
 encoding//jophiel/utils/helper/date_utils.py=utf-8
 encoding//jophiel/utils/timer2.py=utf-8
 encoding//jophiel/utils/timeutils.py=utf-8
+encoding//plugins/pools.py=utf-8
 encoding/README=UTF-8
