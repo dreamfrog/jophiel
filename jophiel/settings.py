@@ -262,8 +262,6 @@ SITE_TITLE = "Jophiel"
 ####################
 
 
-CELERY_ALWAYS_EAGER = True 
-
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
 # applicable.

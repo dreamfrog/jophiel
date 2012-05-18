@@ -4,7 +4,6 @@ Created on 2012-5-11
 @author: lzz
 '''
 from .tables import RequestTable
-from .tables import ResponseTable
 from .models import Spider
 
 from jophiel.crawler.http import Request
@@ -23,4 +22,3 @@ def create_seed_request(spider,form):
         request = Request(url = url)
         table = RequestTable(data["name"])
         table.insert_request(request)
-    

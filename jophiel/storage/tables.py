@@ -21,7 +21,6 @@ class TableDescriptor(type):
             if isinstance(value,Column):
                 obj = copy.deepcopy(value)
                 obj.key = obj.name= obj_name
-                print obj,obj.key,obj
                 setattr(new_class, obj_name, obj)
                 fields.append(obj)
             else:
@@ -53,7 +52,8 @@ class BaseTable(object):
     @property
     def table(self):
         if self._table ==None:
-            self._table = self.get_or_create_table(self.table_name ,self.columns) 
+            columns = copy.deepcopy(self.columns)
+            self._table = self.get_or_create_table(self.table_name ,columns) 
         return self._table
     
     def insert(self,**kwargs):
@@ -70,7 +70,7 @@ class BaseTable(object):
         columns = []
         for item in args:
             columns.append(self.table.c[item])
-        columns = self.columns if not columns else columns
+        columns = [self.table]
         sl = select(columns)
         for key,value in wheres.items():
             sl = sl.where(self.table.c[key]==value)

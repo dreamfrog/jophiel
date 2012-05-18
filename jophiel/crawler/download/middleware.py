@@ -28,8 +28,6 @@ class DownloaderMiddlewareManager(object):
             self.methods['process_exception'].insert(0, mw.process_exception)
 
     def download(self, download_func, request, spider):
-        print self.methods
-        print self.middlewares
         def process_request(request):
             for method in self.methods['process_request']:
                 response = method(request=request, spider=spider)

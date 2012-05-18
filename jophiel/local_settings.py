@@ -63,6 +63,9 @@ USING_PASSWORD_REGISTER = True
 
 TASTYPIE_FULL_DEBUG = True
 
+CELERY_DISABLE_RATE_LIMITS = True
+CELERY_ALWAYS_EAGER = True 
+
 def setup_loader():
     os.environ.setdefault("CELERY_LOADER", "jophiel.loaders.DjangoLoader")
 
