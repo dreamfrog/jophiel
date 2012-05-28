@@ -1,9 +1,0 @@
-{%  include "map/map_init.html" %}
-<script type="text/javascript">
-    $(document).ready(function(){
-        using("layout", function(){
-			
-        })        
-        initialize();
-    });
-</script>
