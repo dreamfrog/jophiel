@@ -1,0 +1,9 @@
+django
+south
+sentry
+raven
+django-debug_toolbar
+django_extensions
+celery
+django_tastpie
+feedparser

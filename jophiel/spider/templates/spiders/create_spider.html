@@ -1,0 +1,21 @@
+{% extends "jophiel/base.html" %}
+
+{% block main %}
+<form action="{% url spider_create_upload %}" method="post",class="form-horizontal">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Create New Spiders</legend>
+        {{form.errors}}
+        {% for field in form %}
+            <div class="control-group">
+                {{ field.label_tag }}
+                <div class="controls">
+                     {{ field }}
+                </div>
+             </div>
+        {% endfor %}
+    </fieldset>
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}
+

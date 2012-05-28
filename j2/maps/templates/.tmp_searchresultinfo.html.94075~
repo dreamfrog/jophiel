@@ -1,0 +1,10 @@
+<style type="text/css">
+.ss_result_info {
+	background:#E8ECF9
+}
+</style>
+<div class="ss_result_info">
+	{% if count %}
+		<span>相关结果{{count}}条，用时{{ searchtime }}秒</span>
+	{% endif %}
+</div>

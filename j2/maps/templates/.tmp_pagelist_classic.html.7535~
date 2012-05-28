@@ -1,0 +1,7 @@
+<div id="tnt_pagination">
+    {% for item in pagearr %}
+    {% ifnotequal item.key  pagecur %}<a href="/list?cityname={{cityname}}&kw={{keyword}}&page={{item.value}}&map={{map}}">[{{item.key}}]</a>
+    {% else %}<a href="/list?cityname={{cityname}}&kw={{keyword}}&page={{item.value}}&map={{map}}" class="active_tnt_link">[{{item.key}}]</a>
+    {% endifnotequal %}
+    {% endfor %}
+</div>

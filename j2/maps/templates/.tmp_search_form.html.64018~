@@ -1,0 +1,66 @@
+<style type="text/css">
+    .search_icon {
+        display: inline;
+        width: 120px;
+        height: 100%;
+
+        vertical-align: middle;
+        float: left;
+        border-style: solid;
+        border-width: 5px;
+        position: relative;
+    }
+    
+    .search_input {
+        margin-left: 120px;
+        height: 40px;
+        vertical-align: middle;
+        width: 80%;
+        border-style: solid;
+        border-width: 5px;
+    }
+    
+    .search_city {
+        display: inline;
+        height: 70%;
+        vertical-align: middle;
+        width: "100px";
+        float: left;
+        position: relative;
+    }
+    
+    .search_keyword {
+        display: inline;
+        height: 70%;
+        width: "100%";
+        float: left;
+        position: relative;
+    }
+    
+    .search_text {
+        display: inline;
+        height: 70%;
+        width: "100%";
+        float: left;
+        position: relative;
+    }
+    
+    .search_submit {
+        display: inline;
+        height: 70%;
+        width: "100%";
+        float: left;
+        position: relative;
+    }
+</style>
+<form id="searchform" name="form1" method="get" action="list">
+    <div class="search_form">
+        <div class="search_icon">
+            <img src="images/logo.png" hspace="0"height="40px" align="left" />
+        </div>
+		<div class="search_input">
+		<input class="search_city" name="cityname" type="textarea" value="北京"><span class="search_text">搜索</span>
+        <input class="search_keyword" name="kw" width="300px" type="textarea"><input class="search_submit" type="submit" value="搜索">
+    </div>
+	</div>
+</form>

@@ -1,0 +1,50 @@
+{% extends "spiders/base.html" %}
+
+{% load i18n plugins_tags%}
+
+{% block main %}
+
+<div>
+<table class="table table-bordered table-striped",style="table-layout:fixed;word-break:break-all; word-wrap: break-word">
+   <thead>
+      <tr>
+        <th>Id</th>
+        <th>Url</th>
+        <th>Method</th>
+        <th>Status</td>
+      </tr>
+    </thead>
+    <tbody>
+     {% for request in urls %}
+      <tr>
+        <td><p>{{request.id}}</p></td>
+        <td><div style="word-wrap:break-word;width:500px;"><a href="#">{{request.url}}</a></div></td>
+        <td>{{request.method}}</td>
+        <td>{{request.status}}</td>
+      </tr>
+     {% endfor %}
+   </tbody>
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if pages.has_previous %}
+            <a href="?page={{ pages.previous_page_number }}">previous</a>
+        {% endif %}
+
+        {% for page in pages.visible_page_range %}
+        <li{% if page == pages.number %} class="active"{% endif %}>
+            <a href="?page={{ page }}&id={{spider.id}}">{{ page }}</a>
+        </li>
+        {% endfor %}
+        
+        <span class="current">
+            Page {{ pages.number }} of {{ pages.paginator.num_pages }}.
+        </span>
+
+        {% if pages.has_next %}
+            <a href="?page={{ pages.next_page_number }}&id={{spider.id}}">next</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock %}

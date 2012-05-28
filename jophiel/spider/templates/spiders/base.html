@@ -1,0 +1,12 @@
+{% extends "jophiel/base.html" %}
+
+{% load i18n plugins_tags%}
+
+{% block right_panel %}
+<div class="panel">
+<a href="{% url spider_create %}"
+    class="btn btn-small btn-account">{% trans "Create Spider" %}</a>
+{% trans "Create New Spider" %}
+<br clear="all">
+</div>
+{% endblock %}

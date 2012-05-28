@@ -1,0 +1,9 @@
+<div id="search_result_list">
+    {% for search in searchresult %}
+   		{% include "result_item.html" %}
+    {% endfor %}
+</div>
+
+<div>
+{% include "pagelist_classic.html" %}
+</div>

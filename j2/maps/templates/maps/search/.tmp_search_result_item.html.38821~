@@ -1,0 +1,27 @@
+<div class="search_result_iterm" >
+    <div class="search_result_image">
+        <img src="map_media/images/sort/{{forloop.counter}}.bmp">
+    </div>
+    <div class="search_result_name">
+        <a href="detail?cityname={{cityname}}&pguid={{search.id}}" target=_blank>
+        	<span >
+        		{{search.attr.name}}
+			</span>
+		</a>
+    </div>
+    <div class="search_result_address">
+        地址：{{ search.attr.address}}
+    </div>
+	
+	{% if search.attr.telephone %}
+    <div class="search_result_telephone">
+        电话：{{ search.attr.telephone}}
+    </div>
+	{% endif %}
+	
+	{% if search.attr.type or search.attr.category %}
+    <div class="search_result_catetory">
+        类型：{{ search.attr.type}}{{ search.attr.category}}
+    </div>
+	{% endif %}
+</div>

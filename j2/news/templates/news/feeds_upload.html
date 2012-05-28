@@ -1,0 +1,12 @@
+{% load i18n mezzanine_tags %}
+
+{% if request.user.is_authenticated %}
+<div class="panel">
+<form method="post" action= "{% url news_upload %}" >
+{% csrf_token %}
+{{ feedupload_form.as_table }}
+<input  class="btn" name="upload" type="submit" value="{% trans "Upload" %}">
+</form>
+</div>
+{% endif %}
+

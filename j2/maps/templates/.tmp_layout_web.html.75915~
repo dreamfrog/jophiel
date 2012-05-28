@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+{% block title %}<title>本地搜索、公交查询、驾车导航</title>{% endblock %}
+{% block meta %}
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="HAPedit 3.1">
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="map_media/css/reset-fonts-grids.css">
+<link rel="stylesheet" type="text/css" href="map_media/css/base.css">
+<link href="map_media/images/css/search_suggest.css" rel="stylesheet" type="text/css" />
+<link href="map_media/images/css/page.css" rel="stylesheet" type="text/css" />
+<link href="map_media/images/css/ai_web.css" rel="stylesheet" type="text/css" />
+<link href="map_media/css/style.css" rel="stylesheet" type="text/css" />
+<link href="map_media/schema/default/layout.css" rel="stylesheet" type="text/css" />
+<link href="map_media/schema/default/pagination.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="map_media/js/jquery-1.6.min.js"></script>
+{% endblock %}
+
+{% block message %}
+{% include 'build_message.html' %}
+{% endblock %}
+
+{% include 'map_base.html' %}
+
+</head>
+    <body>
+        <div id="ss_container">
+            <div id="ss_guide">
+                {% include 'search_guide.html' %}
+            </div>
+            <div id="ss_search_form">
+                {% include 'search_form.html' %}
+            </div>
+            <div id="ss_wrapper">
+                <div id="ss_result_list">
+                    {% block middle %} 
+                    {% include 'searchresultinfo.html' %} 
+                    {% endblock %}  
+                    {% block left %} 
+                    {% include 'searchresult.html' %}  
+                    {% endblock %} 
+                </div>
+                <div id="ss_map_show">
+                	{% block map_guide %}
+					{% include "map_guide.html" %}
+					{% endblock %}
+                    {% block right %}
+                    {% include 'map_element.html' %}
+                    {% endblock %}
+                </div>
+            </div>
+            <div id="ss_extra">
+            </div>
+            <div id="ss_footer">
+            	{% block footer %}
+				{% include 'footer.html' %}
+				{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

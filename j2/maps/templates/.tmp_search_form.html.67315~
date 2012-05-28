@@ -1,0 +1,78 @@
+<style type="text/css">
+    .search_icon {
+        display: inline;
+        width: 120px;
+        height: 40px;
+        vertical-align: middle;
+        float: left;
+        position: relative;
+    }
+    
+    .search_input {
+        margin-left: 120px;
+        height: 40px;
+        vertical-align: middle;
+        width: 80%;
+    }
+    
+    .search_city {
+    	margin-top: 5px;
+        display: inline;
+        height: 70%;
+        vertical-align: middle;
+        width: 100px;
+        float: left;
+        position: relative;
+    }
+    
+    .search_keyword {
+    	margin-top: 5px;
+        display: inline;
+        height: 70%;
+        width: 300px;
+        float: left;
+        position: relative;
+        vertical-align: middle;
+    }
+    
+    .search_text {
+    	margin-top: 10px;
+        display: inline;
+        height: 70%;
+        width: 30px;
+        float: left;
+        position: relative;
+        vertical-align: middle;
+    }
+    
+    .search_submit {
+    	margin-top: 5px;
+        display: inline;
+        height: 70%;
+        width: 50px;
+        float: left;
+        position: relative;
+        vertical-align: middle;
+    }
+</style>
+
+<script type="text/javascript">
+	
+</script>
+
+<form id="searchform" name="form1" method="get" action="list">
+    <div class="search_form">
+        <div class="search_icon">
+            <img src="map_media/images/logo.png" hspace="0"height="40px" align="left" />
+        </div>
+        <div class="search_input">
+            <input class="search_city" name="cityname" type="textarea" value="北京">
+			<span class="search_text">搜索</span>
+            <input class="search_keyword" name="kw" width="300px" type="textarea">
+			<input class="search_submit" type="submit" value="搜索"  onclick="doSearch(this)">
+			
+        	<input type='hidden' name='lat' value=''>
+        	<input type='hidden' name='lng' value=''>
+		</div>
+    </div>
+</form>

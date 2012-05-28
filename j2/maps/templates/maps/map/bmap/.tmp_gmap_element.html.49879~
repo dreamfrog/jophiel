@@ -1,0 +1,82 @@
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2&services=true">
+</script>
+<script type="text/javascript">
+    function resetMarker(){
+        if (clickMarker != null) {
+            map.removeOverlay(clickMarker);
+        }
+        for (var i = 0; i < poiMarker.length; i++) {
+        }
+        for (var i = 0; i < infoWindows.length; i++) {
+            infoWindows[i].close();
+        }
+    }
+    
+    function listenClickMessage(map){
+        map.addEventListener('click', function(event){
+            placeMarker(event.point);
+        });
+    }
+    
+    function placeMarker(location){
+        var clickedLocation = new BMap.Point(location);
+        var marker = new BMap.Marker(location);
+        map.addOverlay(marker);
+        map.setCenter(location);
+    }
+    
+    
+    function showDefaultLocatin(map){
+    
+    };
+    
+    
+    function onClickCallback(event){
+        var clickMessage = "";
+		var marker;
+        resetMarker();
+        if (event.point) {
+            clickMarker = new BMap.Marker(event.point);
+			marker=clickMarker;
+            clickMarker.setTitle(event.point.toString());
+            map.addOverlay(clickMarker);
+            var messageContent = buidlClickMessageInfo(event.point.lat, event.point.lng);
+            var infowindow = new BMap.InfoWindow(messageContent);
+            clickMarker.addEventListener('click', function(){
+                this.openInfoWindow(infowindow);
+            });
+            map.panTo(clickMarker.getPosition());
+			clickMarker.openInfoWindow(infowindow);
+            //clickMarker.click();
+        }
+        
+        
+    }
+    
+    function attachSecretMessage(marker, number){
+        var infowindow = new BMap.InfoWindow(messages[number].showinfo);
+        infoWindows.push(infowindow);
+        marker.addEventListener('click', function(){
+            resetMarker();
+            this.openInfoWindow(infowindow);
+        });
+    }
+    
+    function showRegion(map){
+    
+        if (messages.length <= 0) {
+        
+            showDefaultLocatin(map)
+        }
+        else {
+            var points = new Array();
+            for (var i = 0; i < messages.length; i++) {
+                var point = new BMap.Point(messages[i].x,messages[i].y);
+                points.push(point);
+            }
+            map.setViewport(points);
+        }
+    }
+</script>
+{% include "map/bmap/map_varaible.html" %}
+{% include "map/bmap/map_init.html" %}

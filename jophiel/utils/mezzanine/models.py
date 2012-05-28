@@ -1,0 +1,88 @@
+
+from django.core.exceptions import ImproperlyConfigured
+from django.db.models import Model, Field
+
+
+def base_concrete_model(abstract, instance):
+    """
+    Used in methods of abstract models to find the super-most concrete
+    (non abstract) model in the inheritance chain that inherits from the
+    given abstract model. This is so the methods in the abstract model can
+    query data consistently across the correct concrete model.
+
+    Consider the following::
+
+        class Abstract(models.Model)
+
+            class Meta:
+                abstract = True
+
+            def concrete(self):
+                return base_concrete_model(Abstract, self)
+
+        class Super(Abstract):
+            pass
+
+        class Sub(Super):
+            pass
+
+        sub = Sub.objects.create()
+        sub.concrete() # returns Super
+
+    In actual Mezzanine usage, this allows methods in the ``Displayable`` and
+    ``Orderable`` abstract models to access the ``Page`` instance when
+    instances of custom content types, (eg: models that inherit from ``Page``)
+    need to query the ``Page`` model to determine correct values for ``slug``
+    and ``_order`` which are only relevant in the context of the ``Page``
+    model and not the model of the custom content type.
+    """
+    for cls in reversed(instance.__class__.__mro__):
+        if issubclass(cls, abstract) and not cls._meta.abstract:
+            return cls
+    return instance.__class__
+
+
+class ModelMixinBase(type):
+    """
+    Metaclass for ``ModelMixin`` which is ued for injecting model
+    fields and methods into models defined outside of a project.
+    """
+
+    def __new__(cls, name, bases, attrs):
+        """
+        Checks for an inner ``Meta`` class with a ``mixin_for``
+        attribute containing the model that this model will be mixed
+        into. Once found, copy over any model fields and methods onto
+        the model being mixed into, and return it as the actual class
+        definition for the mixin.
+        """
+        if name == "ModelMixin":
+            # Actual ModelMixin class definition.
+            return super(ModelMixinBase, cls).__new__(cls, name, bases, attrs)
+        try:
+            mixin_for = attrs.pop("Meta").mixin_for
+            if not issubclass(mixin_for, Model):
+                raise TypeError
+        except (TypeError, KeyError, AttributeError):
+            raise ImproperlyConfigured("The ModelMixin class '%s' requires "
+                                       "an inner Meta class with the "
+                                       "``mixin_for`` attribute defined, "
+                                       "with a value that is a valid model.")
+        # Copy fields and methods onto the model being mixed into, and
+        # return it as the definition for the mixin class itself.
+        for k, v in attrs.items():
+            if isinstance(v, Field):
+                v.contribute_to_class(mixin_for, k)
+            elif k != "__module__":
+                setattr(mixin_for, k, v)
+        return mixin_for
+
+
+class ModelMixin(object):
+    """
+    Used as a subclass for mixin models that inject their behaviour onto
+    models defined outside of a project. The subclass should define an
+    inner ``Meta`` class with a ``mixin_for`` attribute containing the
+    model that will be mixed into.
+    """
+    __metaclass__ = ModelMixinBase

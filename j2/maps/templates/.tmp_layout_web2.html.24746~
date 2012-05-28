@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+{% block title %}<title>本地搜索、公交查询、驾车导航</title>{% endblock %}
+{% block meta %}
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="HAPedit 3.1">
+{% endblock %}
+
+<SCRIPT type="text/javascript" src="map_media/js/jquery-1.6.1.js"></SCRIPT>
+<SCRIPT type="text/javascript" src="map_media/js/jquery.layout.js"></SCRIPT>
+
+{% block common_style_js %}
+{% include "common_header.html" %}
+{% endblock %}
+
+{% block message %}
+{% include 'build_message.html' %}
+{% endblock %}
+
+{% include 'map_base.html' %}
+
+
+<SCRIPT type="text/javascript">
+
+
+
+</SCRIPT>
+
+	<style type="text/css">
+	/**
+	 *	Basic Layout Theme
+	 * 
+	 *	This theme uses the default layout class-names for all classes
+	 *	Add any 'custom class-names', from options: paneClass, resizerClass, togglerClass
+	 */
+
+	.ui-layout-pane { /* all 'panes' */ 
+		background: #FFF; 
+		border: 1px solid #BBB; 
+		padding: 10px; 
+		overflow: auto;
+	} 
+
+	.ui-layout-west { /* all 'panes' */ 
+		width:200px;
+	} 
+	.ui-layout-resizer { /* all 'resizer-bars' */ 
+		background: #FFF; 
+	} 
+
+	.ui-layout-toggler { /* all 'toggler-buttons' */ 
+		background: #000; 
+	} 
+
+
+	</style>
+
+</head>
+    <body>
+		
+		<DIV class="ui-layout-north">
+			<div id="ss_guide">
+			    {% include 'search_header.html' %}
+			</div>
+			<div id="ss_search_form">
+			    {% include 'search_form.html' %}
+			</div>
+			
+		</DIV>
+		<DIV class="ui-layout-west">
+			<div class="inner-north">
+							    {% block middle %} 
+						    {% include 'search_results_info.html' %} 
+						    {% endblock %}  
+				
+			</div> 
+			<div class="inner-south">
+					{% block left %} 
+			    {% include 'search_results_show.html' %}  
+			    {% endblock %} 	
+			</div> 
+	
+		</DIV>
+		
+
+			
+		<div  class="ui-layout-south">
+			{% block footer %}
+			{% include 'common/footer.html' %}
+			{% endblock %}
+		</div>	
+			<DIV class="ui-layout-center">
+		    <div id="ss_map_show">
+		    	{% block map_guide %}
+				{% include "map_guide.html" %}
+				{% endblock %}
+		        {% block right %}
+		        {% include 'map_element.html' %}
+		        {% endblock %}
+
+		    </div>
+		</DIV>	
+    </body>
+</html>

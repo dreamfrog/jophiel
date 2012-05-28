@@ -1,0 +1,60 @@
+This is a port of the core ideas of Parsley from C to Javascript and jQuery.  Parsley is a domain-specific language for extracting content from HTML.  It adds two idioms to jQuery.
+
+The first addition is the extract() method.  This transforms a jQuery object acting as a node
+list into a StringNodeList list of strings.  
+
+For example, let's perform some extractions on the following HTML:
+
+  <html><a href="/">Home</a><a href="http://google.com">Google</a></html>
+
+Here's some console output from simple use cases:
+
+  js> jQuery("a").extract()
+  #=> <StringNodeList[<Home(1)>, <Google(2)>]>
+  js> jQuery("a").extract().simple()
+  #=> ["Home", "Google"]
+
+You can also pass regexen, attributes, or arbitrary functions to extract().
+
+  js> jQuery("a").extract("@href").simple()
+  #=> ["/", "http://google.com"]
+  js> jQuery("a").extract(/[A-Z]/).simple()
+  #=> ["H", "G"]
+  js> jQuery("a").extract(function(node){ return "hi"; }).simple()
+  #=> ["hi", "hi"]
+
+The second idiom is auto-grouping.  Individual extractions can be grouped into a larger data structure (called a parselet), which will parse the page in an intelligent way.  Here's the naive ungrouped way to use extract:
+
+  js> var parselet = { 
+        links: [{
+          text: $("a").extract().simple(),
+          href: $("a").extract("@href").simple()
+        }]
+      };
+  #=> { links: [{ text: ["Home", "Google"], href: ["/", "http://google.com"] }] }
+
+Now, let's add grouping by calling pQuery.extractAndGroup() to transform the data structure into something more convenient.  extractAndGroup() will automatically call extract() and simple() as necessary, so this time we'll omit them.
+
+  js> pQuery.extractAndGroup({ 
+        links: [{
+          text: $("a")
+          href: $("a").extract("@href")
+        }]
+      });
+  #=> { links: [{ text: "Home", href: "/"}, {text: "Google", href: "http://google.com"}]}
+
+Now the links array has two objects, each representing one link.  This is a much better representation of the data.
+
+The eventual goal of this project is to create a crawler that takes parselets inner {links: ...} object as input, and from that generates a json or csv representaion of an entire website.  
+
+Here's an example parselet that gets a list of stories from http://news.ycombinator.com.
+
+  {
+   articles: [{
+     title: $(".title a"),
+     link:  $(".title a").extract("@href"),
+     comment_count: $(".subtext a:nth-child(3)").extract(/0-9+/),
+     comment_link:  $(".subtext a:nth-child(3)").extract("@href"),
+     points: $(".subtext span").extract(/0-9+/)
+   }],
+  }
