@@ -24,17 +24,8 @@ def create_seed_request(spider,url_json):
         request = Request(url = url)
         table.store_request(request)
 
-from jophiel.models import IntervalSchedule
-from jophiel.models import PeriodicTask
+from jophiel.schedule.utils import create_internal_task
 
 def create_spider_task(spider):
-    schedule=IntervalSchedule.objects.create(every=5,period='seconds')
-    task = PeriodicTask(
-              name=spider.name,task="tasks.schedule_spider_task",
-              args = "[\""+spider.name+"\"]",
-              interval = schedule,
-              enabled = True
-            )
-    print "++++++++++",task.enabled
-    task.save()
+    create_internal_task(spider.name,"tasks.schedule_spider_task",5,spider.name)
 

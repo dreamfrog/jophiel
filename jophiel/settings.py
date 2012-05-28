@@ -119,7 +119,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-    "jophiel.conf.context_processors.settings",
+    "jophiel.base.context_processors.settings",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -179,11 +179,11 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'base',
     'account',
     'jophiel',   
+    'spider',
     'crawler',
+    'schedule', 
     "debug_toolbar",
     "django_extensions",
-    'spider',
-    'j2.plugins',
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )

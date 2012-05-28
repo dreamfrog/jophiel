@@ -38,7 +38,7 @@ CELERY_RESULT_DBURI = "mysql://root:zhong@localhost/jophiel"
 
 LOGIN_URL = "/login"
 
-CELERYBEAT_SCHEDULER = "jophiel.schedulers.DatabaseScheduler"
+CELERYBEAT_SCHEDULER = "jophiel.schedule.schedulers.DatabaseScheduler"
 
 # Set your DSN value
 SENTRY_DSN = 'http://5414a038f9bd491db1a7372f1ce272d6:6a76fafcfebb41e98c80e6fb0e2e4ec4@127.0.0.1:9000/2'
@@ -67,7 +67,7 @@ CELERY_DISABLE_RATE_LIMITS = True
 CELERY_ALWAYS_EAGER = False
 
 def setup_loader():
-    os.environ.setdefault("CELERY_LOADER", "jophiel.loaders.DjangoLoader")
+    os.environ.setdefault("CELERY_LOADER", "jophiel.schedule.loaders.DjangoLoader")
 
 # Importing this module enables the Celery Django loader.
 setup_loader()
