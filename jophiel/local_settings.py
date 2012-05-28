@@ -26,16 +26,19 @@ FILE_CHARSET = 'utf-8'
 QUEUE_BACKEND = "redis://localhost:6379//"
 
 BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis"
-CELERY_REDIS_HOST = "localhost"
-CELERY_REDIS_PORT = 6379
-CELERY_REDIS_DB = 0
+#CELERY_RESULT_BACKEND = "redis"
+#CELERY_REDIS_HOST = "localhost"
+#CELERY_REDIS_PORT = 6379
+#CELERY_REDIS_DB = 0
 
-CELERY_IMPORTS = ('feeds.tasks','news.tasks')
+CELERY_RESULT_BACKEND = "database"
+CELERY_RESULT_DBURI = "mysql://root:zhong@localhost/jophiel"
+
+#CELERY_IMPORTS = ('feeds.tasks','news.tasks')
 
 LOGIN_URL = "/login"
 
-CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERYBEAT_SCHEDULER = "jophiel.schedulers.DatabaseScheduler"
 
 # Set your DSN value
 SENTRY_DSN = 'http://5414a038f9bd491db1a7372f1ce272d6:6a76fafcfebb41e98c80e6fb0e2e4ec4@127.0.0.1:9000/2'
@@ -60,6 +63,11 @@ USING_PASSWORD_REGISTER = True
 
 TASTYPIE_FULL_DEBUG = True
 
-ACCOUNTS_ENABLED = True
+CELERY_DISABLE_RATE_LIMITS = True
+CELERY_ALWAYS_EAGER = False
 
+def setup_loader():
+    os.environ.setdefault("CELERY_LOADER", "jophiel.loaders.DjangoLoader")
 
+# Importing this module enables the Celery Django loader.
+setup_loader()
