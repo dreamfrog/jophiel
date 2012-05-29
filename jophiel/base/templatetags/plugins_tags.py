@@ -25,7 +25,7 @@ Created on 2012-4-14
 from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
-from j2.plugins import block_pool
+from jophiel.plugins import block_pool
 
 register = template.Library()
 

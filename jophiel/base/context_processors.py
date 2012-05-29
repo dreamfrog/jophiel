@@ -3,6 +3,6 @@ def settings(request):
     """
     Add the settings object to the template context.
     """
-    from django.conf import settings
+    from jophiel.base import settings
     settings.use_editable()
     return {"settings": settings}

@@ -4,14 +4,13 @@ Created on 2012-5-13
 @author: lzz
 '''
 
-from .backends.hbase_proxy import Datastore
+from .backends.hbase_backend import Datastore
 from collections import defaultdict
 
 class ColumnsField(object):
     def __init__(self, **kwargs):
         self.values = {}
      
-        
 class ModelDescriptor(type):
     def __new__(cls, name, bases, attrs):
         super_new = super(ModelDescriptor, cls).__new__

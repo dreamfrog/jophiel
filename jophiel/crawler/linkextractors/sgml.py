@@ -15,8 +15,7 @@ from ..utils.python import unique as unique_list
 from ..utils.python import str_to_unicode
 from ..utils.url import canonicalize_url, url_is_from_any_domain, url_has_any_extension
 from ..utils.response import get_base_url
-
-from jophiel.crawler.selector import HtmlXPathSelector
+from ..selector import HtmlXPathSelector
 
 class BaseSgmlLinkExtractor(FixedSGMLParser):
 

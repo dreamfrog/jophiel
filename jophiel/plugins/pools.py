@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ImproperlyConfigured
-from j2.utils.django_load import load
-from j2.exceptions import PluginAlreadyRegistered, PluginNotRegistered
+from jophiel.utils.django_load import load
+from jophiel.exceptions import PluginAlreadyRegistered, PluginNotRegistered
 from .base import BaseBlock
 
 PLUGIN_MODULE_NAME = "plugins"

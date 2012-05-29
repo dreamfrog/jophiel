@@ -175,7 +175,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 # These will be added to ``INSTALLED_APPS``, only if available.
 INSTALLED_APPS =INSTALLED_APPS + ( 
     #'redisboard', 
-    'south',    
+    #'south',    
     #'tastypie',
     'base',
     'account',
@@ -184,7 +184,7 @@ INSTALLED_APPS =INSTALLED_APPS + (
     'crawler',
     'schedule', 
     "debug_toolbar",
-    "django_extensions",
+    #"django_extensions",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )

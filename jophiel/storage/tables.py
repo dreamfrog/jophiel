@@ -4,9 +4,7 @@ Created on 2012-5-10
 @author: lzz
 '''
 from sqlalchemy import *
-from sqlalchemy.sql import select
-
-from .aldjemy.core import *
+from alchemy import *
 import copy 
 
 class TableDescriptor(type):
