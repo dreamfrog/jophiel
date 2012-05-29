@@ -7,7 +7,7 @@ Created on 2012-5-2
 from django import forms
 from django.utils.translation import ugettext as _
 
-from jophiel.jsonfield import JSONFormField
+from jophiel.utils.field import JSONFormField
 from .models import Spider
 
 class SpiderForm(forms.ModelForm):

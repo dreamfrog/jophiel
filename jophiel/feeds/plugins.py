@@ -6,8 +6,8 @@ Created on 2012-4-14
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _, ugettext_lazy
 
-from j2.plugins.base import BaseBlock
-from j2 import plugins
+from jophiel.plugins.base import BaseBlock
+from jophiel import plugins
 
 from .models import Feed
 from .forms import FeedAddForm

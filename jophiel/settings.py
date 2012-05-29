@@ -119,6 +119,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    
     "jophiel.base.context_processors.settings",
 )
 
