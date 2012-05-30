@@ -1,0 +1,14 @@
+
+jophiel.accout 负责用户登陆和注册
+jophiel.base  是基础模块，主要是页面的基本layout和css，js
+jophiel.plugins 是页面展示的插件模块，
+
+jophiel.schedule 是task的调度模块，主要是来自djcelery
+
+jophiel.contrib 是收集的一些爬取、抽取、数据处理的公用模块 
+
+jophiel.storage 主要的存储模块
+jophiel.feeds 是rss的抓取模块
+jophiel.crawler,修改scrapy，主要是修改了downloader模块，
+jophiel.spider 是主要的爬虫模块
+
